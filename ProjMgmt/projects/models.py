@@ -24,3 +24,7 @@ class Project(ProjMgmtBase):
 	#todo remove when no longer needed
 	def __str__(self):
 		return self.title
+		
+		
+def getAllProjects():
+	return Project.objects.all()
