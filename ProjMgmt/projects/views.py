@@ -6,5 +6,5 @@ from django.shortcuts import render
 
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
-	context = {'projects' : models.getAllProjects()}
+	context = {'projects' : models.getProjectsForUser(request.user.id)}
 	return render(request, 'projects.html', context)

@@ -7,7 +7,7 @@ class ProjMgmtBase(models.Model):
 	
 	#todo add status as a Field.choices
 	
-	owner = models.ForeignKey(User, null=True)
+	#owner = models.ForeignKey(User, null=True)
 	
 	#todo add user associations
 	
@@ -20,11 +20,22 @@ class ProjMgmtBase(models.Model):
 class Project(ProjMgmtBase):
 	#todo add stories
 
+	users = models.ManyToManyField(User, through='UserAssociation')
+	
 	#added so this class will contain an indented block
 	#todo remove when no longer needed
 	def __str__(self):
 		return self.title
 		
 		
+class UserAssociation(models.Model):
+	user = models.ForeignKey(User)
+	project = models.ForeignKey(Project)
+	
+	#todo add association meta data
+		
 def getAllProjects():
 	return Project.objects.all()
+
+def getProjectsForUser(userID):
+	return Project.objects.filter(users__id__contains=userID)
