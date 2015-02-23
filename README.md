@@ -2,6 +2,7 @@
 Project for Require Management
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Add one line
 =======
 
@@ -13,3 +14,6 @@ How to setup the server
 3. Create a super user
 	py manage.py createsuperuser
 >>>>>>> pr/3
+=======
+Test Line
+>>>>>>> pr/6
