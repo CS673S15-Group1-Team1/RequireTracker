@@ -4,6 +4,8 @@ from projects import views
 
 urlpatterns = patterns('',
 	
+	url(r'^logout', views.logout),
+	
 	url(r'^admin', include(admin.site.urls)),
 	
 	url(r'^projects', views.listProjects),
