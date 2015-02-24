@@ -17,3 +17,5 @@ How to setup the server
 =======
 Test Line
 >>>>>>> pr/6
+
+Test Line 2
