@@ -39,3 +39,9 @@ def getAllProjects():
 
 def getProjectsForUser(userID):
 	return Project.objects.filter(users__id__contains=userID)
+
+def getProject(projID):
+	return Project.objects.get(id=projID)
+	
+def canUserAccessProject(userID, projectID):
+	return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0

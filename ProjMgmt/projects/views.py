@@ -15,3 +15,11 @@ def logout(request):
 	django.contrib.auth.logout(request)
 	return HttpResponse("Log Out Successful")
 	
+@login_required(login_url='/accounts/login/')
+def project(request, proj):
+	if models.canUserAccessProject(request.user.id, proj) :
+		context = {'project' : models.getProject(proj)}
+		return render(request, 'viewProject.html', context)
+	else:
+		return HttpResponse("You cannot access project " + proj)
+	
