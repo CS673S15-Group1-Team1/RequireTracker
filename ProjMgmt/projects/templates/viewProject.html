@@ -1,0 +1,17 @@
+
+{% extends "LoggedInBase.html" %}
+{% block content %}
+<table style="width:100%">
+	<tr>
+		<th>Title</th>
+		<th>Description</th>
+	</tr>
+
+	<tr>
+		<td>{{project.title}}</td>
+		<td>{{project.description}}</td>
+	</tr>
+
+</table>
+
+{% endblock %}

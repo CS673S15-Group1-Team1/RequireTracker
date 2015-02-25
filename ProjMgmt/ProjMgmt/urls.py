@@ -8,6 +8,8 @@ urlpatterns = patterns('',
 	
 	url(r'^admin', include(admin.site.urls)),
 	
+	url(r'^projects/(?P<proj>\d+)', views.project),
+	
 	url(r'^projects', views.listProjects),
 	
 	#Default to login screen
