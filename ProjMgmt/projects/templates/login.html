@@ -3,9 +3,7 @@
 
 {% block content %}
 
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 	<body>
@@ -15,6 +13,15 @@
 			</div>
 
 			<div style="position: relative; left: 240px; font-size: 200%; "> Please log in </div>
+		</br>
+		</br>
+		{% if form.errors %}
+			<div style = "position: relative; left: 100px; font-size: 150%; ">
+				Your username and password didn't match. Please try again.
+			</div>
+		{% endif %}
+		</br>
+		</br>	
 			{% csrf_token %}
 			<table>
 				<tr>
