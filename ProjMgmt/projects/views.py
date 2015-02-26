@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 import models
 from django.shortcuts import render
 import django.contrib.auth
+import userManager
+from django.views.decorators.csrf import csrf_exempt
 
 def HomePage(request):
 	return render(request, 'HomePage.html')
@@ -25,4 +27,9 @@ def project(request, proj):
 		return render(request, 'viewProject.html', context)
 	else:
 		return HttpResponse("You cannot access project " + proj)
-	
+				
+def createUser(request):
+	if userManager.createUser(request) :
+		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
+	else:
+		return HttpResponse("Failed to create user")
