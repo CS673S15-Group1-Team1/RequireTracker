@@ -4,10 +4,10 @@ from projects import views
 
 urlpatterns = patterns('',
 	
-<<<<<<< HEAD
+# <<<<<<< HEAD
 	url(r'^logout', views.logout),
-=======
->>>>>>> pr/9
+# =======
+# >>>>>>> pr/9
 	
 	url(r'^admin', include(admin.site.urls)),
 	
