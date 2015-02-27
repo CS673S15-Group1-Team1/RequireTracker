@@ -3,7 +3,11 @@ import models
 from models import Project
 from models import UserAssociation
 from django.contrib.auth.models import User
- 
+import userManager
+
+class Obj(): pass
+	
+
 class ProjectTestCase(TestCase):
 	
 	def setUp(self):
@@ -62,4 +66,13 @@ class ProjectTestCase(TestCase):
 		u = UserAssociation(user = self.__user, project=p)
 		u.save()
 		self.assertEqual( models.canUserAccessProject(self.__user.id, p.id), True)		
+	
+	def test_createUser(self):
+		req = Obj()
+		req.POST = {'username' : 'user', 'password' : 'pass'}
+		userManager.createUser(req)
 		
+		u = User.objects.all()[1]
+		self.assertEqual('user', u.username)
+		self.assertEqual('pass', u.password)
+		self.assertEqual(False, u.is_active)
