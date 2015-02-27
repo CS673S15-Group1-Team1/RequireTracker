@@ -14,5 +14,7 @@ urlpatterns = patterns('',
 	#TODO what if the user is already logged in?
 	url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     url(r'^$', views.HomePage),
-     url(r'^registration', views.Registration),
+    url(r'^registration', views.Registration),
+    url(r'^members', views.Members),
+
 )

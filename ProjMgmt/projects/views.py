@@ -17,6 +17,9 @@ class registrationForm(forms.Form):
 def HomePage(request):
 	return render(request, 'HomePage.html')
 
+def Members(request):
+	return render(request, 'Members.html')
+
 def Registration(request):
 	if request.method =='POST':
 		form =  registrationForm(request.POST)
