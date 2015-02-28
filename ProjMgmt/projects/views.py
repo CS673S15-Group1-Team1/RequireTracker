@@ -30,7 +30,8 @@ def Registration(request):
 		form =  registrationForm(request.POST)
 		if form.is_valid():
 			# This is where you do stuff and then go to thank you page
-			 return HttpResponseRedirect('/thankYou/')
+			userManager.createUser(request)
+			return HttpResponseRedirect('/thankYou/')
 	else:
 		form =  registrationForm()
 	return render(request, 'registration.html', {'form': form})
