@@ -4,12 +4,12 @@
 <body>
 <div id="container">
 	<div id="header">
-		<h1 style="position: relative; left: 350px;" onclick= "CreateProject()" >
+		<h1 style="position: relative; left: 350px;" >
 			Project List
 		</h1>
 	</div>
 	<div id="linkbar">
-		<button id ="newProjectButton" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;">New Project</button>
+		<button id ="newProjectButton" onclick= "CreateProject()" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>
 	</div>
 	{% block content %}
 	<table style="width:100%">
@@ -28,9 +28,11 @@
 	{% endblock %}
 </body>
 
+ <!-- Put in code to create a new Project in next function then redirect -->
+ 
 <SCRIPT TYPE="text/javascript">
 	function createProject()
 	{
-	  <!-- Put in code to create a new Project here-->
+	 
 	}
 </SCRIPT>
