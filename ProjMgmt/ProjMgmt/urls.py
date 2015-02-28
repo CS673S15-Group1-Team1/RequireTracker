@@ -17,7 +17,8 @@ urlpatterns = patterns('',
 	
 	
 	url(r'^createuser', views.createUser),
-	
+	url(r'^newproject', views.newproject),
+	url(r'^createProject', views.createProject),
 	#Default to login screen
 	#TODO what if the user is already logged in?
 	url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
