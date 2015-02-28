@@ -1,17 +1,37 @@
-
 {% extends "LoggedInBase.html" %}
 {% block content %}
-<table style="width:100%">
-	<tr>
-		<th>Title</th>
-		<th>Description</th>
-	</tr>
-	{% for project in projects %}
-	<tr>
-		<td>{{project.title}}</td>
-		<td>{{project.description}}</td>
-	</tr>
-	{% endfor %}
-</table>
+{% load staticfiles %}
+<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
 
+<!-- <<<<<<< HEAD -->
+<div id="container">
+	<div id="header">
+		<h1 style="position: relative; left: 350px;" onclick= "CreateProject()" >
+			Project List
+		</h1>
+	</div>
+	<div id="linkbar">
+		<button id ="newProjectButton" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;">New Project</button>
+	</div>
+	<table style="width:100%">
+		<tr>
+			<th>Title</th>
+			<th>Description</th>
+		</tr>
+		{% for project in projects %}
+		<tr>
+			<td>{{project.title}}</td>
+			<td>{{project.description}}</td>
+		</tr>
+		{% endfor %}
+	</table>
+</div>
+<!-- >>>>>>> pr/11 -->
+
+<SCRIPT TYPE="text/javascript">
+	function createProject()
+	{
+	  <!-- Put in code to create a new Project here-->
+	}
+</SCRIPT>
 {% endblock %}
