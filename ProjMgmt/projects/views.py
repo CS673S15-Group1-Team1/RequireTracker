@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import models
 from django.shortcuts import render
@@ -28,7 +29,7 @@ def Registration(request):
 		form =  registrationForm(request.POST)
 		if form.is_valid():
 			# This is where you do stuff and then go to thank you page
-			 return HttpResponseRedirect('/HomePage/')
+			 return HttpResponseRedirect('/')
 	else:
 		form =  registrationForm()
 	return render(request, 'Registration.html', {'form': form})
