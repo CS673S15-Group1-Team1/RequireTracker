@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     url(r'^$', views.HomePage),
     url(r'^Registration', views.Registration),
     url(r'^members', views.Members),
-    url(r'^thankYou', views.ThankYou),
+    url(r'^ThankYou', views.ThankYou),
     url(r'^newProject', views.NewProject),
 
 )
