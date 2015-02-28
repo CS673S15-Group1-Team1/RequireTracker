@@ -25,6 +25,11 @@
 		</tr>
 		{% endfor %}
 	</table>
+	</br>
+	</br>
+	{% if isProjectOwner == True %}
+		{% include "projectAdminPanel.html" %}
+	{% endif %}
 </div>
 <!-- >>>>>>> pr/11 -->
 
@@ -33,9 +38,7 @@
 <SCRIPT TYPE="text/javascript">
 	function createProject()
 	{
-
 		var projectWindow = window.open("http://127.0.0.1:8000/newProject","_blank","height=600, width=600");
-	 
 	}
 </SCRIPT>
 {% endblock %}

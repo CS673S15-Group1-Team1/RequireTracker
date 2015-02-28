@@ -1,7 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
+ROLE_USER = "user"
+ROLE_OWNER = "owner"
 
 class ProjMgmtBase(models.Model):
 	title = models.CharField(max_length=128)
@@ -29,11 +30,16 @@ class Project(ProjMgmtBase):
 	def __str__(self):
 		return self.title
 		
+	class Meta:
+		permissions = (
+			("own_project", "Can own and create projects"),
+		)
 		
 class UserAssociation(models.Model):
 	user = models.ForeignKey(User)
 	project = models.ForeignKey(Project)
 	
+	role =  models.CharField(max_length=128)
 	#todo add association meta data
 		
 def getAllProjects():
@@ -47,3 +53,10 @@ def getProject(projID):
 	
 def canUserAccessProject(userID, projectID):
 	return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0
+	
+def createProject(user, fields):
+	proj = Project(title=fields['title'], description=fields['description'])
+	proj.save()
+	assocation = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
+	assocation.save()
+	return proj

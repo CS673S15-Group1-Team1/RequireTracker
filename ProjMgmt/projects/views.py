@@ -6,6 +6,8 @@ from django.shortcuts import render
 import django.contrib.auth
 import userManager
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import permission_required
+from forms import NewProjectForm
 
 from django import forms
 
@@ -28,7 +30,8 @@ def Registration(request):
 		form =  registrationForm(request.POST)
 		if form.is_valid():
 			# This is where you do stuff and then go to thank you page
-			 return HttpResponseRedirect('/thankYou/')
+			userManager.createUser(request)
+			return HttpResponseRedirect('/thankYou/')
 	else:
 		form =  registrationForm()
 	return render(request, 'registration.html', {'form': form})
@@ -42,6 +45,7 @@ def NewProject(request):
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
+	context['isProjectOwner'] = request.user.has_perm('projects.own_project')
 	return render(request, 'projects.html', context)
 	
 @login_required	
@@ -61,4 +65,19 @@ def createUser(request):
 	if userManager.createUser(request) :
 		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
 	else:
+		#TODO refactor to use @user_passes_test
 		return HttpResponse("Failed to create user")
+		
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def newproject(request):
+	form = NewProjectForm()
+	return render(request, 'createProject.html', {'form' : form} )
+
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def createProject(request):
+	proj = models.createProject(request.user, request.POST)
+	
+	return project(request, proj.id)
+		
