@@ -1,6 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import models
 from django.shortcuts import render
@@ -29,16 +28,21 @@ def Registration(request):
 		form =  registrationForm(request.POST)
 		if form.is_valid():
 			# This is where you do stuff and then go to thank you page
-			 return HttpResponseRedirect('/')
+			 return HttpResponseRedirect('/thankYou/')
 	else:
 		form =  registrationForm()
-	return render(request, 'Registration.html', {'form': form})
+	return render(request, 'registration.html', {'form': form})
+
+def ThankYou(request):
+	return render(request, 'ThankYou.html')
+
+def NewProject(request):
+	return render(request, 'NewProject.html')
 
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
 	return render(request, 'projects.html', context)
-# <<<<<<< HEAD
 	
 @login_required	
 def logout(request):
@@ -58,6 +62,3 @@ def createUser(request):
 		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
 	else:
 		return HttpResponse("Failed to create user")
-# =======
-
-# >>>>>>> pr/11
