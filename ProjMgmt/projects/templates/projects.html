@@ -13,5 +13,11 @@
 	</tr>
 	{% endfor %}
 </table>
+</br>
+</br>
+{% if isProjectOwner == True %}
+{% include "projectAdminPanel.html" %}
+
+{% endif %}
 
 {% endblock %}
