@@ -64,9 +64,6 @@ def createUser(request):
 	if userManager.createUser(request) :
 		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
 	else:
-<<<<<<< HEAD
-		return HttpResponse("Failed to create user")
-=======
 		#TODO refactor to use @user_passes_test
 		return HttpResponse("Failed to create user")
 		
@@ -83,4 +80,3 @@ def createProject(request):
 	
 	return project(request, proj.id)
 		
->>>>>>> newfeature-be-newprojectb

@@ -1,6 +1,5 @@
 {% extends "LoggedInBase.html" %}
 {% block content %}
-<<<<<<< HEAD
 {% load staticfiles %}
 <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
 
@@ -26,6 +25,11 @@
 		</tr>
 		{% endfor %}
 	</table>
+	</br>
+	</br>
+	{% if isProjectOwner == True %}
+		{% include "projectAdminPanel.html" %}
+	{% endif %}
 </div>
 <!-- >>>>>>> pr/11 -->
 
@@ -34,29 +38,7 @@
 <SCRIPT TYPE="text/javascript">
 	function createProject()
 	{
-=======
-<table style="width:100%">
-	<tr>
-		<th>Title</th>
-		<th>Description</th>
-	</tr>
-	{% for project in projects %}
-	<tr>
-		<td>{{project.title}}</td>
-		<td>{{project.description}}</td>
-	</tr>
-	{% endfor %}
-</table>
-</br>
-</br>
-{% if isProjectOwner == True %}
-{% include "projectAdminPanel.html" %}
-
-{% endif %}
->>>>>>> newfeature-be-newprojectb
-
 		var projectWindow = window.open("http://127.0.0.1:8000/newProject","_blank","height=600, width=600");
-	 
 	}
 </SCRIPT>
 {% endblock %}

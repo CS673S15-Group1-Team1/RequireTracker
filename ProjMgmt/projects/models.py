@@ -1,12 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-<<<<<<< HEAD
-
-=======
 ROLE_USER = "user"
 ROLE_OWNER = "owner"
->>>>>>> newfeature-be-newprojectb
 
 class ProjMgmtBase(models.Model):
 	title = models.CharField(max_length=128)
