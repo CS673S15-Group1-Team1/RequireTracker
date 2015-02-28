@@ -1,0 +1,26 @@
+{% load staticfiles %}
+<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+
+<body>
+<div id="container">
+	<div id="header" >
+		<h1 style="position: relative; left: 300px;">
+			Project Tracker Registration Request
+		</h1>
+	</div>
+	<div id="linkbar">
+	</div>
+	<h1>
+		Thank you for Registering.  The Administrator will review your request shortly. The button Below will bring you to the login screen or you may come back when you have been approved.
+	</h1>
+	</br>
+	</br>
+	<button onclick="Home()" style=" Height: 40px; position: relative; left: 475px"> 
+		Continue to login Screen
+</div>
+
+<SCRIPT TYPE="text/javascript">
+	function Home(){
+		window.location="http://127.0.0.1:8000/login"
+	}
+</SCRIPT>
