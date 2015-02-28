@@ -17,5 +17,6 @@ urlpatterns = patterns('',
     url(r'^Registration', views.Registration),
     url(r'^members', views.Members),
     url(r'^thankYou', views.ThankYou),
+    url(r'^newProject', views.NewProject),
 
 )

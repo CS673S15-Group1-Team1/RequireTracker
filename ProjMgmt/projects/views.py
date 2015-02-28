@@ -33,6 +33,9 @@ def Registration(request):
 def ThankYou(request):
 	return render(request, 'ThankYou.html')
 
+def NewProject(request):
+	return render(request, 'NewProject.html')
+
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
