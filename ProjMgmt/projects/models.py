@@ -57,6 +57,19 @@ def canUserAccessProject(userID, projectID):
 def createProject(user, fields):
 	proj = Project(title=fields['title'], description=fields['description'])
 	proj.save()
-	assocation = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
-	assocation.save()
+	association = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
+	association.save()
 	return proj
+	
+def addUserToProject( projectID, username):
+	proj = Project.objects.get(id=projectID)
+	user = User.objects.get(username=username)
+	association = UserAssociation(user=user,project=proj, role=ROLE_USER)
+	association.save()
+	association.save()
+	
+def removeUserFromProject(projectID, username):
+	proj = Project.objects.get(id=projectID)
+	user = User.objects.get(username=username)
+	ua = UserAssociation.objects.get(project = proj, user=user)
+	ua.delete()
