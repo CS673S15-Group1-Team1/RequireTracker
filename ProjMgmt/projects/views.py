@@ -74,3 +74,12 @@ def createProject(request):
 	
 	return project(request, proj.id)
 		
+@login_required(login_url='/accounts/login/')
+def addUserToProject(request, projectID, username):
+	models.addUserToProject(projectID, username)
+	return HttpResponse("User added.")
+	
+def removeUserFromProject(request, projectID, username):
+	models.removeUserFromProject(projectID, username)
+	return HttpResponse("User removed.")	
+	
