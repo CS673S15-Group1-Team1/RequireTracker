@@ -8,16 +8,9 @@ import userManager
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import permission_required
 from forms import NewProjectForm
-
+from forms import registrationForm
 from django import forms
 
-class registrationForm(forms.Form):
-	firstName = forms.CharField(label='First Name:', max_length=100)
-	lastName = forms.CharField(label='Last Name:', max_length=100)
-	emailAddress=forms.CharField(label='Email Address:', max_length=100)
-	username=forms.CharField(label='Username:', max_length=100)
-	password=forms.CharField(label='password:', max_length=100)
-	confirmPassword=forms.CharField(label='Confirm password:', max_length=100)
 
 def HomePage(request):
 	return render(request, 'HomePage.html')
