@@ -5,7 +5,10 @@ from projects import views
 urlpatterns = patterns('',
 	
 # <<<<<<< HEAD
-	url(r'^logout', views.logout),
+	url(r'^signin', views.signin),
+	url(r'^signout', views.signout),
+	url(r'^signup', views.signup),
+	
 # =======
 # >>>>>>> pr/9
 	
@@ -21,7 +24,7 @@ urlpatterns = patterns('',
 	url(r'^createProject', views.createProject),
 	#Default to login screen
 	#TODO what if the user is already logged in?
-	url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+	# url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'SignIn.html'}),
     url(r'^$', views.HomePage),
     url(r'^registration', views.Registration),
     url(r'^members', views.Members),
