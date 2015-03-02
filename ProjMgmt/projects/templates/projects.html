@@ -1,9 +1,7 @@
-{% extends "LoggedInBase.html" %}
-{% block content %}
 {% load staticfiles %}
 <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
 
-<!-- <<<<<<< HEAD -->
+<body>
 <div id="container">
 	<div id="header">
 		<h1 style="position: relative; left: 350px;" >
@@ -12,7 +10,14 @@
 	</div>
 	<div id="linkbar">
 		<button id ="newProjectButton" onclick= "createProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>
+
+		<button id ="editProjectButton" onclick= "editProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 20px;" >Edit Project</button>
+
+		<button id ="deleteProjectButton" onclick= "deleteProject();" style=" position: relative; Height: 50px; Width: 100px; top: 5px; left: 35px;" >Delete Project</button>
+
+		<button id ="goToProjectButton" onclick= "goToProject();" style=" position: relative; Height: 50px; Width: 100px; top: 5px; left: 50px;" >Go to Project</button>
 	</div>
+	{% block content %}
 	<table style="width:100%">
 		<tr>
 			<th>Title</th>
@@ -25,20 +30,22 @@
 		</tr>
 		{% endfor %}
 	</table>
-	</br>
-	</br>
-	{% if isProjectOwner == True %}
-		{% include "projectAdminPanel.html" %}
-	{% endif %}
-</div>
-<!-- >>>>>>> pr/11 -->
+
+	{% endblock %}
+</body>
 
  <!-- Put in code to create a new Project in next function then redirect -->
 
 <SCRIPT TYPE="text/javascript">
 	function createProject()
 	{
+
 		var projectWindow = window.open("http://127.0.0.1:8000/newProject","_blank","height=600, width=600");
+	 
+	}
+
+
+	function goToProject(){
+		window.location.replace("projectStories")
 	}
 </SCRIPT>
-{% endblock %}
