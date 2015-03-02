@@ -20,4 +20,5 @@ urlpatterns = patterns('',
     url(r'^newProject', views.NewProject),
     url(r'^newStory', views.NewStory),
     url(r'^projectStories', views.ProjectStories),
+    url(r'^editProject', views.EditProject),
 )

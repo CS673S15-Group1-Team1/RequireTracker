@@ -1,0 +1,43 @@
+{% load staticfiles %}
+<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+
+<body>
+<div id="container">
+	<div id="header" >
+		<h1 style="position: relative; left: 38%;">
+			Edit Project
+		</h1>
+	</div>
+	<div id="linkbar">
+		<h2 style="position: relative; left: 39%">
+			Project Name:
+		</h2>
+		<input id="projectName" value="Project Name" style="position: relative; left: 41%">
+	</div>
+	</br>
+	</br>
+	<div id="description" style="position: relative; left: 41%"> 
+		<h3>
+			Description of Project:
+		</h3>
+	</div>
+	<textarea id="userDescription" style="resize: none; position: relative; left: 31%; Width: 35%; Height: 150px;"> This is the default Text
+	</textarea>
+	</div>
+	</br>
+	<button id="createButton" onclick="save();" style="position: relative; left: 32%; height: 40px; ">Save Changes</button>
+
+
+	<button id="Cancel" onclick="self.close()" style="position: relative; left: 50%; height: 40px; ">Cancel</button>
+
+
+	<!-- Add the create opitons in the create function below to add the project to the list-->
+
+<SCRIPT TYPE="text/javascript">
+
+	function save()
+	{
+
+	}
+	
+</SCRIPT>

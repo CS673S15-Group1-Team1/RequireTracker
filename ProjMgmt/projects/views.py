@@ -45,6 +45,12 @@ def ProjectStories(request):
 	#links. --Jared
 	return render(request, 'ProjectStories.html')
 
+def EditProject(request):
+	# In this section we need to load the djaong project that is selected
+	# and send it to the edit form
+	#--Jared
+	 return render(request, 'EditProject.html')
+
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
