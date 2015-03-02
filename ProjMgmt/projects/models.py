@@ -60,3 +60,13 @@ def createProject(user, fields):
 	assocation = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
 	assocation.save()
 	return proj
+
+def deleteProject(projectID):
+	project = Project.objects.filter(id=projectID)
+	association = UserAssociation.objects.filter(project=project)
+	association.delete()
+	project.delete()
+	
+	
+	
+	
