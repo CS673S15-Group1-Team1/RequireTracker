@@ -10,18 +10,20 @@
 			Project List
 		</h1>
 	</div>
-	<div id="linkbar">
-		<button id ="newProjectButton" onclick= "createProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>
+    <div id="linkbar">
+		<!--<button id ="newProjectButton" onclick= "createProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>-->
 	</div>
 	<table style="width:100%">
 		<tr>
-			<th>Title</th>
-			<th>Description</th>
+			<th align=left>Title</th>
+			<th align=left>Description</th>
 		</tr>
 		{% for project in projects %}
 		<tr>
 			<td>{{project.title}}</td>
 			<td>{{project.description}}</td>
+			<td><a href=  "/editproject/{{project.id}}">Edit</a></td>
+			<td><a href=  "/deleteproject/{{project.id}}">Delete</a></td>
 		</tr>
 		{% endfor %}
 	</table>
