@@ -2,21 +2,27 @@
 <html lang="en">
 	{% load staticfiles %}
 	<link rel="stylesheet" href="{{ STATIC_URL }}projects/basestyle.css"/>
+	<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
 <head>
 	<title>Project Management System</title>
 </head>
 
 <body>
-	<div id = "topbar">
-		<ul >
-			<li>
-				<a id="logout_link" href="logout">log out</a>
-			</li>
-		</ul>
+    <div id = "header">
+	    <table width="100%">
+	        <tr>
+                <td align=left>
+                    <h3 style="position: relative; top: 10px; left: 20px;" >{{ header }}</h3>
+                </td>
+    	        <td align=right>
+    	            <h3 style="position: relative; top: 10px; right: 20px;" >
+    	               <a id="logout_link" href="logout">Sign Out</a>    
+    	            </h3>    
+    	        </td>
+	        </tr>
+	    </table>
 	</div>
-	
 	</br>
-	
 	<div id="content">
 		{% block content %}{% endblock %}
 	</div>
