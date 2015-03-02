@@ -4,16 +4,21 @@
 <link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
 
 <!-- <<<<<<< HEAD -->
-<div id="container">
+<!--<div id="container">
 	<div id="header">
 		<h1 style="position: relative; left: 350px;" >
 			Project List
 		</h1>
 	</div>
     <div id="linkbar">
-		<!--<button id ="newProjectButton" onclick= "createProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>-->
-	</div>
-	<table style="width:100%">
+		<button id ="newProjectButton" onclick= "createProject();" style=" position: relative; Height: 50px; Width: 80px; top: 5px; left: 5px;" >New Project</button>
+	</div>-->
+<div>	
+    {% if isProjectOwner == True %}
+        {% include "projectAdminPanel.html" %}
+    {% endif %}
+    </br>
+	<table cellspacing="10">
 		<tr>
 			<th align=left>Title</th>
 			<th align=left>Description</th>
@@ -29,9 +34,7 @@
 	</table>
 	</br>
 	</br>
-	{% if isProjectOwner == True %}
-		{% include "projectAdminPanel.html" %}
-	{% endif %}
+
 </div>
 <!-- >>>>>>> pr/11 -->
 

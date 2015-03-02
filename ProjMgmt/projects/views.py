@@ -44,14 +44,15 @@ def NewProject(request):
 
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
-	context = {'projects' : models.getProjectsForUser(request.user.id)}
+	context = {'projects' : models.getProjectsForUser(request.user.id),
+			'header' : 'Project List'}
 	context['isProjectOwner'] = request.user.has_perm('projects.own_project')
 	return render(request, 'projects.html', context)
 	
 @login_required	
 def logout(request):
 	django.contrib.auth.logout(request)
-	return HttpResponse("Log Out Successful")
+	return redirect('/')
 	
 @login_required(login_url='/accounts/login/')
 def project(request, proj):
@@ -80,7 +81,10 @@ def newproject(request):
 	else:
 		form = NewProjectForm()
 		
-	context = {'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
+	context = {'form' : form, 
+			'header' : 'Create New Project',
+			'action' : '/newproject' , 
+			'desc' : 'Create Project' }
 	return render(request, 'ProjectProperties.html', context )
 
 @login_required(login_url='/accounts/login/')
@@ -97,7 +101,10 @@ def editproject(request, id):
 	else:
 		form = NewProjectForm(instance=project)
 		
-	context = {'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes' }
+	context = {'form' : form,
+			'header' : 'Edit Project - ' + project.title,
+			'action' : '/editproject/' + id,
+			'desc' : 'Save Changes' }
 	return render(request, 'ProjectProperties.html', context )
 
 @login_required(login_url='/accounts/login/')
@@ -114,7 +121,10 @@ def deleteproject(request, id):
 	else:
 		form = NewProjectForm(instance=project)
 		
-	context = {'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
+	context = {'form' : form,
+			'header' : 'Delete Project - ' + project.title, 
+			'action' : '/deleteproject/' + id , 
+			'desc' : 'Delete Project' }
 	return render(request, 'ProjectProperties.html', context )
 
 #===============================================================================
