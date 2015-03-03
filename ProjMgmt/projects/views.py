@@ -68,7 +68,7 @@ def signin(request):
 		else:
 			errormsg = 'Username or Password is incorrect ! Please try again !'
 	return render_to_response('SignIn.html', 
-							  {'errorMsg': errormsg, 'next': next, 'isUserSigningInOrUp': 'true'}, 
+							  {'errorMsg': errormsg, 'next': next, 'isUserSigningInUpOrOut': 'true'}, 
 							  context_instance=RequestContext(request))
 
 def signup(request):
@@ -80,18 +80,23 @@ def signup(request):
 			return HttpResponseRedirect('/thankYou/')
 	else:
 		form =  registrationForm()
-	return render(request, 'SignUp.html', {'form': form, 'isUserSigningInOrUp': 'true'})
+	return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
 	
 # @login_required	
 def signout(request):
 	logout(request)
-	return render(request, 'SignOut.html')
+	context = {'isUserSigningInUpOrOut': 'true'}
+	return render(request, 'SignOut.html', context)
 
 @login_required(login_url='/signin?next=projects')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
 	context['isProjectOwner'] = request.user.has_perm('projects.own_project')
-	return render(request, 'projects.html', context)
+	# if request.user.is_authenticated():
+	# 	logedInUser = request.user
+	# 	logedInUser.set_unusable_password()
+	# 	context['user'] = logedInUser
+	return render(request, 'DashBoard.html', context)
 	
 	
 @login_required(login_url='/accounts/login/')
