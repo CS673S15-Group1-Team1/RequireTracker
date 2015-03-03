@@ -48,10 +48,36 @@ def EditProject(request):
 	#--Jared
 	 return render(request, 'EditProject.html')
 
+def createUser(request):
+	if userManager.createUser(request) :
+		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
+	else:
+		#TODO refactor to use @user_passes_test
+		return HttpResponse("Failed to create user")
+
+@login_required	
+def logout(request):
+	django.contrib.auth.logout(request)
+	return HttpResponse("Log Out Successful")
+
+@login_required(login_url='/accounts/login/')
+def project(request, proj):
+	if models.canUserAccessProject(request.user.id, proj) :
+		context = {'project' : models.getProject(proj)}
+		return render(request, 'viewProject.html', context)
+	else:
+		return HttpResponse("You cannot access project " + proj)
+
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
 	return render(request, 'projects.html', context)
+
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def newproject(request):
+	form = NewProjectForm()
+	return render(request, 'createProject.html', {'form' : form} )
 
 @login_required(login_url='/accounts/login/')
 @permission_required('projects.own_project')
