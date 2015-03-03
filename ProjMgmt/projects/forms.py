@@ -1,10 +1,20 @@
 from django import forms
+# <<<<<<< HEAD
 #from django.forms import 
 
-class NewProjectForm(forms.Form):
+# class NewProjectForm(forms.Form):
 
-	title = forms.CharField(max_length=128)
-	description = forms.CharField(max_length=1024)
+# 	title = forms.CharField(max_length=128)
+# 	description = forms.CharField(max_length=1024)
+# =======
+import models
+
+class NewProjectForm(forms.ModelForm):
+	
+	class Meta:
+		model = models.Project
+		fields = ['title', 'description']
+# >>>>>>> newfeature-be-editproject
 	
 	
 class registrationForm(forms.Form):

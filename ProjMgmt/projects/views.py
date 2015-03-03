@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import models
@@ -76,15 +76,60 @@ def listProjects(request):
 @login_required(login_url='/accounts/login/')
 @permission_required('projects.own_project')
 def newproject(request):
-	form = NewProjectForm()
-	return render(request, 'createProject.html', {'form' : form} )
+	if request.method == 'POST':
+		form = NewProjectForm(request.POST)
+		if form.is_valid():
+			models.createProject(request.user, request.POST)
+			project = form.save(commit=False)
+		return redirect('/projects')
+	else:
+		form = NewProjectForm()
+		
+	context = {'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
+	return render(request, 'ProjectProperties.html', context )
 
 @login_required(login_url='/accounts/login/')
 @permission_required('projects.own_project')
-def createProject(request):
-	proj = models.createProject(request.user, request.POST)
+def editproject(request, id):
+	project = models.getProject(id)
+	if request.method == 'POST':
+		form = NewProjectForm(request.POST, instance=project)
+		if form.is_valid():
+			project = form.save(commit=False)
+			project.save()
+		return redirect('/projects')
 	
-	return project(request, proj.id)
+	else:
+		form = NewProjectForm(instance=project)
+		
+	context = {'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes' }
+	return render(request, 'ProjectProperties.html', context )
+
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def deleteproject(request, id):
+	project = models.getProject(id)
+	if request.method == 'POST':
+		form = NewProjectForm(request.POST, instance=project)
+		if form.is_valid():
+			project = form.save(commit=False)
+			models.deleteProject(project.id)
+		return redirect('/projects')
+	
+	else:
+		form = NewProjectForm(instance=project)
+		
+	context = {'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
+	return render(request, 'ProjectProperties.html', context )
+
+#===============================================================================
+# @login_required(login_url='/accounts/login/')
+# @permission_required('projects.own_project')
+# def createProject(request):
+# 	proj = models.createProject(request.user, request.POST)
+# 	return redirect('/projects')
+#===============================================================================
+	
 		
 @login_required(login_url='/accounts/login/')
 def addUserToProject(request, projectID, username):
