@@ -12,6 +12,9 @@ urlpatterns = patterns('',
 	url(r'^admin', include(admin.site.urls)),
 	
 	url(r'^projects/(?P<proj>\d+)', views.project),
+	url(r'^addusertoproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', views.addUserToProject),
+	url(r'^removeuserfromproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', views.removeUserFromProject),
+	
 	
 	url(r'^projects', views.listProjects),
 	

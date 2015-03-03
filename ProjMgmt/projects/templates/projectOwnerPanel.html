@@ -1,0 +1,85 @@
+<div id="projectOwnerPanel">
+
+<script>
+
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+$(document).ready(function(){
+	$("#addUserButton").click(function(){
+	
+		username = $("#addUserInput_UserName").val();
+		projectID = $("#projectID").attr("value");
+		token = getCookie('csrftoken');
+		$.ajax({async: false, url: "/addusertoproject/" + projectID + "/" + username,
+		success: userAdded(username), beforeSend: function(xhr, settings) {
+      
+            xhr.setRequestHeader("X-CSRFToken", token);
+        }});
+
+	});
+	
+	
+	
+});
+
+function userAdded(username){
+	$('#ProjectUsersTable').append('<tr><td class="UserTableUserName">' + username + '</td><td><button onclick="removeUser(\'' + username + '\')">Remove</button></td></tr>');
+}
+
+function userRemoved(username){
+	$('.UserTableUserName').each(function(){
+		if($(this).text() == username){
+			$(this).parent().remove();
+		}
+	});
+}
+
+function removeUser(username){
+	projectID = $("#projectID").attr("value");
+	token = getCookie('csrftoken');
+	$.ajax({async: false, url: "/removeuserfromproject/" + projectID + "/" + username,
+	success: userRemoved(username), beforeSend: function(xhr, settings) {
+		xhr.setRequestHeader("X-CSRFToken", token);
+	}});
+
+}
+
+</script>
+
+</br>
+
+Users
+<table style="width:100%" id="ProjectUsersTable">
+	<tr>
+		<th>User</th>
+		<th></th>
+	</tr>
+
+	{% for user in project.users.all %}
+	<tr>
+		<td class="UserTableUserName">{{user.username}}</td>
+		<td><button onclick="removeUser('{{user.username}}')">Remove</button></td>
+	</tr>
+	{% endfor %}
+
+</table>	
+</br>
+Add User
+<br>
+<input type="text" id="addUserInput_UserName"><button id="addUserButton">Add</button>
+</div>
