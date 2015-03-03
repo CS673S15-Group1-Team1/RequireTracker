@@ -4,8 +4,19 @@ from projects import views
 
 urlpatterns = patterns('',
 	
-	url(r'^logout', views.logout),
+# <<<<<<< HEAD
+# <<<<<<< HEAD
+	url(r'^signin', views.signin),
+	url(r'^signout', views.signout),
+	url(r'^signup', views.signup),
+	
+# =======
+# >>>>>>> pr/9
+	
+# =======
+# 	url(r'^logout', views.logout),
 
+# >>>>>>> CS673S15-Group1-Team1/newfeature
 	url(r'^admin', include(admin.site.urls)),
 	url(r'^projects/(?P<proj>\d+)', views.project),
 # <<<<<<< HEAD
@@ -32,7 +43,7 @@ urlpatterns = patterns('',
 		#Default to login screen
 # >>>>>>> newfeature-be-editproject
 	#TODO what if the user is already logged in?
-	url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
+	# url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'SignIn.html'}),
     url(r'^$', views.HomePage),
     url(r'^registration', views.Registration),
     url(r'^members', views.Members),

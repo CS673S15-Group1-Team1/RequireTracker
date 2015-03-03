@@ -30,6 +30,9 @@ class Project(ProjMgmtBase):
 	def __str__(self):
 		return self.title
 		
+	def description_as_list(self):
+		return self.description.split('\n')
+	
 	class Meta:
 		permissions = (
 			("own_project", "Can own and create projects"),
