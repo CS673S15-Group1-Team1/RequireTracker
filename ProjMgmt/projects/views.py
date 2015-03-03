@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 import models
-from django.shortcuts import render
 import django.contrib.auth
 import userManager
 from django.views.decorators.csrf import csrf_exempt
@@ -22,7 +21,6 @@ def Registration(request):
 	if request.method =='POST':
 		form =  registrationForm(request.POST)
 		if form.is_valid():
-			# This is where you do stuff and then go to thank you page
 			userManager.createUser(request)
 			return HttpResponseRedirect('/thankYou/')
 	else:
@@ -35,37 +33,25 @@ def ThankYou(request):
 def NewProject(request):
 	return render(request, 'NewProject.html')
 
+def NewStory(request):
+	return render(request, 'NewStory.html')
+
+def ProjectStories(request):
+	# In this section we need to load the djanog project and its stories to
+	# and send it to the view.  For nw I made a base def so I could test the
+	#links. --Jared
+	return render(request, 'ProjectStories.html')
+
+def EditProject(request):
+	# In this section we need to load the djaong project that is selected
+	# and send it to the edit form
+	#--Jared
+	 return render(request, 'EditProject.html')
+
 @login_required(login_url='/accounts/login/')
 def listProjects(request):
 	context = {'projects' : models.getProjectsForUser(request.user.id)}
-	context['isProjectOwner'] = request.user.has_perm('projects.own_project')
 	return render(request, 'projects.html', context)
-	
-@login_required	
-def logout(request):
-	django.contrib.auth.logout(request)
-	return HttpResponse("Log Out Successful")
-	
-@login_required(login_url='/accounts/login/')
-def project(request, proj):
-	if models.canUserAccessProject(request.user.id, proj) :
-		context = {'project' : models.getProject(proj)}
-		return render(request, 'viewProject.html', context)
-	else:
-		return HttpResponse("You cannot access project " + proj)
-				
-def createUser(request):
-	if userManager.createUser(request) :
-		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
-	else:
-		#TODO refactor to use @user_passes_test
-		return HttpResponse("Failed to create user")
-		
-@login_required(login_url='/accounts/login/')
-@permission_required('projects.own_project')
-def newproject(request):
-	form = NewProjectForm()
-	return render(request, 'createProject.html', {'form' : form} )
 
 @login_required(login_url='/accounts/login/')
 @permission_required('projects.own_project')
