@@ -5,6 +5,7 @@ from projects import views
 urlpatterns = patterns('',
 	
 # <<<<<<< HEAD
+# <<<<<<< HEAD
 	url(r'^signin', views.signin),
 	url(r'^signout', views.signout),
 	url(r'^signup', views.signup),
@@ -12,17 +13,35 @@ urlpatterns = patterns('',
 # =======
 # >>>>>>> pr/9
 	
+# =======
+# 	url(r'^logout', views.logout),
+
+# >>>>>>> CS673S15-Group1-Team1/newfeature
 	url(r'^admin', include(admin.site.urls)),
-	
 	url(r'^projects/(?P<proj>\d+)', views.project),
+# <<<<<<< HEAD
+	url(r'^addusertoproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', views.addUserToProject),
+	url(r'^removeuserfromproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', views.removeUserFromProject),
 	
 	url(r'^projects', views.listProjects),
-	
-	
+
+# =======
+# 	url(r'^projects', views.listProjects),
+# >>>>>>> newfeature-be-editproject
 	url(r'^createuser', views.createUser),
+	
+	#Project Add/Edit/Delete
 	url(r'^newproject', views.newproject),
-	url(r'^createProject', views.createProject),
+# <<<<<<< HEAD
+	# url(r'^createProject', views.createProject),
+
 	#Default to login screen
+# =======
+	url(r'^editproject/(?P<id>\d+)', views.editproject),
+	url(r'^deleteproject/(?P<id>\d+)', views.deleteproject),
+	
+		#Default to login screen
+# >>>>>>> newfeature-be-editproject
 	#TODO what if the user is already logged in?
 	# url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'SignIn.html'}),
     url(r'^$', views.HomePage),
@@ -30,5 +49,7 @@ urlpatterns = patterns('',
     url(r'^members', views.Members),
     url(r'^thankYou', views.ThankYou),
     url(r'^newProject', views.NewProject),
-
+    url(r'^newStory', views.NewStory),
+    url(r'^projectStories', views.ProjectStories),
+    url(r'^editProject', views.EditProject),
 )

@@ -1,4 +1,8 @@
+# <<<<<<< HEAD
 from django.shortcuts import render, render_to_response, redirect
+# =======
+# from django.shortcuts import render, redirect
+# >>>>>>> CS673S15-Group1-Team1/newfeature
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -9,15 +13,21 @@ import userManager
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import permission_required
 from forms import NewProjectForm
+# <<<<<<< HEAD
+# from django import forms
+
+# class registrationForm(forms.Form):
+# 	firstName = forms.CharField(label='First Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+# 	lastName = forms.CharField(label='Last Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+# 	emailAddress=forms.CharField(label='Email Address:', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control'}))
+# 	username=forms.CharField(label='Username:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+# 	password=forms.CharField(label='Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
+# 	confirmPassword=forms.CharField(label='Confirm Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
+# =======
+from forms import registrationForm
 from django import forms
 
-class registrationForm(forms.Form):
-	firstName = forms.CharField(label='First Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-	lastName = forms.CharField(label='Last Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-	emailAddress=forms.CharField(label='Email Address:', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control'}))
-	username=forms.CharField(label='Username:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-	password=forms.CharField(label='Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
-	confirmPassword=forms.CharField(label='Confirm Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
+# >>>>>>> CS673S15-Group1-Team1/newfeature
 
 def HomePage(request):
 	context = {}
@@ -31,7 +41,6 @@ def Registration(request):
 	if request.method =='POST':
 		form =  registrationForm(request.POST)
 		if form.is_valid():
-			# This is where you do stuff and then go to thank you page
 			userManager.createUser(request)
 			return HttpResponseRedirect('/thankYou/')
 	else:
@@ -44,6 +53,7 @@ def ThankYou(request):
 def NewProject(request):
 	return render(request, 'NewProject.html')
 
+# <<<<<<< HEAD
 def signin(request):
 	logout(request)
 	username = password = ''
@@ -99,6 +109,35 @@ def listProjects(request):
 	return render(request, 'DashBoard.html', context)
 	
 	
+# =======
+def NewStory(request):
+	return render(request, 'NewStory.html')
+
+def ProjectStories(request):
+	# In this section we need to load the djanog project and its stories to
+	# and send it to the view.  For nw I made a base def so I could test the
+	#links. --Jared
+	return render(request, 'ProjectStories.html')
+
+def EditProject(request):
+	# In this section we need to load the djaong project that is selected
+	# and send it to the edit form
+	#--Jared
+	 return render(request, 'EditProject.html')
+
+def createUser(request):
+	if userManager.createUser(request) :
+		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
+	else:
+		#TODO refactor to use @user_passes_test
+		return HttpResponse("Failed to create user")
+
+# @login_required	
+# def logout(request):
+# 	django.contrib.auth.logout(request)
+# 	return HttpResponse("Log Out Successful")
+
+# >>>>>>> CS673S15-Group1-Team1/newfeature
 @login_required(login_url='/accounts/login/')
 def project(request, proj):
 	if models.canUserAccessProject(request.user.id, proj) :
@@ -106,24 +145,87 @@ def project(request, proj):
 		return render(request, 'viewProject.html', context)
 	else:
 		return HttpResponse("You cannot access project " + proj)
-				
-def createUser(request):
-	if userManager.createUser(request) :
-		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
-	else:
-		#TODO refactor to use @user_passes_test
-		return HttpResponse("Failed to create user")
-		
-@login_required(login_url='/accounts/login/')
-@permission_required('projects.own_project')
-def newproject(request):
-	form = NewProjectForm()
-	return render(request, 'createProject.html', {'form' : form} )
+
+# @login_required(login_url='/accounts/login/')
+# def listProjects(request):
+# 	context = {'projects' : models.getProjectsForUser(request.user.id)}
+# 	return render(request, 'projects.html', context)
 
 @login_required(login_url='/accounts/login/')
 @permission_required('projects.own_project')
-def createProject(request):
-	proj = models.createProject(request.user, request.POST)
-	
-	return project(request, proj.id)
+def newproject(request):
+	if request.method == 'POST':
+		form = NewProjectForm(request.POST)
+		if form.is_valid():
+			models.createProject(request.user, request.POST)
+			project = form.save(commit=False)
+		return redirect('/projects')
+	else:
+		form = NewProjectForm()
 		
+	context = {'projects' : models.getProjectsForUser(request.user.id),
+			   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+			   'title' : 'New Project',
+			   'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
+	return render(request, 'ProjectSummary.html', context )
+
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def editproject(request, id):
+	project = models.getProject(id)
+	if request.method == 'POST':
+		form = NewProjectForm(request.POST, instance=project)
+		if form.is_valid():
+			project = form.save(commit=False)
+			project.save()
+		return redirect('/projects')
+	
+	else:
+		form = NewProjectForm(instance=project)
+		
+	context = {'projects' : models.getProjectsForUser(request.user.id),
+			   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+			   'title' : 'Edit Project',
+			   'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes'}
+	
+	return render(request, 'ProjectSummary.html', context )
+
+@login_required(login_url='/accounts/login/')
+@permission_required('projects.own_project')
+def deleteproject(request, id):
+	project = models.getProject(id)
+	if request.method == 'POST':
+		# form = NewProjectForm(request.POST, instance=project)
+		# if form.is_valid():
+		# 	project = form.save(commit=False)
+		models.deleteProject(project.id)
+		return redirect('/projects')
+	
+	else:
+		form = NewProjectForm(instance=project)
+		
+	context = {'projects' : models.getProjectsForUser(request.user.id),
+			   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+			   'title' : 'Delete Project',
+			   'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
+			   'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
+	return render(request, 'ProjectSummary.html', context )
+
+#===============================================================================
+# @login_required(login_url='/accounts/login/')
+# @permission_required('projects.own_project')
+# def createProject(request):
+# 	proj = models.createProject(request.user, request.POST)
+# 	return redirect('/projects')
+#===============================================================================
+	
+		
+@login_required(login_url='/accounts/login/')
+def addUserToProject(request, projectID, username):
+	models.addUserToProject(projectID, username)
+	return HttpResponse("User added.")
+	
+def removeUserFromProject(request, projectID, username):
+	models.removeUserFromProject(projectID, username)
+	return HttpResponse("User removed.")	
+	
