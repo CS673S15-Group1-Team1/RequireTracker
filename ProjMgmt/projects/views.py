@@ -12,7 +12,7 @@ import django.contrib.auth
 import userManager
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import permission_required
-from forms import NewProjectForm
+from forms import NewProjectForm, AddUserForm
 # <<<<<<< HEAD
 # from django import forms
 
@@ -141,10 +141,17 @@ def createUser(request):
 @login_required(login_url='/accounts/login/')
 def project(request, proj):
 	if models.canUserAccessProject(request.user.id, proj) :
-		context = {'project' : models.getProject(proj)}
-		return render(request, 'viewProject.html', context)
+		project = models.getProject(proj)
+		activeUsers = models.getActiveUsers()
+		context = {'project' : project,
+				   'users' : project.users.all,
+				   'activeUsers' : activeUsers,
+			   	   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+			   	  }
+		return render(request, 'ProjectDetail.html', context)
 	else:
-		return HttpResponse("You cannot access project " + proj)
+		# return HttpResponse("You cannot access project " + proj)
+		return redirect('/projects')
 
 # @login_required(login_url='/accounts/login/')
 # def listProjects(request):
@@ -222,10 +229,33 @@ def deleteproject(request, id):
 		
 @login_required(login_url='/accounts/login/')
 def addUserToProject(request, projectID, username):
-	models.addUserToProject(projectID, username)
-	return HttpResponse("User added.")
+	project = models.getProject(projectID)
+	if not username == '0':
+		models.addUserToProject(projectID, username)
+		return redirect('/projects/' + projectID)
+	else:
+		activeUsers = models.getActiveUsers()
+		for activeUser in activeUsers:
+			if models.canUserAccessProject(activeUser.id, projectID) == True:
+				del activeUser
+	context = {'project' : project,
+			   'users' : project.users.all,
+			   'activeUsers' : activeUsers,
+		   	   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+		   	   'title' : 'Add User into Project',
+		   	  }
+	return render(request, 'UserSummary.html', context)
 	
 def removeUserFromProject(request, projectID, username):
-	models.removeUserFromProject(projectID, username)
-	return HttpResponse("User removed.")	
+	project = models.getProject(projectID)
+	if not username == '0':
+		models.removeUserFromProject(projectID, username)
+		return redirect('/projects/' + projectID)
+	context = {'project' : project,
+			   'users' : project.users.all,
+			   'isProjectOwner' : request.user.has_perm('projects.own_project'),
+		   	   'title' : 'Remove User from Project',
+		   	   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
+		   	  }		
+	return render(request, 'UserSummary.html', context)
 	

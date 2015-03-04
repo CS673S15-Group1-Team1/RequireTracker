@@ -23,7 +23,9 @@
 	        			<h4>{{ form.title.label_tag }}</h4>
 						<h5>{{ form.title.value }}</h5>
 						<h4>{{ form.description.label_tag }}</h4>
-						<h5>{{ form.description.value }}</h5>
+						<h5>
+							{{ form.description.value }}
+					    </h5>
 	        		{% else %}
 	        			<h4>{{ form.title.label_tag }}</h4>
 	        			<p>{{ form.title }}</p>
@@ -34,7 +36,11 @@
 	        	</div>
         		<div class="modal-footer">
         		  	<a class="btn btn-default" href="/projects">Close</a>
+        		  	{% if confirm_message %}
+					<button type="submit" class="btn btn-danger">{{ desc }}</button>
+        		  	{% else %}
         		  	<button type="submit" class="btn btn-primary">{{ desc }}</button>
+        		  	{% endif %}
         		</div>
 	        </form>
 
