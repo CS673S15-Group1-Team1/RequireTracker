@@ -4,9 +4,12 @@
 <div class="navbar-inverse">
 	<div class="navbar-collapse navbar-ex1-collapse collapse" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav side-nav">
-            <li class="active">
-                <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-            </li>
+            <ul class="nav nav-sidebar">
+                <li class="active">
+                    <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                </li>
+            </ul>
+            <ul class="nav nav-sidebar">
             <li>
                 <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
             </li>
@@ -16,6 +19,7 @@
             <li>
                 <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
             </li>
+            </ul>
             <li>
                 <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
             </li>
@@ -48,4 +52,13 @@
 {% load staticfiles %}
 <link rel="stylesheet" href="{{ STATIC_URL }}sb-admin/css/sb-admin.css" />
 
+<style type="text/css">
+    .navbar-inverse .navbar-nav > ul {
+        margin-bottom: 20px;
+    }
+
+    .navbar-inverse .navbar-nav > ul > li > a {
+        color: #9d9d9d;
+    }
+</style>
 {% endblock content %}

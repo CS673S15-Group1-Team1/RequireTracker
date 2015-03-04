@@ -32,6 +32,7 @@
 							        <h4 class="panel-title">
 							        	<a data-toggle="collapse" data-parent="#accordion" href="#{{ project.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
 								             {{ project.title}}
+								            <!-- <div id="panelbar-{{ project.id }}" class="pull-right"> -->
 							        		<a class="btn btn-link pull-right" href="/deleteproject/{{ project.id }}">
 							        			<i class="fa fa-trash-o fa-fw"></i>
 							        			 Delete
@@ -40,6 +41,11 @@
 							           			<i class="fa fa-edit fa-fw"></i>
 							           			 Edit
 							           		</a>
+							           		<a class="btn btn-link pull-right" href="/projects/{{ project.id }}">
+							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
+							           			 Open
+							           		</a>
+							           		<!-- </div> -->
 								        </a>
 							        </h4>
 					            </div>

@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.models import User
+
 # <<<<<<< HEAD
 #from django.forms import 
 
@@ -35,6 +37,10 @@ class registrationForm(forms.Form):
 	password=forms.CharField(label='Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
 	confirmPassword=forms.CharField(label='Confirm Password:', max_length=100, widget=forms.PasswordInput(attrs={'class':'form-control'}))
 	
+class AddUserForm(forms.Form):
+	users = User.objects.filter(is_active=True).order_by('id')
+	username = forms.ModelChoiceField(queryset=users, empty_label=None)
+
 # class registrationForm(forms.Form):
 # 	firstName = forms.CharField(label='First Name:', max_length=100)
 # 	lastName = forms.CharField(label='Last Name:', max_length=100)

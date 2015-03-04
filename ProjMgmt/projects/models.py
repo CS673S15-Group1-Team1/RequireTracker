@@ -54,6 +54,9 @@ def getProjectsForUser(userID):
 def getProject(projID):
 	return Project.objects.get(id=projID)
 	
+def getProjectUsers(projID):
+	return UserAssociation.objects.filter(project__id=projID, role=ROLE_USER)
+
 def canUserAccessProject(userID, projectID):
 	return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0
 	
@@ -64,7 +67,10 @@ def createProject(user, fields):
 	association = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
 	association.save()
 	return proj
-	
+
+def getActiveUsers():
+	return User.objects.filter(is_active=True)
+		
 def addUserToProject( projectID, username):
 	proj = Project.objects.get(id=projectID)
 	user = User.objects.get(username=username)
