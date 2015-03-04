@@ -3,3 +3,9 @@
 
 *.sqlite3
 
+
+ProjMgmt/db.sqlite3
+
+ProjMgmt/projects/models.pyc
+
+ProjMgmt/projects/views.pyc
