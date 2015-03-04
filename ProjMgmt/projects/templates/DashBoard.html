@@ -12,7 +12,7 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-12">
-				<div class="panel panel-primary" style="min-height: 500px">
+				<div id="panelProjectList" class="panel panel-primary">
 					<div class="panel-heading">
 						<h2 class="panel-title">
 							<i class="fa fa-list fa-fw"></i>
@@ -30,7 +30,7 @@
 					        <div class="panel panel-default">
 					            <div class="panel-heading">
 							        <h4 class="panel-title">
-							        	<a data-toggle="collapse" data-parent="#accordion" href="#{{ project.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
+							        	<a data-toggle="collapse" data-target="#{{ project.id }}" href="#{{ project.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
 								             {{ project.title}}
 								            <!-- <div id="panelbar-{{ project.id }}" class="pull-right"> -->
 							        		<a class="btn btn-link pull-right" href="/deleteproject/{{ project.id }}">
@@ -98,8 +98,6 @@
 
 <script type="text/javascript">
 	var winHeight = $(window).outerHeight();
-	$("#page-wrapper").css('min-height',winHeight);
-	// $(document).ready(function() {
-	// });
+	$("#page-wrapper").css('height',winHeight);
 </script>
 {% endblock content2 %}

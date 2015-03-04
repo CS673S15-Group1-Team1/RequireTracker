@@ -87,10 +87,10 @@ def signup(request):
 		if form.is_valid():
 			# This is where you do stuff and then go to thank you page
 			userManager.createUser(request)
-			return HttpResponseRedirect('/thankYou/')
+			return render(request,'SignUpFinish.html',{'form': form, 'isUserSigningInUpOrOut': 'true'})
 	else:
 		form =  registrationForm()
-	return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
+		return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
 	
 # @login_required	
 def signout(request):
