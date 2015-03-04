@@ -17,7 +17,7 @@
 	        	{% csrf_token %}
 	        	<div class="modal-body">
 	        		{% if confirm_message %}
-						<h2><span class="label label-danger">Warnning :</span></h2>
+						<h2><span class="label label-danger">Warning :</span></h2>
 						<h3>{{ confirm_message }}</h3>
 						<hr>
 	        			<h4>{{ form.title.label_tag }}</h4>
