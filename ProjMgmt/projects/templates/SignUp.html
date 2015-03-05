@@ -1,0 +1,49 @@
+<!DOCTYPE html >
+{% extends "TopBarBase.html" %}
+
+{% block content %}
+<div class="container">
+		<div class="jumbotron">
+			<h1>Welcome !</h1>
+			<p class="lead">Please fill out the following fields and click 'Register' to become one of our big family.</p>
+			<div class="col-sm-10 col-sm-offset-1">
+				<form class="form-horizontal" style="padding-top: 30px;" action="/signup" method="post">
+					{% csrf_token %}
+
+					{% for field in form %}
+					{% if field.errors %}
+					<div class="form-group has-error has-feedback">
+					{% else %}
+					<div class="form-group">
+					{% endif %}
+						<div class="col-sm-3 control-label">
+							{{ field.label_tag }}
+						</div>
+						<div class="col-sm-8">
+							{{ field }}
+							{% if field.errors %}
+							<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+  							<span id="inputError2Status" class="sr-only">(error)</span>
+							{% endif %}
+						</div>
+					</div>
+					{% endfor %}
+
+					<div class="col-sm-12" style="padding-top: 40px;">
+						<div class="col-sm-6">
+							<button type="submit" class="btn btn-block btn-primary btn-lg"> Register</button>
+						</div>
+						<div class="col-sm-6">
+							<a class="btn btn-block btn-default btn-lg" href="/"> Cancel</a>
+						</div>
+					</div>
+
+				</form>
+			</div>			
+		</div>
+</div>
+
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/Jumbotron.css">
+
+{% endblock content %}
