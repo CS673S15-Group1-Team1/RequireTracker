@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 # 	title = forms.CharField(max_length=128)
 # 	description = forms.CharField(max_length=1024)
 # =======
-import models
+from requirements.models.project import Project
 
 class NewProjectForm(forms.ModelForm):
 	
@@ -22,14 +22,14 @@ class NewProjectForm(forms.ModelForm):
 				field.widget.attrs.update({'class':'form-control'})
 
 	class Meta:
-		model = models.Project
+		model = Project
 		fields = ('title', 'description')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 		}
 # >>>>>>> newfeature-be-editproject
 	
-class registrationForm(forms.Form):
+class RegistrationForm(forms.Form):
 	firstName = forms.CharField(label='First Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
 	lastName = forms.CharField(label='Last Name:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
 	emailAddress=forms.CharField(label='Email Address:', max_length=100, widget=forms.EmailInput(attrs={'class':'form-control'}))
