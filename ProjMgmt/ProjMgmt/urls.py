@@ -2,6 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from requirements.views import users
 from requirements.views import projects 
+from requirements.views import user_stories
 from requirements.views import home
 
 urlpatterns = patterns('',
@@ -33,14 +34,19 @@ urlpatterns = patterns('',
     url(r'^createuser', users.create_user),
     
     #Project Add/Edit/Delete
-    url(r'^newproject', projects.new_project),
+    
 # <<<<<<< HEAD
     # url(r'^createProject', views.createProject),
 
     #Default to login screen
 # =======
+    url(r'^newproject', projects.new_project),
     url(r'^editproject/(?P<id>\d+)', projects.edit_project),
     url(r'^deleteproject/(?P<id>\d+)', projects.delete_project),
+    
+    url(r'^newstory/(?P<projectID>\d+)', user_stories.new_user_story),
+    url(r'^editstory/(?P<projectID>\d+)/(?P<storyID>\d+)', user_stories.edit_user_story),
+    url(r'^deletestory/(?P<projectID>\d+)/(?P<storyID>\d+)', user_stories.delete_user_story),
     
         #Default to login screen
 # >>>>>>> newfeature-be-editproject
