@@ -1,6 +1,7 @@
 from django import forms
 from requirements.models import project_api
 from requirements.models import user_manager
+from requirements.models import user_story_api
 from django.http import HttpResponse, HttpResponseRedirect
 from forms import RegistrationForm
 from forms import NewProjectForm
@@ -40,10 +41,11 @@ def project(request, proj):
         project = project_api.get_project(proj)
         activeUsers = user_manager.getActiveUsers()
         context = {'project' : project,
+                   'stories' : user_story_api.get_project_user_stories(project.id),
                    'users' : project.users.all,
                    'activeUsers' : activeUsers,
-                      'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                     }
+                   'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+                   }
         return render(request, 'ProjectDetail.html', context)
     else:
         # return HttpResponse("You cannot access project " + proj)
