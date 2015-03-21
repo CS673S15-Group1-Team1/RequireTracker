@@ -165,7 +165,7 @@ def remove_user_from_project(request, projectID, username):
 @permission_required(PERMISSION_OWN_PROJECT)    
 def show_new_iteration(request,projectID):
     form = AddIterationForm()
-    context = {'projectID' : projectID, 'form' : form}
+    context = {'projectID' : projectID, 'form' : form, 'title' : 'Create a new Iteration'}
     return render(request, 'NewIterationForm.html',context)
     
 @login_required(login_url='/accounts/login/')

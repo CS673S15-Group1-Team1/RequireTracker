@@ -3,7 +3,9 @@
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
 	        <div class="modal-header">
-	        	<a class="btn close" aria-label="Close" href="/projects"><span aria-hidden="true">x</span></a>
+	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeNewIterationBox();">
+	        		<span aria-hidden="true">x</span>
+	        	</a>
 	        	<h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
 	        </div>
 	        <form class="form-horizontal" action="/newiteration/{{ projectID}}" method="post">
