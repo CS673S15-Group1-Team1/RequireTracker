@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms.extras.widgets import SelectDateWidget
 
 # <<<<<<< HEAD
 #from django.forms import 
@@ -67,3 +68,9 @@ class AddUserForm(forms.Form):
 # 	username=forms.CharField(label='Username:', max_length=100)
 # 	password=forms.CharField(label='password:', max_length=100, widget=forms.PasswordInput())
 # 	confirmPassword=forms.CharField(label='Confirm password:', max_length=100)
+
+class AddIterationForm(forms.Form):
+    title = forms.CharField(label='Title:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+    description = forms.CharField(label='Description:', max_length=100, widget=forms.Textarea(attrs={'class':'form-control'}))
+    start_date = forms.DateField(label='Start Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))
+    end_date = forms.DateField(label='End Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))

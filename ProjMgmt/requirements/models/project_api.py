@@ -1,6 +1,7 @@
 from user_association import UserAssociation
 from project import Project
 from django.contrib.auth.models import User
+from iteration import Iteration
 
 ROLE_USER = "user"
 ROLE_OWNER = "owner"
@@ -48,3 +49,10 @@ def delete_project(projectID):
     association = UserAssociation.objects.filter(project=project)
     association.delete()
     project.delete()    
+def add_iteration_to_project(title, description, start_date, end_date, projectID):
+    project = Project.objects.get(id=projectID)
+    
+    iteration = Iteration(title=title, description=description, start_date=start_date, end_date=end_date)
+    iteration.save()
+    
+    project.iterations.add(iteration)
