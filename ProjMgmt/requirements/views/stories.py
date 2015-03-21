@@ -1,9 +1,9 @@
 from django import forms
+from requirements import models
 from requirements.models.project import Project
-from requirements.models.user_story import UserStory
+from requirements.models.story import Story
 from requirements.models import project_api
-from requirements.models import user_story_api
-from forms import UserStoryForm
+from forms import StoryForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
@@ -14,16 +14,16 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
     
 @login_required(login_url='/accounts/login/')
 #TODO we need some kind of permission here - aat
-def new_user_story(request, projectID):
+def new_story(request, projectID):
     if request.method == 'POST':
-        form = UserStoryForm(request.POST)
+        form = StoryForm(request.POST)
         if form.is_valid():
             project = project_api.get_project(projectID)
-            user_story_api.create_user_story(request.user, project, request.POST)
+            story = models.story.create_story(request.user, project, request.POST)
             story = form.save(commit=False)
         return redirect('/projects/' + projectID)
     else:
-        form = UserStoryForm()
+        form = StoryForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -32,22 +32,22 @@ def new_user_story(request, projectID):
                'form' : form, 
                'action' : '/newstory/' + projectID , 
                'desc' : 'Create User Story' }
-    return render(request, 'UserStorySummary.html', context )
+    return render(request, 'StorySummary.html', context )
 
 @login_required(login_url='/accounts/login/')
 #TODO we need some kind of permission here - aat
-def edit_user_story(request, projectID, storyID):
+def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
-    story = user_story_api.get_user_story(storyID)
+    story = models.story.get_story(storyID)
     if request.method == 'POST':
-        form = UserStoryForm(request.POST, instance=story)
+        form = StoryForm(request.POST, instance=story)
         if form.is_valid():
             story = form.save(commit=False)
             story.save()
         return redirect('/projects/' + projectID)
      
     else:
-        form = UserStoryForm(instance=story)
+        form = StoryForm(instance=story)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -57,19 +57,19 @@ def edit_user_story(request, projectID, storyID):
                'action' : '/editstory/' + projectID + '/' + storyID, 
                'desc' : 'Save Changes'}
     
-    return render(request, 'UserStorySummary.html', context )
+    return render(request, 'StorySummary.html', context )
 
 @login_required(login_url='/accounts/login/')
 #TODO we need some kind of permission here - aat
-def delete_user_story(request, projectID, storyID):
+def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
-    story = user_story_api.get_user_story(storyID)
+    story = models.story.get_story(storyID)
     if request.method == 'POST':
-        user_story_api.delete_user_story(storyID)
+        models.story.delete_story(storyID)
         return redirect('/projects/' + projectID)
      
     else:
-        form = UserStoryForm(instance=story)
+        form = StoryForm(instance=story)
 
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -80,4 +80,4 @@ def delete_user_story(request, projectID, storyID):
                'action' : '/deletestory/' + projectID + '/' + storyID, 
                'desc' : 'Delete User Story' }
     
-    return render(request, 'UserStorySummary.html', context )
+    return render(request, 'StorySummary.html', context )

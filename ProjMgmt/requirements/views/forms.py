@@ -10,7 +10,7 @@ from django.contrib.auth.models import User
 # 	description = forms.CharField(max_length=1024)
 # =======
 from requirements.models.project import Project
-from requirements.models.user_story import UserStory
+from requirements.models.story import Story
 
 
 class NewProjectForm(forms.ModelForm):
@@ -30,9 +30,9 @@ class NewProjectForm(forms.ModelForm):
 			'description': forms.Textarea(attrs={'rows': 5}),
 		}
 		
-class UserStoryForm(forms.ModelForm):
+class StoryForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
-		super(UserStoryForm, self).__init__(*args, **kwargs)
+		super(StoryForm, self).__init__(*args, **kwargs)
 		for name, field in self.fields.items():
 			if field.widget.attrs.has_key('class'):
 				field.widget.attrs['class'] += ' form-control'
@@ -40,7 +40,7 @@ class UserStoryForm(forms.ModelForm):
 				field.widget.attrs.update({'class':'form-control'})
 
 	class Meta:
-		model = UserStory
+		model = Story
 		fields = ('title', 'description')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
