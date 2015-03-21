@@ -11,7 +11,7 @@ class Story(ProjMgmtBase):
         return self.title
         
     class Meta:
-        pass  
+        app_label = 'requirements'
     
 def get_project_stories(projID):
     return Story.objects.filter(project_id=projID)
