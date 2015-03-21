@@ -5,11 +5,13 @@ from requirements.models import user_manager
 from requirements.models import story
 from django.http import HttpResponse, HttpResponseRedirect
 from forms import RegistrationForm
+from forms import AddIterationForm
 from forms import NewProjectForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.shortcuts import render, redirect
+import datetime
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
@@ -44,6 +46,7 @@ def project(request, proj):
         context = {'project' : project,
                    'stories' : story.get_project_stories(project.id),
                    'users' : project.users.all,
+                   'iterations' : project.iterations.all(),
                    'activeUsers' : activeUsers,
                    'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                    }
@@ -157,4 +160,20 @@ def remove_user_from_project(request, projectID, username):
                   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
                  }        
     return render(request, 'UserSummary.html', context)
+
+@login_required(login_url='/accounts/login/')
+@permission_required(PERMISSION_OWN_PROJECT)    
+def show_new_iteration(request,projectID):
+    form = AddIterationForm()
+    context = {'projectID' : projectID, 'form' : form}
+    return render(request, 'NewIterationForm.html',context)
     
+@login_required(login_url='/accounts/login/')
+@permission_required(PERMISSION_OWN_PROJECT)    
+def add_iteration_to_project(request,projectID):
+    fields = request.POST
+    project_api.add_iteration_to_project(fields['title'], fields['description'],
+    datetime.date(int(fields['start_date_year']),int(fields['start_date_month']),int(fields['start_date_day'])),
+    datetime.date(int(fields['end_date_year']), int(fields['end_date_month']), int(fields['end_date_day']) ), projectID)
+    
+    return redirect('/projects/' + projectID)    

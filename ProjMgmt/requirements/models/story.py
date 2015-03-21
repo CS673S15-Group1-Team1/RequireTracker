@@ -2,11 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from base import ProjMgmtBase
 from project import Project
-
+from iteration import Iteration
 
 class Story(ProjMgmtBase):
     project = models.ForeignKey('Project')    
-        
+    iteration = models.ForeignKey('Iteration',blank=True,null=True)
+    
     def __str__(self):
         return self.title
         
