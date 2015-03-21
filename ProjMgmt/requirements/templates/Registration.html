@@ -1,0 +1,53 @@
+{% load staticfiles %}
+<link href="{{ STATIC_URL }}default.css" rel="stylesheet" type="text/css"/>
+<title>Project Tracker</title>
+
+<form action="/registration/" method="post">
+	{% csrf_token %}
+	<body>
+	<div class="main">
+		<div class="gfx">
+			<h1>Project Tracker</h1>
+		</div>
+		</br>
+		<div class="Name">
+			<label for ="{{ form.firstName.id_for_label }}"> First Name:
+			</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			{{form.firstName}}
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<label for ="{{ form.lastName.id_for_label }}"> Last Name:
+			</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{{form.lastName}}
+		</div>
+		</br>
+		<div class="Email_and_username">
+			<label for ="{{ form.emailAddress.id_for_label }}"> Email Address:
+			</label>
+			{{form.emailAddress}}
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<label for ="{{ form.username.id_for_label }}"> Username:
+			</label>
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			{{form.username}}
+		</div>
+		</br>
+		<div class="Password">
+		<label for ="{{ form.password.id_for_label }}"> Password:
+		</label>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		{{form.password}}
+		&nbsp;&nbsp;&nbsp;&nbsp;
+		<label for ="{{ form.confirmPassword.id_for_label }}"> Confirm Password:
+		</label>
+		{{form.confirmPassword}}
+	</div>
+	</br>
+	</br>
+	<input type = "submit" value="Submit" style= "position: relative; left: 250px"/>
+
+</form>
+
+
+

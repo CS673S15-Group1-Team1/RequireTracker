@@ -1,17 +1,63 @@
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
-from projects import views
+from requirements.views import users
+from requirements.views import projects 
+from requirements.views import stories
+from requirements.views import home
 
 urlpatterns = patterns('',
-	
-	url(r'^logout', views.logout),
-	
-	url(r'^admin', include(admin.site.urls)),
-	
-	url(r'^projects', views.listProjects),
-	
-	#Default to login screen
-	#TODO what if the user is already logged in?
-	url(r'^', 'django.contrib.auth.views.login', {'template_name': 'login.html'}),
     
+# <<<<<<< HEAD
+# <<<<<<< HEAD
+    url(r'^signin', users.signin),
+    url(r'^signout', users.signout),
+    url(r'^signup', users.signup),
+    
+# =======
+# >>>>>>> pr/9
+    
+# =======
+#     url(r'^logout', views.logout),
+
+# >>>>>>> CS673S15-Group1-Team1/newfeature
+    url(r'^admin', include(admin.site.urls)),
+    url(r'^projects/(?P<proj>\d+)', projects.project),
+# <<<<<<< HEAD
+    url(r'^addusertoproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', projects.add_user_to_project),
+    url(r'^removeuserfromproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', projects.remove_user_from_project),
+    
+    url(r'^projects', projects.list_projects),
+
+# =======
+#     url(r'^projects', views.listProjects),
+# >>>>>>> newfeature-be-editproject
+    url(r'^createuser', users.create_user),
+    
+    #Project Add/Edit/Delete
+    
+# <<<<<<< HEAD
+    # url(r'^createProject', views.createProject),
+
+    #Default to login screen
+# =======
+    url(r'^newproject', projects.new_project),
+    url(r'^editproject/(?P<id>\d+)', projects.edit_project),
+    url(r'^deleteproject/(?P<id>\d+)', projects.delete_project),
+    
+    url(r'^newstory/(?P<projectID>\d+)', stories.new_story),
+    url(r'^editstory/(?P<projectID>\d+)/(?P<storyID>\d+)', stories.edit_story),
+    url(r'^deletestory/(?P<projectID>\d+)/(?P<storyID>\d+)', stories.delete_story),
+    
+        #Default to login screen
+# >>>>>>> newfeature-be-editproject
+    #TODO what if the user is already logged in?
+    # url(r'^login', 'django.contrib.auth.views.login', {'template_name': 'SignIn.html'}),
+    url(r'^$', home.home_page),
+    url(r'^registration', users.registration),
+    url(r'^members', users.members),
+    url(r'^thankYou', users.thank_you),
+    url(r'^newproject', projects.new_project),
+    url(r'^newStory', projects.new_story),
+    url(r'^projectStories', projects.project_stories),
+    url(r'^editproject', projects.edit_project),
 )

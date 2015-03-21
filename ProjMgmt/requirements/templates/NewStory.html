@@ -1,0 +1,45 @@
+{% extends "LoggedInBase.html" %}
+{% block content %}
+{% load staticfiles %}
+<link href="{{ STATIC_URL }}style.css" rel="stylesheet" type="text/css"/>
+
+<body>
+<div id="container">
+	<div id="header" >
+		<h1 style="position: relative; left: 38%;">
+			New Story
+		</h1>
+	</div>
+	<div id="linkbar">
+		<h2 style="position: relative; left: 39%">
+			Story Name:
+		</h2>
+		<input id="projectName" style="position: relative; left: 41%">
+	</div>
+	</br>
+	</br>
+	<div id="description" style="position: relative; left: 41%"> 
+		<h3>
+			Description of Story:
+		</h3>
+	</div>
+	<textarea id="userDescription" style="resize: none; position: relative; left: 31%; Width: 35%; Height: 150px;">Write a basic description of your Story here.
+	</textarea>
+	</br>
+	<button id="createButton" onclick="create();" style="position: relative; left: 31%; height: 40px; ">Create Story</button>
+
+
+	<button id="Cancel" onclick="self.close()" style="position: relative; left: 44%; height: 40px; ">Cancel</button>
+
+
+	<!-- Add the create opitons in the create function below to add the project to the list-->
+
+<SCRIPT TYPE="text/javascript">
+
+	function create()
+	{
+
+	}
+	
+</SCRIPT>
+{% endblock content %}

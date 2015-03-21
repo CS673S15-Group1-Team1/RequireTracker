@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+{% extends "ProjectDetail.html" %}
+{% block usersummary %}
+<div id="userModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true" style="display: none;">
+	{% if confirm_message %}
+    <div class="modal-dialog modal-lg">
+    {% else %}
+    <div class="modal-dialog">
+    {% endif %}
+      	<div class="modal-content">
+	        <div class="modal-header">
+	        	<a class="btn close" aria-label="Close" href="/projects/{{ project.id }}"><span aria-hidden="true">×</span></a>
+	        	<h4 class="modal-title" id="userModalLabel">{{ title }}</h4>
+	        </div>
+	        <div class="modal-body">
+	        	{% if confirm_message %}
+					<h2><span class="label label-danger">Warning :</span></h2>
+					<h3>{{ confirm_message }}</h3>
+					<hr>
+	        	{% endif %}
+				<ul class="list-group">
+					{% if confirm_message %}
+					{% for auser in users %}
+					<li class="list-group-item">
+                        <i class="glyphicon glyphicon-user fa-fw"></i> {{ auser.username }}
+                        <span>
+                        	<a class="btn btn-link pull-right" href="/removeuserfromproject/{{ project.id }}/{{ auser.username }}">
+						   		<i class="fa fa-trash-o fa-fw"></i>
+							    Delete
+						   	</a>
+						</span>
+                    </li>
+                    {% endfor %}
+					{% else %}
+					{% for activeUser in activeUsers %}
+					<li class="list-group-item">
+                        <i class="glyphicon glyphicon-user fa-fw"></i> {{ activeUser.username }}
+                        <span>
+                        	<a class="btn btn-link pull-right" href="/addusertoproject/{{ project.id }}/{{ activeUser.username }}">
+						   		<i class="glyphicon glyphicon-plus fa-fw"></i>
+							    Add
+						   	</a>
+						</span>
+                    </li>
+                    {% endfor %}
+                    {% endif %}
+                    
+<!--                         <a href="#" class="list-group-item">
+                            <i class="fa fa-money fa-fw"></i> Payment Received
+                            <span class="pull-right text-muted small"><em>Yesterday</em>
+                            </span>
+                        </a> -->
+                </ul>
+            </div>
+        	<div class="modal-footer">
+        	  	<a class="btn btn-default" href="/projects/{{ project.id }}">Close</a>
+        	  	{% comment "No Use" %}
+        	  	{% if confirm_message %}
+				<button type="submit" class="btn btn-danger">{{ desc }}</button>
+        	  	{% else %}
+        	  	<button type="submit" class="btn btn-primary">{{ desc }}</button>
+        	  	{% endif %}
+        	  	{% endcomment %}
+        	</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript">
+	$("#userModal").modal({
+		backdrop: false,
+		show: true
+	})
+</script>
+{% endblock usersummary %}

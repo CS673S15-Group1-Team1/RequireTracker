@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+{% extends "ProjectDetail.html" %}
+{% block storysummary %}
+
+<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+    {% if confirm_message %}
+    <div class="modal-dialog modal-lg">
+    {% else %}
+    <div class="modal-dialog">
+    {% endif %}
+        <div class="modal-content">
+            <div class="modal-header">
+                <a class="btn close" aria-label="Close" href="/projects/{{ project.id }}"><span aria-hidden="true">×</span></a>
+                <h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+            </div>
+            <form class="form-horizontal" action="{{ action }}" method="post">
+                {% csrf_token %}
+                <div class="modal-body">
+                    {% if confirm_message %}
+                        <h2><span class="label label-danger">Warning :</span></h2>
+                        <h3>{{ confirm_message }}</h3>
+                        <hr>
+                        <h4>{{ form.title.label_tag }}</h4>
+                        <h5>{{ form.title.value }}</h5>
+                        <h4>{{ form.description.label_tag }}</h4>
+                        <h5>
+                            {{ form.description.value }}
+                        </h5>
+                    {% else %}
+                        <h4>{{ form.title.label_tag }}</h4>
+                        <p>{{ form.title }}</p>
+                        <hr>
+                        <h4>{{ form.description.label_tag }}</h4>
+                        <p>{{ form.description }}</p>
+                    {% endif %}
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-default" href="/projects/{{ project.id }}">Close</a>
+                    {% if confirm_message %}
+                    <button type="submit" class="btn btn-danger">{{ desc }}</button>
+                    {% else %}
+                    <button type="submit" class="btn btn-primary">{{ desc }}</button>
+                    {% endif %}
+                </div>
+            </form>
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
+
+<script type="text/javascript">
+    $("#myModal").modal({
+        backdrop: false,
+        show: true
+    })
+</script>
+{% endblock storysummary %}

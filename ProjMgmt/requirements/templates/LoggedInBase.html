@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+	{% load staticfiles %}
+	<link rel="stylesheet" href="{{ STATIC_URL }}projects/basestyle.css"/>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<head>
+	<title>Project Management System</title>
+</head>
+
+<body>
+	<div id = "topbar">
+		<ul >
+			<li>
+				<a id="logout_link" href="signout">log out</a>
+			</li>
+		</ul>
+	</div>
+	
+	</br>
+	
+	<div id="content">
+		{% block content %}{% endblock %}
+	</div>
+</body>
+
+</html>
