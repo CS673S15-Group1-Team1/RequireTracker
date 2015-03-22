@@ -42,9 +42,10 @@ class StoryForm(forms.ModelForm):
 
 	class Meta:
 		model = Story
-		fields = ('title', 'description')
+		fields = ('title', 'description', 'test')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
+			'test': forms.Textarea(attrs={'rows': 5}),
 		}
 		
 # >>>>>>> newfeature-be-editproject
