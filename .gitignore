@@ -3,30 +3,4 @@
 
 *.sqlite3
 
-ProjMgmt/db.sqlite3
-
-ProjMgmt/projects/models.pyc
-
-ProjMgmt/projects/views.pyc
-
-ProjMgmt/projects/__init__.pyc
-
-ProjMgmt/projects/admin.pyc
-
-ProjMgmt/projects/migrations/__init__.pyc
-
-ProjMgmt/projects/migrations/0001_initial.pyc
-
-ProjMgmt/projects/migrations/0002_project_owner.pyc
-
-ProjMgmt/projects/migrations/0003_userassociation.pyc
-
-ProjMgmt/projects/migrations/0004_auto_20150217_2256.pyc
-
-ProjMgmt/ProjMgmt/__init__.pyc
-
-ProjMgmt/ProjMgmt/settings.pyc
-
-ProjMgmt/ProjMgmt/urls.pyc
-
-ProjMgmt/ProjMgmt/wsgi.pyc
+ProjMgmt/requirements/migrations

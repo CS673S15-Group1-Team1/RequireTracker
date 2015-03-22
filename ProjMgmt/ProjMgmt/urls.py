@@ -48,6 +48,8 @@ urlpatterns = patterns('',
     url(r'^editstory/(?P<projectID>\d+)/(?P<storyID>\d+)', stories.edit_story),
     url(r'^deletestory/(?P<projectID>\d+)/(?P<storyID>\d+)', stories.delete_story),
     
+    url(r'^shownewiteration/(?P<projectID>\d+)',projects.show_new_iteration),
+    url(r'^newiteration/(?P<projectID>\d+)',projects.add_iteration_to_project),
         #Default to login screen
 # >>>>>>> newfeature-be-editproject
     #TODO what if the user is already logged in?
