@@ -8,3 +8,6 @@ How to setup the server
 	py manage.py migrate
 3. Create a super user
 	py manage.py createsuperuser
+4. If you modify the model files. Please do the following command before step 2.
+	py manage.py makemigrations
+	
