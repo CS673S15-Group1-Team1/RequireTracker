@@ -2,12 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 from base import ProjMgmtBase
 from project import Project
-from iteration import Iteration
+
 
 class Story(ProjMgmtBase):
-    project = models.ForeignKey('Project')    
-    iteration = models.ForeignKey('Iteration',blank=True,null=True)
-    
+    project = models.ForeignKey('Project')   
+    test= models.CharField(default=b'', max_length=1024, blank=True)
+        
     def __str__(self):
         return self.title
         
@@ -22,8 +22,10 @@ def get_story(storyID):
     
 def create_story(user, proj, fields):
     story = Story(project=proj,
+                  test=fields['test'],
                   title=fields['title'], 
-                  description=fields['description'])
+                  description=fields['description'],
+                  )
     story.save()
     return story
 
