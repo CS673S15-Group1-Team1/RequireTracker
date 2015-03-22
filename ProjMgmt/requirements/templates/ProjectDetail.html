@@ -1,6 +1,28 @@
 <!DOCTYPE html>
 {% extends "SideBarBase.html" %}
 {% block content2 %}
+<script>
+
+function showNewIterationBox(){
+    $.ajax({
+         url:    '/shownewiteration/{{project.id}}',
+         success: function(result) {
+                          $("#iterModal").html(result);
+                          $("#iterModal").modal({
+                                backdrop: false,
+                                show: true
+                            })
+                  },
+         async:   false
+    }); 
+
+}
+
+function closeNewIterationBox(){
+    $("#iterModal").modal('hide');
+}
+
+</script>
 <div id="wrapper">
 	<div id="page-wrapper">
 		<div class="row">
@@ -97,8 +119,46 @@
 					        </div>-->
 						</div>
 					</div>
+                </div>    
+                
+                <!-- iterations panel -->
+                <div class="panel panel-primary" style="min-height: 500px">
+					<div class="panel-heading">
+						<h2 class="panel-title">
+							<i class="fa fa-list fa-fw"></i>
+							Iterations
+							<a class="btn btn-link pull-right" href="javascript:void(0)" onclick="showNewIterationBox();">
+								<i class="glyphicon glyphicon-plus"></i>
+							</a>
+						</h2>
+					</div>
+                   
+                    <span id="iterModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                    </span>
+
+					<div class="panel-body">
+					    <div class="panel-group" id="accordion">
+						
+							{% for iteration in iterations %}
+                            
+					        <div class="panel panel-default">
+					            <div class="panel-heading">
+					                <h4 class="panel-title">
+					                    <a data-toggle="collapse" 
+					                       data-parent="#accordion" 
+					                       href="#collapseOne" 
+					                       aria-expanded="true" 
+					                       class="">{{ iteration.title }} {{iteration.start_date}} - {{iteration.end_date}}</a> 
+					                </h4>
+					            </div>
+					                                                
+					        </div>
+					        {% endfor %}
+						</div>
+					</div>
+                    
 				</div>
-			</div>
+            </div>
 			<div class="col-lg-4 col-md-6">
 				<div class="panel panel-primary" style="min-height: 500px">
 					<div class="panel-heading">
