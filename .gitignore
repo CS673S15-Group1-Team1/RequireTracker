@@ -3,4 +3,4 @@
 
 *.sqlite3
 
-ProjMgmt/requirements/migrations
+ProjMgmt/requirements/migrations/
