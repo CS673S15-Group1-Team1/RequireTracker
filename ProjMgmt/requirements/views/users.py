@@ -2,7 +2,7 @@ from django import forms
 import requirements.models.user_manager
 from requirements.models import user_manager
 from django.http import HttpResponse, HttpResponseRedirect
-from forms import RegistrationForm
+from forms import RegistrationForm, SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
@@ -61,14 +61,13 @@ def signin(request):
 
 def signup(request):
     if request.method =='POST':
-        form =  RegistrationForm(request.POST)
+        form =  SignUpForm(request.POST)
         if form.is_valid():
-            # This is where you do stuff and then go to thank you page
-            user_manager.createUser(request)
+            form.save(commit=True)
             return render(request,'SignUpFinish.html',{'form': form, 'isUserSigningInUpOrOut': 'true'})
     else:
-        form =  RegistrationForm()
-        return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
+        form =  SignUpForm()
+    return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
     
 @login_required    
 def signout(request):
