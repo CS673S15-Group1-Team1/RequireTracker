@@ -2,7 +2,7 @@ from django import forms
 import requirements.models.user_manager
 from requirements.models import user_manager
 from django.http import HttpResponse, HttpResponseRedirect
-from forms import RegistrationForm, SignUpForm
+from forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext

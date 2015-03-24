@@ -4,7 +4,6 @@ from requirements.models import project_api
 from requirements.models import user_manager
 from requirements.models import story
 from django.http import HttpResponse, HttpResponseRedirect
-from forms import RegistrationForm
 from forms import AddIterationForm
 from forms import NewProjectForm
 from django.contrib.auth.decorators import login_required, permission_required
