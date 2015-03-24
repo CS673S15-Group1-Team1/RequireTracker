@@ -5,6 +5,8 @@ import models.project_api
 from models.user_association import UserAssociation
 from django.contrib.auth.models import User
 import models.user_manager
+from models.iteration import Iteration
+import datetime
 
 class Obj(): pass
     
@@ -76,3 +78,24 @@ class ProjectTestCase(TestCase):
         u = User.objects.all()[1]
         self.assertEqual('user', u.username)
         self.assertEqual(False, u.is_active)
+        
+    def test_project_no_iterations(self):
+        p = Project(title="title", description="desc")
+        p.save()
+        iterations = p.iterations
+        self.assertEqual(False, iterations.exists())
+        
+    def test_add_iteration_to_project(self):
+        p = Project(title="title", description="desc")
+        p.save()
+        title = "title"
+        description = "description"
+        start_date = datetime.date.today()
+        end_date = datetime.date.max
+        models.project_api.add_iteration_to_project(title, description, start_date, end_date, p.id)
+        
+        iteration = p.iterations.all()[0]
+        self.assertEqual(start_date, iteration.start_date)
+        self.assertEqual(end_date, iteration.end_date)
+        self.assertEqual(title, iteration.title)
+        self.assertEqual(description, iteration.description)        
