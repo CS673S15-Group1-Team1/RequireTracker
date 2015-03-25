@@ -17,7 +17,7 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 def newProject(request):
     return render(request, 'NewProject.html')
 
-@login_required(login_url='/signin?next=projects')
+@login_required(login_url='/signin')
 def list_projects(request):
     context = {'projects' : project_api.get_projects_for_user(request.user.id)}
     context['isProjectOwner'] = request.user.has_perm(PERMISSION_OWN_PROJECT)
@@ -37,7 +37,7 @@ def project_stories(request):
     #links. --Jared
     return render(request, 'ProjectStories.html')
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 def project(request, proj):
     if project_api.can_user_access_project(request.user.id, proj) :
         project = project_api.get_project(proj)
@@ -59,7 +59,7 @@ def project(request, proj):
 #     context = {'projects' : models.getProjectsForUser(request.user.id)}
 #     return render(request, 'projects.html', context)
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)
 def new_project(request):
     if request.method == 'POST':
@@ -77,7 +77,7 @@ def new_project(request):
                'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
     return render(request, 'ProjectSummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)
 def edit_project(request, id):
     project = project_api.get_project(id)
@@ -98,7 +98,7 @@ def edit_project(request, id):
     
     return render(request, 'ProjectSummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)
 def delete_project(request, id):
     project = project_api.get_project(id)
@@ -128,7 +128,7 @@ def delete_project(request, id):
 #===============================================================================
     
         
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 def add_user_to_project(request, projectID, username):
     project = project_api.get_project(projectID)
     if not username == '0':
@@ -146,7 +146,8 @@ def add_user_to_project(request, projectID, username):
                   'title' : 'Add User into Project',
                  }
     return render(request, 'UserSummary.html', context)
-    
+
+@login_required(login_url='/signin')    
 def remove_user_from_project(request, projectID, username):
     project = project_api.get_project(projectID)
     if not username == '0':
@@ -160,14 +161,14 @@ def remove_user_from_project(request, projectID, username):
                  }        
     return render(request, 'UserSummary.html', context)
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)    
 def show_new_iteration(request,projectID):
     form = AddIterationForm()
     context = {'projectID' : projectID, 'form' : form, 'title' : 'Create a new Iteration'}
     return render(request, 'NewIterationForm.html',context)
     
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)    
 def add_iteration_to_project(request,projectID):
     fields = request.POST

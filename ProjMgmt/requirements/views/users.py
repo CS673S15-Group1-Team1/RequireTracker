@@ -8,29 +8,29 @@ from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response, redirect
 
-def create_user(request):
-	if userManager.createUser(request) :
-		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
-	else:
-		#TODO refactor to use @user_passes_test
-		return HttpResponse("Failed to create user")
+# def create_user(request):
+# 	if userManager.createUser(request) :
+# 		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
+# 	else:
+# 		#TODO refactor to use @user_passes_test
+# 		return HttpResponse("Failed to create user")
 
 
-def members(request):
-    return render(request, 'Members.html')
+# def members(request):
+#     return render(request, 'Members.html')
 
-def registration(request):
-    if request.method =='POST':
-        form =  RegistrationForm(request.POST)
-        if form.is_valid():
-            user_manager.createUser(request)
-            return HttpResponseRedirect('/thankYou/')
-    else:
-        form =  RegistrationForm()
-    return render(request, 'registration.html', {'form': form})
+# def registration(request):
+#     if request.method =='POST':
+#         form =  RegistrationForm(request.POST)
+#         if form.is_valid():
+#             user_manager.createUser(request)
+#             return HttpResponseRedirect('/thankYou/')
+#     else:
+#         form =  RegistrationForm()
+#     return render(request, 'registration.html', {'form': form})
 
-def thank_you(request):
-    return render(request, 'ThankYou.html')
+# def thank_you(request):
+#     return render(request, 'ThankYou.html')
 
 def signin(request):
     logout(request)

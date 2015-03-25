@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
     
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def new_story(request, projectID):
     if request.method == 'POST':
@@ -34,7 +34,7 @@ def new_story(request, projectID):
                'desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
@@ -59,7 +59,7 @@ def edit_story(request, projectID, storyID):
     
     return render(request, 'StorySummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
