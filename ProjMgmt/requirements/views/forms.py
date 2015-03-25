@@ -14,6 +14,13 @@ from requirements.models.project import Project
 from requirements.models.story import Story
 
 
+status_choices= ( 
+  	(1, "Unstarted"),
+    (2, "Started"),
+    (3, "Completed"),
+    (4, "Accepted")
+)
+
 class NewProjectForm(forms.ModelForm):
 	
 	def __init__(self, *args, **kwargs):
@@ -32,6 +39,7 @@ class NewProjectForm(forms.ModelForm):
 		}
 		
 class StoryForm(forms.ModelForm):
+	status=forms.ChoiceField(choices=status_choices)
 	def __init__(self, *args, **kwargs):
 		super(StoryForm, self).__init__(*args, **kwargs)
 		for name, field in self.fields.items():
