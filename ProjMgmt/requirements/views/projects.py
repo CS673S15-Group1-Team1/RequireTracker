@@ -43,12 +43,15 @@ def project(request, proj):
     if project_api.can_user_access_project(request.user.id, proj) :
         project = project_api.get_project(proj)
         activeUsers = user_manager.getActiveUsers()
+        
+        iterations = project_api.get_iterations_for_project(project)
+
         context = {'project' : project,
                    'stories' : story.get_project_stories(project.id),
                    'users' : project.users.all,
-                   'iterations' : project.iterations.all(),
+                   'iterations' : iterations,
                    'activeUsers' : activeUsers,
-                   'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+                   'owns_project' : project_api.user_owns_project(request.user,project)
                    }
         return render(request, 'ProjectDetail.html', context)
     else:
@@ -176,4 +179,19 @@ def add_iteration_to_project(request,projectID):
     datetime.date(int(fields['start_date_year']),int(fields['start_date_month']),int(fields['start_date_day'])),
     datetime.date(int(fields['end_date_year']), int(fields['end_date_month']), int(fields['end_date_day']) ), projectID)
     
-    return redirect('/projects/' + projectID)    
+    return redirect('/projects/' + projectID)   
+
+@login_required(login_url='/accounts/login/')
+@permission_required(PERMISSION_OWN_PROJECT)  
+def move_story_to_iter(request, projectID,storyID, iterID):
+    stry = story.get_story(storyID)
+    iteration = project_api.get_iteration(iterID)
+    project_api.add_story_to_iteration(stry,iteration)
+    return redirect('/projects/' + projectID)  
+
+@login_required(login_url='/accounts/login/')
+@permission_required(PERMISSION_OWN_PROJECT)     
+def move_story_to_icebox(request,projectID,storyID):
+    stry = story.get_story(storyID)
+    project_api.move_story_to_icebox(stry)
+    return redirect('/projects/' + projectID)  
