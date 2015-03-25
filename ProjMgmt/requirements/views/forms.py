@@ -13,7 +13,6 @@ from django.forms.extras.widgets import SelectDateWidget
 from requirements.models.project import Project
 from requirements.models.story import Story
 
-
 class NewProjectForm(forms.ModelForm):
 	
 	def __init__(self, *args, **kwargs):
@@ -42,7 +41,7 @@ class StoryForm(forms.ModelForm):
 
 	class Meta:
 		model = Story
-		fields = ('title', 'description', 'reason', 'test')
+		fields = ('title', 'description', 'reason', 'test', 'status')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 			'reason': forms.Textarea(attrs={'rows': 5}),
