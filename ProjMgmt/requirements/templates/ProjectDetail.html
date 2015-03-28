@@ -21,7 +21,7 @@
 									<a data-toggle="collapse" data-parent="" href="#iter_body_icebox" aria-expanded="true">
 									Icebox
 									</a>
-									<a class="btn btn-link pull-right" href="/newstory/{{ project.id }}">
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/newstory/{{ project.id }}');">
 										<i class="glyphicon glyphicon-plus"></i>
 									</a>
 								</h2>
@@ -51,10 +51,10 @@
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
-						    	                    <a class="btn btn-link pull-right" href="/deletestory/{{ project.id }}/{{ story.id }}">
+						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
-            	    	    	                    <a class="btn btn-link pull-right" href="/editstory/{{ project.id }}/{{ story.id }}">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 
 								                </h4>
@@ -113,10 +113,10 @@
             	    	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
             	    	    	                      	</ul>
             	    	    	                    </div>
-													<a class="btn btn-link pull-right" href="/deletestory/{{ project.id }}/{{ story.id }}">
+													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                	</a>
-            	    	    	                    <a class="btn btn-link pull-right" href="/editstory/{{ project.id }}/{{ story.id }}">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                	</a> 
 								                </h4>
@@ -144,10 +144,10 @@
 							<h2 class="panel-title">
 								<i class="fa fa-list fa-fw"></i>
 								User List
-								<a class="btn btn-link pull-right" href="/removeuserfromproject/{{ project.id }}/0">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');">
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
-								<a class="btn btn-link pull-right" href="/addusertoproject/{{ project.id }}/0">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/addusertoproject/{{ project.id }}/0');">
 									<i class="glyphicon glyphicon-plus"></i>
 								</a>
 							</h2>
@@ -175,12 +175,6 @@
 			</div>
 		</div>
 		<div class="row">
-            <div class="col-lg-12">
-                {% block storysummary %}
-                {% endblock storysummary %}
-            </div>
-        </div>
-		<div class="row">
 			<div class="col-lg-12">
 				{% block usersummary %}
 				{% endblock usersummary %}
@@ -193,14 +187,42 @@
 	var winHeight = $(window).outerHeight();
 	$("#page-wrapper").css('min-height',winHeight);
 
-	// $("#btnAddUser").click(function() {
-	// 	$("#userModalLabel").text('Add User into {{ project.title }}');
-	// });
+	function showStoryDialog(storyUrl){
+	    $.ajax({
+	        url: storyUrl,
+	        success: function(result) {
+	            $("#storyModal").html(result);
+	            $("#storyModal").modal({
+	            	backdrop: false,
+	            	show: true
+	            })
+	        },
+	        async:false
+	    }); 
+	}
 
-	// $("#btnRemoveUser_{{ user.username }}").click(function() {
+	function closeStoryDialog(){
+	    $("#storyModal").modal('hide');
+	    $("#storyModal").html('');
+	}
+	
+	function showUserDialog(userUrl){
+	    $.ajax({
+	        url: userUrl,
+	        success: function(result) {
+	            $("#userModal").html(result);
+	            $("#userModal").modal({
+	            	backdrop: false,
+	            	show: true
+	            })
+	        },
+	        async:false
+	    }); 
+	}
 
-	// });
-	// $(document).ready(function() {
-	// });
+	function closeUserDialog(){
+	    $("#userModal").modal('hide');
+	    $("#userModal").html('');
+	}
 </script>
 {% endblock content2 %}

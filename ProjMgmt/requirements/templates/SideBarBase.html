@@ -78,5 +78,24 @@
         });
     });
     {% endfor %}
+
+    function showNewIterationDialog(iterUrl){
+        $.ajax({
+            url: iterUrl,
+            success: function(result) {
+                $("#iterationModal").html(result);
+                $("#iterationModal").modal({
+                    backdrop: false,
+                    show: true
+                })
+            },
+            async:false
+        }); 
+    }
+
+    function closeNewIterationDialog(){
+        $("#iterationModal").modal('hide');
+        $("#iterationModal").html('');
+    }
 </script>
 {% endblock content %}

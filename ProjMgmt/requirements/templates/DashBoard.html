@@ -17,7 +17,7 @@
 							<i class="fa fa-list fa-fw"></i>
 							Project List
 							{% if isProjectOwner %}
-							<a class="btn btn-link pull-right" href="/newproject">
+							<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/newproject');">
 								<i class="glyphicon glyphicon-plus"></i>
 							</a>
 							{% endif %}
@@ -32,11 +32,11 @@
 							        	<a data-toggle="collapse" data-target="#{{ project.id }}" href="#{{ project.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
 								             {{ project.title}}
 								            <!-- <div id="panelbar-{{ project.id }}" class="pull-right"> -->
-							        		<a class="btn btn-link pull-right" href="/deleteproject/{{ project.id }}">
+							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/deleteproject/{{ project.id }}');">
 							        			<i class="fa fa-trash-o fa-fw"></i>
 							        			 Delete
 							        		</a>
-							           		<a class="btn btn-link pull-right" href="/editproject/{{ project.id }}">
+							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/editproject/{{ project.id }}');">
 							           			<i class="fa fa-edit fa-fw"></i>
 							           			 Edit
 							           		</a>
@@ -86,17 +86,31 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				{% block projectsummary %}
-				{% endblock projectsummary %}
-			</div>
-		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 	var winHeight = $(window).outerHeight();
 	$("#page-wrapper").css('height',winHeight);
+
+	function showProjectDialog(projUrl){
+	    $.ajax({
+	        url: projUrl,
+	        success: function(result) {
+	            $("#projectModal").html(result);
+	            $("#projectModal").modal({
+	            	backdrop: false,
+	            	show: true
+	            })
+	        },
+	        async:false
+	    }); 
+	}
+
+	function closeProjectDialog(){
+	    $("#projectModal").modal('hide');
+	    $("#projectModal").html('');
+	}
+	
 </script>
 {% endblock content2 %}
