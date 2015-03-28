@@ -42,7 +42,8 @@ def project(request, proj):
     if project_api.can_user_access_project(request.user.id, proj) :
         project = project_api.get_project(proj)
         activeUsers = user_manager.getActiveUsers()
-        context = {'project' : project,
+        context = {'projects' : project_api.get_projects_for_user(request.user.id),
+                   'project' : project,
                    'stories' : story.get_project_stories(project.id),
                    'users' : project.users.all,
                    'iterations' : project.iterations.all(),
