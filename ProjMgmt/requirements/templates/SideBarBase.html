@@ -1,48 +1,52 @@
-<!DOCTYPE html>
 {% extends "TopBarBase.html" %}
+
 {% block content %}
 <div class="navbar-inverse">
 	<div class="navbar-collapse navbar-ex1-collapse collapse" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav side-nav">
-            <ul class="nav nav-sidebar">
-                <li class="active">
-                    <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
+            {% if project %}
             <li>
-                <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
+            {% else %}
+            <li class="active">
+            {% endif %}
+                <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
             </li>
+
+            {% for aproject in projects %}
             <li>
-                <a href="tables.html"><i class="fa fa-fw fa-table"></i> Tables</a>
-            </li>
-            <li>
-                <a href="forms.html"><i class="fa fa-fw fa-edit"></i> Forms</a>
-            </li>
-            </ul>
-            <li>
-                <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-            </li>
-            <li>
-                <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-            </li>
-            <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-                <ul id="demo" class="collapse">
+                <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}">
+                    <i class="fa fa-fw fa-briefcase"></i> {{ aproject.title }} <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                {% ifequal aproject.id project.id %}
+                <ul id="proj_{{ aproject.id }}" class="collapse in" aria-expanded="true">
+                    {% if iteration == None %}
+                    <li class="active">
+                    {% else %}
                     <li>
-                        <a href="#">Dropdown Item</a>
+                    {% endif %}
+                {% else %}
+                <ul id="proj_{{ aproject.id }}" class="collapse" aria-expanded="false">
+                    <li>
+                {% endifequal %}
+                        <a href="/projects/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
                     </li>
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
+                            <i class="fa fa-fw fa-tasks"></i> Iterations <i class="fa fa-fw fa-caret-down"></i>
+                        </a> 
+                        <ul id="proj_{{ aproject.id }}_iters" class="collapse" aria-expanded="false">
+<!--                             <li><a href="#"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
+                            {% for aiteration in aproject.get_iterations %}
+                            <li><a href="#"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
+                            {% endfor %}
+                            <li><a href="#"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li> -->
+                        </ul>
                     </li>
+                    <li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Communication</a></li>
+                    <li><a href="#"><i class="fa fa-fw fa-road"></i> Issue Tracker</a></li>
                 </ul>
             </li>
-            <li>
-                <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
-            </li>
-            <li>
-                <a href="index-rtl.html"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
-            </li>
+            {% endfor %}
         </ul>
     </div>
 </div>
@@ -61,4 +65,18 @@
         color: #9d9d9d;
     }
 </style>
+
+<script type="text/javascript">
+    {% for aproject in projects %}
+    $(function() {
+        $.ajax({
+            url:'/showiterations/{{ aproject.id }}',
+            success: function(result) {
+                $("#proj_{{ aproject.id }}_iters").html(result);
+            },
+            async:true
+        });
+    });
+    {% endfor %}
+</script>
 {% endblock content %}

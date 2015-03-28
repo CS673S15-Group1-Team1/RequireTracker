@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-lg">
       	<div class="modal-content">
 	        <div class="modal-header">
-	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeNewIterationBox();">
+	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeNewIterationDialog();">
 	        		<span aria-hidden="true">x</span>
 	        	</a>
 	        	<h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
@@ -25,8 +25,8 @@
 	        			<p>{{ form.end_date }}</p>
 	        	</div>
         		<div class="modal-footer">
-        		  	<a class="btn btn-default" href="javascript:void(0)" onclick="closeNewIterationBox();">Close</a>
-					<button type="submit" class="btn btn-danger">Save</button>
+        		  	<a class="btn btn-default" href="javascript:void(0)" onclick="closeNewIterationDialog();">Close</a>
+					<button type="submit" class="btn btn-primary">Save</button>
         		</div>
 	        </form>
 

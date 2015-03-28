@@ -13,17 +13,3 @@ from forms import NewProjectForm, AddUserForm
 from forms import registrationForm
 from django import forms
 
-
-
-
-
-
-
-
-# @login_required	
-# def logout(request):
-# 	django.contrib.auth.logout(request)
-# 	return HttpResponse("Log Out Successful")
-
-# >>>>>>> CS673S15-Group1-Team1/newfeature
-
