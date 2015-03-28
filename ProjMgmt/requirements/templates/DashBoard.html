@@ -26,22 +26,28 @@
 					</div>
 					<div class="panel-body">
 					    <div class="panel-group" id="accordion">
-					    	{% for project in projects %}
+					    	{% for theProject in projects %}
 					        <div class="panel panel-default">
 					            <div class="panel-heading">
 							        <h4 class="panel-title">
-							        	<a data-toggle="collapse" data-target="#{{ project.id }}" href="#{{ project.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
-								             {{ project.title}}
-								            <!-- <div id="panelbar-{{ project.id }}" class="pull-right"> -->
-							        		<a class="btn btn-link pull-right" href="/deleteproject/{{ project.id }}">
-							        			<i class="fa fa-trash-o fa-fw"></i>
-							        			 Delete
-							        		</a>
-							           		<a class="btn btn-link pull-right" href="/editproject/{{ project.id }}">
-							           			<i class="fa fa-edit fa-fw"></i>
-							           			 Edit
-							           		</a>
-							           		<a class="btn btn-link pull-right" href="/projects/{{ project.id }}">
+							        	<a data-toggle="collapse" data-target="#{{ theProject.id }}" href="#{{ theProject.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
+								             {{ theProject.title}}
+								            <!-- <div id="panelbar-{{ theProject.id }}" class="pull-right"> -->
+                                            {% for anAssociation in associationsWithUser %}
+                                                {% if anAssociation.project = theProject and anAssociation.check_permission("DeleteProject") %}
+                                                    <a class="btn btn-link pull-right" href="/deleteproject/{{ theProject.id }}">
+                                                    <i class="fa fa-trash-o fa-fw"></i>
+                                                     Delete
+                                                    </a>
+                                                {% endif %}
+                                                {% if anAssociation.project = theProject and anAssociation.check_permission("EditProject") %} 
+                                                    <a class="btn btn-link pull-right" href="/editproject/{{ theProject.id }}">
+                                                    <i class="fa fa-edit fa-fw"></i>
+                                                    Edit
+                                                    </a>
+                                                {% endif %}
+                                            {% endfor %}
+							           		<a class="btn btn-link pull-right" href="/projects/{{ theProject.id }}">
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
 							           			 Open
 							           		</a>
@@ -49,9 +55,9 @@
 								        </a>
 							        </h4>
 					            </div>
-					            <div id="{{ project.id }}" class="panel-collapse collapse in" aria-expanded="true">
+					            <div id="{{ theProject.id }}" class="panel-collapse collapse in" aria-expanded="true">
 					                <div class="panel-body">
-					                	{% for line_description in project.description_as_list %}
+					                	{% for line_description in theProject.description_as_list %}
 											{{ line_description }}<br>
 					                	{% endfor %}
 					                </div>

@@ -20,8 +20,14 @@ def newProject(request):
 
 @login_required(login_url='/signin?next=projects')
 def list_projects(request):
-    context = {'projects' : project_api.get_projects_for_user(request.user.id)}
-    context['isProjectOwner'] = request.user.has_perm(PERMISSION_OWN_PROJECT)
+    # Loads the DashBoard template, which contains a list of the project the user is
+    # associated with, and an option to create new projects if one has that permission.
+    context = {
+               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'projects' : project_api.get_projects_for_user(request.user.id),
+               'theUser' : request.user,
+               'associationsWithUser' : project_api.get_associations_for_user(request.user.id)
+              }
     # if request.user.is_authenticated():
     #     logedInUser = request.user
     #     logedInUser.set_unusable_password()
