@@ -21,14 +21,11 @@ def new_story(request, projectID):
             project = project_api.get_project(projectID)
             story = models.story.create_story(request.user, project, request.POST)
             story = form.save(commit=False)
-        return redirect('/projects/' + projectID)
+            return redirect('/projects/' + projectID)
     else:
         form = StoryForm()
         
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'project' : project_api.get_project(projectID),
-               'title' : 'New User Story',
+    context = {'title' : 'New User Story',
                'form' : form, 
                'action' : '/newstory/' + projectID , 
                'desc' : 'Create User Story' }
@@ -42,17 +39,13 @@ def edit_story(request, projectID, storyID):
     if request.method == 'POST':
         form = StoryForm(request.POST, instance=story)
         if form.is_valid():
-            story = form.save(commit=False)
-            story.save()
-        return redirect('/projects/' + projectID)
+            story = form.save(commit=True)
+            return redirect('/projects/' + projectID)
      
     else:
         form = StoryForm(instance=story)
         
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'project' : project,
-               'title' : 'Edit User Story',
+    context = {'title' : 'Edit User Story',
                'form' : form, 
                'action' : '/editstory/' + projectID + '/' + storyID, 
                'desc' : 'Save Changes'}
@@ -71,10 +64,7 @@ def delete_story(request, projectID, storyID):
     else:
         form = StoryForm(instance=story)
 
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'project' : project,
-               'title' : 'Delete User Story',
+    context = {'title' : 'Delete User Story',
                'confirm_message' : 'This is an irreversible procedure ! You will lose all information about this user story !',
                'form' : form, 
                'action' : '/deletestory/' + projectID + '/' + storyID, 

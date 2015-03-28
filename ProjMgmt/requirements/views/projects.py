@@ -69,13 +69,11 @@ def new_project(request):
         if form.is_valid():
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
-        return redirect('/projects')
+            return redirect('/projects')
     else:
         form = NewProjectForm()
         
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'title' : 'New Project',
+    context = {'title' : 'New Project',
                'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
     return render(request, 'ProjectSummary.html', context )
 
@@ -86,18 +84,13 @@ def edit_project(request, id):
     if request.method == 'POST':
         form = NewProjectForm(request.POST, instance=project)
         if form.is_valid():
-            project = form.save(commit=False)
-            project.save()
-        return redirect('/projects')
-    
+            project = form.save(commit=True)
+            return redirect('/projects')
     else:
         form = NewProjectForm(instance=project)
         
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'title' : 'Edit Project',
+    context = {'title' : 'Edit Project',
                'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes'}
-    
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
@@ -110,13 +103,10 @@ def delete_project(request, id):
         #     project = form.save(commit=False)
         models.project_api.delete_project(project.id)
         return redirect('/projects')
-    
     else:
         form = NewProjectForm(instance=project)
-        
-    context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'title' : 'Delete Project',
+      
+    context = {'title' : 'Delete Project',
                'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
                'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
     return render(request, 'ProjectSummary.html', context )
@@ -141,13 +131,11 @@ def add_user_to_project(request, projectID, username):
         for activeUser in activeUsers:
             if project_api.can_user_access_project(activeUser.id, projectID) == True:
                 del activeUser
-    context = {'project' : project,
-               'users' : project.users.all,
-               'activeUsers' : activeUsers,
-                  'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                  'title' : 'Add User into Project',
-                 }
-    return render(request, 'UserSummary.html', context)
+        context = {'project' : project,
+                   'activeUsers' : activeUsers,
+                   'title' : 'Add User into Project',
+                  }
+        return render(request, 'UserSummary.html', context)
 
 @login_required(login_url='/signin')    
 def remove_user_from_project(request, projectID, username):
@@ -155,13 +143,13 @@ def remove_user_from_project(request, projectID, username):
     if not username == '0':
         project_api.remove_user_from_project(projectID, username)
         return redirect('/projects/' + projectID)
-    context = {'project' : project,
-               'users' : project.users.all,
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                  'title' : 'Remove User from Project',
-                  'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
-                 }        
-    return render(request, 'UserSummary.html', context)
+    else:
+        context = {'project' : project,
+                   'users' : project.users.all,
+                   'title' : 'Remove User from Project',
+                   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
+                  }        
+        return render(request, 'UserSummary.html', context)
 
 @login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)    
