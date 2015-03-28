@@ -6,9 +6,9 @@
 	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeNewIterationDialog();">
 	        		<span aria-hidden="true">x</span>
 	        	</a>
-	        	<h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+	        	<h4 class="modal-title" id="iterModalLabel">{{ title }}</h4>
 	        </div>
-	        <form class="form-horizontal" action="/newiteration/{{ projectID}}" method="post">
+	        <form class="form-horizontal" action="/newiteration/{{ projectID }}" method="post">
 	        	{% csrf_token %}
 	        	<div class="modal-body">
 
