@@ -1,0 +1,30 @@
+	{% load staticfiles %}
+
+    <li><a href="#"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
+    {% for aiteration in iterations %}
+    <li><a href="#"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
+    {% endfor %}
+    {% if owns_project %}
+    <li><a href="javascript:void(0)" onclick="showNewIterationDialog();"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li>
+    {% endif %}
+
+	<script type="text/javascript">
+		function showNewIterationDialog(){
+		    $.ajax({
+		        url:'/shownewiteration/{{ project.id }}',
+		        success: function(result) {
+		            $("#newIterModal").html(result);
+		            $("#newIterModal").modal({
+		            	backdrop: false,
+		            	show: true
+		            })
+		        },
+		        async:false
+		    }); 
+		}
+
+		function closeNewIterationDialog(){
+		    $("#newIterModal").modal('hide');
+		    $("#newIterModal").html('');
+		}
+	</script>
