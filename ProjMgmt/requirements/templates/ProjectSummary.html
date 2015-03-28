@@ -47,6 +47,8 @@
     </div><!-- /.modal-dialog -->
 
 	<script type="text/javascript">
+		// detect submit button event to use ajax method to post the form
+		// and retrive the return data back if there is error object in form object.
 		$('form').on('submit',function(e){
 		    // e.preventDefault();
 		    $.ajax({

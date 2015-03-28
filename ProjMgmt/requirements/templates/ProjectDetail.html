@@ -187,6 +187,9 @@
 	var winHeight = $(window).outerHeight();
 	$("#page-wrapper").css('min-height',winHeight);
 
+	// use ajax method to load Story Dialog
+	// storyUrl will be one of the following three:
+	// /newstory or /editstory/projID/storyID or /deletestory/projID/storyID
 	function showStoryDialog(storyUrl){
 	    $.ajax({
 	        url: storyUrl,
@@ -201,11 +204,15 @@
 	    }); 
 	}
 
+	// close Story Dialog and erase the content
 	function closeStoryDialog(){
 	    $("#storyModal").modal('hide');
 	    $("#storyModal").html('');
 	}
 	
+	// use ajax method to load User Dialog
+	// userUrl will be one of the following two:
+	// /addusertoproject/username or /removeuserfromproject/username
 	function showUserDialog(userUrl){
 	    $.ajax({
 	        url: userUrl,
@@ -220,6 +227,7 @@
 	    }); 
 	}
 
+	// close User Dialog and erase the content
 	function closeUserDialog(){
 	    $("#userModal").modal('hide');
 	    $("#userModal").html('');

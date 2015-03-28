@@ -67,6 +67,8 @@
 </style>
 
 <script type="text/javascript">
+    // because the project model has not foreign relation with iteration model
+    // we only can use ajax method to retrive each project's iterations into sidebar.
     {% for aproject in projects %}
     $(function() {
         $.ajax({
@@ -79,6 +81,10 @@
     });
     {% endfor %}
 
+    // use ajax method to load Iteration Dialog
+    // iterUrl will be one of the following three:
+    // /newiteration/projID or /edititeration/iterID or /deleteiteration/iterID
+    // for now only provide new iteration function.
     function showNewIterationDialog(iterUrl){
         $.ajax({
             url: iterUrl,
@@ -93,9 +99,11 @@
         }); 
     }
 
+    // close Iteration Dialog and erase content.
     function closeNewIterationDialog(){
         $("#iterationModal").modal('hide');
         $("#iterationModal").html('');
     }
 </script>
+
 {% endblock content %}
