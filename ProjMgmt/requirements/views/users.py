@@ -2,35 +2,35 @@ from django import forms
 import requirements.models.user_manager
 from requirements.models import user_manager
 from django.http import HttpResponse, HttpResponseRedirect
-from forms import RegistrationForm
+from forms import SignUpForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
 from django.shortcuts import render, render_to_response, redirect
 
-def create_user(request):
-	if userManager.createUser(request) :
-		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
-	else:
-		#TODO refactor to use @user_passes_test
-		return HttpResponse("Failed to create user")
+# def create_user(request):
+# 	if userManager.createUser(request) :
+# 		return HttpResponse("Your request has been submitted. It will need to be approved by an administrator.")
+# 	else:
+# 		#TODO refactor to use @user_passes_test
+# 		return HttpResponse("Failed to create user")
 
 
-def members(request):
-    return render(request, 'Members.html')
+# def members(request):
+#     return render(request, 'Members.html')
 
-def registration(request):
-    if request.method =='POST':
-        form =  RegistrationForm(request.POST)
-        if form.is_valid():
-            user_manager.createUser(request)
-            return HttpResponseRedirect('/thankYou/')
-    else:
-        form =  RegistrationForm()
-    return render(request, 'registration.html', {'form': form})
+# def registration(request):
+#     if request.method =='POST':
+#         form =  RegistrationForm(request.POST)
+#         if form.is_valid():
+#             user_manager.createUser(request)
+#             return HttpResponseRedirect('/thankYou/')
+#     else:
+#         form =  RegistrationForm()
+#     return render(request, 'registration.html', {'form': form})
 
-def thank_you(request):
-    return render(request, 'ThankYou.html')
+# def thank_you(request):
+#     return render(request, 'ThankYou.html')
 
 def signin(request):
     logout(request)
@@ -61,14 +61,13 @@ def signin(request):
 
 def signup(request):
     if request.method =='POST':
-        form =  RegistrationForm(request.POST)
+        form =  SignUpForm(request.POST)
         if form.is_valid():
-            # This is where you do stuff and then go to thank you page
-            user_manager.createUser(request)
+            form.save(commit=True)
             return render(request,'SignUpFinish.html',{'form': form, 'isUserSigningInUpOrOut': 'true'})
     else:
-        form =  RegistrationForm()
-        return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
+        form =  SignUpForm()
+    return render(request, 'SignUp.html', {'form': form, 'isUserSigningInUpOrOut': 'true'})
     
 @login_required    
 def signout(request):

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 {% extends "SideBarBase.html" %}
 {% block content2 %}
 <script>
@@ -139,7 +138,7 @@ function closeNewIterationBox(){
 					<div class="panel-body">
 					    <div class="panel-group" id="accordion">
 						
-							{% for iteration in iterations %}
+							{% for iteration in project.iterations.all %}
                             
 					        <div class="panel panel-default">
 					            <div class="panel-heading">

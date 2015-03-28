@@ -1,16 +1,17 @@
-<!DOCTYPE html>
 {% extends "TopBarBase.html" %}
+
 {% block content %}
 <div class="navbar-inverse">
 	<div class="navbar-collapse navbar-ex1-collapse collapse" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav side-nav">
-            <ul class="nav nav-sidebar">
-                <li class="active">
-                    <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
-                </li>
-            </ul>
-            <ul class="nav nav-sidebar">
+            {% if project %}
             <li>
+            {% else %}
+            <li class="active">
+            {% endif %}
+                <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+            </li>
+<!--             <li>
                 <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Charts</a>
             </li>
             <li>
@@ -25,24 +26,97 @@
             </li>
             <li>
                 <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Bootstrap Grid</a>
-            </li>
+            </li> -->
+            {% for aproject in projects %}
             <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-                <ul id="demo" class="collapse">
+                <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}">
+                    <i class="fa fa-fw fa-briefcase"></i> {{ aproject.title }} <i class="fa fa-fw fa-caret-down"></i>
+                </a>
+                {% ifequal aproject.id project.id %}
+                <ul id="proj_{{ aproject.id }}" class="collapse in" aria-expanded="true">
+                    {% if iteration == None %}
+                    <li class="active">
+                    {% else %}
                     <li>
-                        <a href="#">Dropdown Item</a>
+                    {% endif %}
+                {% else %}
+                <ul id="proj_{{ aproject.id }}" class="collapse" aria-expanded="false">
+                    <li>
+                {% endifequal %}
+                        <a href="/projects/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
                     </li>
                     <li>
-                        <a href="#">Dropdown Item</a>
+                        <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
+                            <i class="fa fa-fw fa-tasks"></i> Iterations <i class="fa fa-fw fa-caret-down"></i>
+                        </a> 
+                        <ul id="proj_{{ aproject.id }}_iters" class="collapse" aria-expanded="false">
+                            <li><a href="#"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
+                            {% for aiteration in aproject.iterations.all %}
+                            <li><a href="#"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
+                            {% endfor %}
+                            <li><a href="#"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Communication</a></li>
+                    <li><a href="#"><i class="fa fa-fw fa-road"></i> Issue Tracker</a></li>
+                </ul>
+            </li>
+            {% endfor %}
+<!--             <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#demo1"><i class="fa fa-fw fa-arrows-v"></i> Project 1 <i class="fa fa-fw fa-caret-down"></i></a>
+                <ul id="demo1" class="collapse">
+                    <li>
+                        <a href="#">Project Stories</a>
+                    </li>
+                    <li>
+                        <a href="#">Iteration 1</a>
+                    </li>
+                    <li>
+                        <a href="#">Iteration 2</a>
+                    </li>
+                    <li>
+                        <a href="#">Ice Box</a>
+                    </li>
+                    <li>
+                        <a href="#">Communication</a>
+                    </li>
+                    <li>
+                        <a href="#">Issues</a>
                     </li>
                 </ul>
             </li>
             <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#demo2"><i class="fa fa-fw fa-arrows-v"></i> Project 2 <i class="fa fa-fw fa-caret-down"></i></a>
+                <ul id="demo2" class="collapse">
+                    <li>
+                        <a href="#">Project Stories</a>
+                    </li>
+                    <li>
+                        <a href="#">Iteration 1</a>
+                    </li>
+                    <li>
+                        <a href="#">Iteration 2</a>
+                    </li>
+                    <li>
+                        <a href="#">Iteration 3</a>
+                    </li>
+                    <li>
+                        <a href="#">Ice Box</a>
+                    </li>
+                    <li>
+                        <a href="#">Communication</a>
+                    </li>
+                    <li>
+                        <a href="#">Issues</a>
+                    </li>
+                </ul>
+            </li> -->
+<!--             <li>
                 <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
             </li>
             <li>
                 <a href="index-rtl.html"><i class="fa fa-fw fa-dashboard"></i> RTL Dashboard</a>
-            </li>
+            </li> -->
         </ul>
     </div>
 </div>
