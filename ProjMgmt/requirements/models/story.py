@@ -17,8 +17,8 @@ class Story(ProjMgmtBase):
         (STATUS_ACCEPTED, "Accepted")
     )
 
-    project = models.ForeignKey('Project')    
-    iteration = models.ForeignKey('Iteration',blank=True,null=True)
+    project = models.ForeignKey(Project)    
+    iteration = models.ForeignKey(Iteration,blank=True,null=True)
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
     # status_choices= ( 
@@ -27,7 +27,7 @@ class Story(ProjMgmtBase):
     #    (3, "Completed"),
     #    (4, "Accepted")
     # )
-    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=1)
+    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     
     def __str__(self):
         return self.title

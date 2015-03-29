@@ -12,7 +12,7 @@
                 </a>
                 <h4 class="modal-title" id="storyModalLabel">{{ title }}</h4>
             </div>
-            <form class="form-horizontal" action="{{ action }}" method="post">
+            <form id="storyForm" class="form-horizontal" action="{{ action }}" method="post">
                 {% csrf_token %}
                 <div class="modal-body">
                     {% if confirm_message %}
@@ -64,16 +64,17 @@
     <script type="text/javascript">
         // detect submit button event to use ajax method to post the form
         // and retrive the return data back if there is error object in form object.
-        $('form').on('submit',function(e){
-            // e.preventDefault();
-            $.ajax({
+        $('#storyForm').on('submit',function(e){
+            $(this).ajaxForm({
                 type : "POST",
                 cache : false,
                 url : $(this).attr('action'),
                 data : $(this).serialize(),
                 success : function(data) {
                     $("#storyModal").html(data);
-                }
-            });
+                },
+                async:false
+            }).submit();
+            e.stopPropagation();
         });
     </script>
