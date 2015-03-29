@@ -66,7 +66,7 @@ class ProjectTestCase(TestCase):
         fields = {"abc" : "xyz"}
         s = models.story.create_story(self.__user, self.__project, fields)
         self.assertEqual(0, self.__project.story_set.count())
-        
+         
     def test_create_story_fail_bad_project(self):
         fields = {"title" : "title",
                   "description" : "desc",
@@ -75,7 +75,7 @@ class ProjectTestCase(TestCase):
                   "status" : 1}
         s = models.story.create_story(self.__user, {}, fields)
         self.assertEqual(1, self.__project.story_set.count())
-        
+         
     def test_create_story_fail_bad_user(self):
         fields = {"title" : "title",
                   "description" : "desc",
