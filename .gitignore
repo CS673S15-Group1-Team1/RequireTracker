@@ -4,3 +4,7 @@
 *.sqlite3
 
 ProjMgmt/requirements/migrations/
+
+ProjMgmt/tools/*
+/.project
+/.pydevproject
