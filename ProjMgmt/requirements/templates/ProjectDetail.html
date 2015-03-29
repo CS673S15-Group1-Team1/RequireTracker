@@ -61,6 +61,10 @@
 								            </div>
 								            <div id="story_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
 								                <div class="panel-body">
+                                                    {% if story.last_updated != None %}
+                                                    Last Updated: {{story.last_updated }}
+                                                    </br></br>
+                                                    {% endif %}
 								                    {{ story.description }}
 								                </div>
 								            </div>
@@ -123,6 +127,10 @@
 								            </div>
 								            <div id="story_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
 								                <div class="panel-body">
+                                                    {% if story.last_updated != None %}
+                                                    Last Updated: {{story.last_updated }}
+                                                    </br></br>
+                                                    {% endif %}
 								                    {{ story.description }}
 								                </div>
 								            </div>

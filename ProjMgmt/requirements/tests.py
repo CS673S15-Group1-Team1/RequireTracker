@@ -14,6 +14,8 @@ class Obj(): pass
 
 class ProjectTestCase(TestCase):
     
+    _sample_story_fields = {'title' : "title", 'description' : "description", 'test' : "", 'reason' : "", 'status' : models.story.Story.STATUS_UNSTARTED}
+    
     def setUp(self):
         self.__clear()
         
@@ -70,15 +72,6 @@ class ProjectTestCase(TestCase):
         u = UserAssociation(user = self.__user, project=p)
         u.save()
         self.assertEqual( models.project_api.can_user_access_project(self.__user.id, p.id), True)        
-    
-    def test_createUser(self):
-        req = Obj()
-        req.POST = {'username' : 'user', 'password' : 'pass'}
-        models.user_manager.createUser(req)
-        
-        u = User.objects.all()[1]
-        self.assertEqual('user', u.username)
-        self.assertEqual(False, u.is_active)
         
     def test_project_no_iterations(self):
         p = Project(title="title", description="desc")
@@ -110,7 +103,7 @@ class ProjectTestCase(TestCase):
         end_date = datetime.date.max
         iteration = models.project_api.add_iteration_to_project(title, description, start_date, end_date, p.id)
         
-        story = models.story.create_story({},p,{'title' : "title", 'description' : "description", 'test' : ""})
+        story = models.story.create_story({},p,self._sample_story_fields)
         
         models.project_api.add_story_to_iteration(story, iteration)
         
@@ -129,7 +122,7 @@ class ProjectTestCase(TestCase):
         p2 = Project(title="title2", description="desc2")
         p2.save()
         
-        story = models.story.create_story({},p2,{'title' : "title", 'description' : "description", 'test' : ''})
+        story = models.story.create_story({},p2,self._sample_story_fields)
         try:
             models.project_api.add_story_to_iteration(story, iteration)
             self.fail("Adding a story to an invalid iteration did not throw an exception")
@@ -174,7 +167,7 @@ class ProjectTestCase(TestCase):
         p = Project(title="title", description="desc")
         p.save()
         iteration = models.project_api.add_iteration_to_project("title", "description", datetime.date.today(), datetime.date.max, p.id)
-        story = models.story.create_story({},p,{'title' : "title", 'description' : "description", 'test' : ""})
+        story = models.story.create_story({},p,self._sample_story_fields)
         models.project_api.add_story_to_iteration(story, iteration)  
         stories = models.project_api.get_stories_for_iteration(iteration)
 
@@ -186,7 +179,7 @@ class ProjectTestCase(TestCase):
         p = Project(title="title", description="desc")
         p.save()
         iteration = models.project_api.add_iteration_to_project("title", "description", datetime.date.today(), datetime.date.max, p.id)
-        story = models.story.create_story({},p,{'title' : "title", 'description' : "description", 'test' : ""}) 
+        story = models.story.create_story({},p,self._sample_story_fields) 
         stories = models.project_api.get_stories_with_no_iteration(p)
 
         self.assertEquals(stories.count(), 1)
@@ -196,7 +189,7 @@ class ProjectTestCase(TestCase):
         p = Project(title="title", description="desc")
         p.save()
         iteration = models.project_api.add_iteration_to_project("title", "description", datetime.date.today(), datetime.date.max, p.id)
-        story = models.story.create_story({},p,{'title' : "title", 'description' : "description", 'test' : ""})
+        story = models.story.create_story({},p,self._sample_story_fields)
         models.project_api.add_story_to_iteration(story, iteration)  
         stories = models.project_api.get_stories_with_no_iteration(iteration)
 
