@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% extends "SideBarBase.html" %}
+{% load require_tags %}
 {% block content2 %}
 <div id="wrapper">
 	<div id="page-wrapper">
@@ -34,18 +35,21 @@
 								             {{ theProject.title}}
 								            <!-- <div id="panelbar-{{ theProject.id }}" class="pull-right"> -->
                                             {% for anAssociation in associationsWithUser %}
-                                                {% if anAssociation.project = theProject and anAssociation.check_permission("DeleteProject") %}
+                                                {% check_permission anAssociation theProject "DeleteProject" as can_delete %} 
+                                                {% if can_delete  %} 
                                                     <a class="btn btn-link pull-right" href="/deleteproject/{{ theProject.id }}">
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
                                                 {% endif %}
-                                                {% if anAssociation.project = theProject and anAssociation.check_permission("EditProject") %} 
+                                                {% check_permission anAssociation theProject "EditProject" as can_edit %} 
+                                                {% if can_edit %} 
                                                     <a class="btn btn-link pull-right" href="/editproject/{{ theProject.id }}">
                                                     <i class="fa fa-edit fa-fw"></i>
                                                     Edit
                                                     </a>
                                                 {% endif %}
+
                                             {% endfor %}
 							           		<a class="btn btn-link pull-right" href="/projects/{{ theProject.id }}">
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
