@@ -35,12 +35,16 @@
 					{% for activeUser in activeUsers %}
 					<li class="list-group-item">
                         <i class="glyphicon glyphicon-user fa-fw"></i> {{ activeUser.username }}
-                        <span>
-                        	<a class="btn btn-link pull-right" href="/addusertoproject/{{ project.id }}/{{ activeUser.username }}">
-						   		<i class="glyphicon glyphicon-plus fa-fw"></i>
-							    Add
-						   	</a>
-						</span>
+                        <form action ="/addusertoproject/{{ project.id }}/{{ activeUser.username }}" method="post">
+                            {% csrf_token %}
+                            {{ form }}
+                            <span>
+                            	<a class="btn btn-link pull-right">
+		    				   		<i class="glyphicon glyphicon-plus fa-fw"></i>
+			    				    <input type="submit" value="Add">
+				    		   	</a>
+					    	</span>
+                        </form>
                     </li>
                     {% endfor %}
                     {% endif %}

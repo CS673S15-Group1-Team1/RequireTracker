@@ -34,10 +34,10 @@ def create_project(user, fields):
     association.save()
     return proj
 
-def add_user_to_project( projectID, username):
+def add_user_to_project( projectID, username, user_role):
     proj = Project.objects.get(id=projectID)
     user = User.objects.get(username=username)
-    association = UserAssociation(user=user,project=proj, role=ROLE_CLIENT)
+    association = UserAssociation(user=user,project=proj, role=user_role)
     association.save()
     association.save()
     

@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from forms import RegistrationForm
 from forms import AddIterationForm
 from forms import NewProjectForm
+from forms import SelectAccessLevelForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
 from django.template import RequestContext
@@ -14,6 +15,11 @@ from django.shortcuts import render, redirect
 import datetime
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
+
+ROLE_CLIENT = "client"
+ROLE_DEVELOPER = "developer"
+ROLE_OWNER = "owner"
+
 
 def newProject(request):
     return render(request, 'NewProject.html')
@@ -23,7 +29,7 @@ def list_projects(request):
     # Loads the DashBoard template, which contains a list of the project the user is
     # associated with, and an option to create new projects if one has that permission.
     context = {
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'projects' : project_api.get_projects_for_user(request.user.id),
                'theUser' : request.user,
                'associationsWithUser' : project_api.get_associations_for_user(request.user.id)
@@ -54,7 +60,7 @@ def project(request, proj):
                    'users' : project.users.all,
                    'iterations' : project.iterations.all(),
                    'activeUsers' : activeUsers,
-                   'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+                   'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                    }
         return render(request, 'ProjectDetail.html', context)
     else:
@@ -79,7 +85,7 @@ def new_project(request):
         form = NewProjectForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'New Project',
                'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
     return render(request, 'ProjectSummary.html', context )
@@ -99,7 +105,7 @@ def edit_project(request, id):
         form = NewProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Edit Project',
                'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes'}
     
@@ -120,7 +126,7 @@ def delete_project(request, id):
         form = NewProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Delete Project',
                'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
                'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
@@ -137,21 +143,30 @@ def delete_project(request, id):
         
 @login_required(login_url='/accounts/login/')
 def add_user_to_project(request, projectID, username):
+	# If username = 0, displays an Add User to Project menu.
+	# Otherwise, adds username to the project specified by projectID.
     project = project_api.get_project(projectID)
-    if not username == '0':
-        project_api.add_user_to_project(projectID, username)
+    if not username == '0': # A user to add has been specified.
+        # Get the role that was sent via the dropdown in the form. 
+        retrieved_role = (request.POST).get('user_role')
+        print retrieved_role # to console for debugging
+        project_api.add_user_to_project(projectID, username, retrieved_role)
         return redirect('/projects/' + projectID)
     else:
         activeUsers = user_manager.getActiveUsers()
         for activeUser in activeUsers:
             if project_api.can_user_access_project(activeUser.id, projectID) == True:
                 del activeUser
-    context = {'project' : project,
+	form = SelectAccessLevelForm()
+    context = {
+               'form' : form,
+               'action' : '/addusertoproject/{{ project.id }}/{{ activeUser.username }}',
+               'project' : project,
                'users' : project.users.all,
                'activeUsers' : activeUsers,
-                  'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                  'title' : 'Add User into Project',
-                 }
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'title' : 'Add User into Project',
+              }
     return render(request, 'UserSummary.html', context)
     
 def remove_user_from_project(request, projectID, username):
@@ -161,11 +176,16 @@ def remove_user_from_project(request, projectID, username):
         return redirect('/projects/' + projectID)
     context = {'project' : project,
                'users' : project.users.all,
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                   'title' : 'Remove User from Project',
                   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
                  }        
     return render(request, 'UserSummary.html', context)
+
+#def extract_role_from_postdata(postdata):
+#	# Takes the data sent from a POST dropdown form and extracts the string representing
+#	# a user role. 
+#	if postdata.get(ROLE_CLIENT)
 
 @login_required(login_url='/accounts/login/')
 @permission_required(PERMISSION_OWN_PROJECT)    

@@ -13,6 +13,9 @@ from django.forms.extras.widgets import SelectDateWidget
 from requirements.models.project import Project
 from requirements.models.story import Story
 
+ROLE_CLIENT = "client"
+ROLE_DEVELOPER = "developer"
+ROLE_OWNER = "owner"
 
 class NewProjectForm(forms.ModelForm):
 	
@@ -61,6 +64,15 @@ class RegistrationForm(forms.Form):
 class AddUserForm(forms.Form):
 	users = User.objects.filter(is_active=True).order_by('id')
 	username = forms.ModelChoiceField(queryset=users, empty_label=None)
+
+class SelectAccessLevelForm(forms.Form):
+    # Dropdown list to select from one of the current access levels for a project. 
+    user_role = forms.ChoiceField(choices = (
+                                             (ROLE_CLIENT, "Client"),
+                                             (ROLE_DEVELOPER, "Developer"),
+                                             (ROLE_OWNER, "Owner"),
+                                            ))
+
 
 # class registrationForm(forms.Form):
 # 	firstName = forms.CharField(label='First Name:', max_length=100)

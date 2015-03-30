@@ -26,7 +26,7 @@ def new_story(request, projectID):
         form = StoryForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project_api.get_project(projectID),
                'title' : 'New User Story',
                'form' : form, 
@@ -50,7 +50,7 @@ def edit_story(request, projectID, storyID):
         form = StoryForm(instance=story)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,
                'title' : 'Edit User Story',
                'form' : form, 
@@ -72,7 +72,7 @@ def delete_story(request, projectID, storyID):
         form = StoryForm(instance=story)
 
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
-               'isProjectOwner' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,
                'title' : 'Delete User Story',
                'confirm_message' : 'This is an irreversible procedure ! You will lose all information about this user story !',
