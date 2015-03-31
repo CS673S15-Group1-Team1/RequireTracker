@@ -17,12 +17,14 @@ class Story(ProjMgmtBase):
         (STATUS_ACCEPTED, "Accepted")
     )
     
+    POINTS_NONE = 0
     POINTS_ONE = 1
     POINTS_TWO = 2
     POINTS_THREE = 3
     POINTS_FOUR = 4
     
     POINTS_CHOICES = (
+        (POINTS_NONE,"0 Not Scaled"),
         (POINTS_ONE, "1 Point"),
         (POINTS_TWO, "2 Points"),
         (POINTS_THREE, "3 Points"),
@@ -35,7 +37,7 @@ class Story(ProjMgmtBase):
     test= models.CharField(default='', max_length=1024, blank=True)
     hours = models.CharField(default='', max_length=16, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
-    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=1)
+    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
     
     def __str__(self):
         return self.title
