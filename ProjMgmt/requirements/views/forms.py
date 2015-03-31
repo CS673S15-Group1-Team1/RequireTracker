@@ -42,7 +42,7 @@ class StoryForm(forms.ModelForm):
 
 	class Meta:
 		model = Story
-		fields = ('title', 'description', 'reason', 'test', 'hours' , 'status', 'points')
+		fields = ('title', 'description', 'reason', 'test', 'hours' , 'status', 'points', 'pause')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 			'reason': forms.Textarea(attrs={'rows': 5}),

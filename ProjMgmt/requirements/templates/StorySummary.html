@@ -33,6 +33,8 @@
                         <h5>
                             {{ form.test.value }}
                         </h5>
+                        <h4>{{ form.points.label_tag }}</h4>
+                        <h5>{{ form.points.value }}</h5>
                     {% else %}
 
                         <h4>{{ form.title.label_tag }}
@@ -56,6 +58,9 @@
                         <hr>
                         <h4>{{ form.points.label_tag}}</h4>
                         <p> {{ form.points }}</p>
+                        <hr>
+                        <h4> {{ form.pause.label_tag}}</h4>
+                        <p>{{ form.pause }}</p>
                     {% endif %}
                 </div>
                 <div class="modal-footer">
@@ -105,6 +110,25 @@
                 document.getElementById("btn-state").style.visibility="hidden";
             }
         }
-             
+
+       /*
+       When edit form is loaded, the following function checks the status of the story, if it is accepted, the 
+       next state button is disabled because there are no more states. After that, it checks the paused feature, if the checkbox is checked, you cannot go to the next state, so the next state button is disabled, if it is unchecked, the next state button is enabled. 
+       */
+
+       $(document).ready(function() {
+            var state = document.getElementById("{{ form.status.id_for_label }}");
+            var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
+        
+            if (state.selectedIndex>2){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden";
+            }
+
+            if (paused.checked==true){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden"   
+            }
+        });      
 
     </script>

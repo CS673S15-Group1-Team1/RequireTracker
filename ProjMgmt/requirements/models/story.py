@@ -38,6 +38,7 @@ class Story(ProjMgmtBase):
     hours = models.CharField(default='', max_length=16, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
+    pause = models.BooleanField(default=False) 
     
     def __str__(self):
         return self.title
@@ -60,14 +61,21 @@ def create_story(user, proj, fields):
     description = fields.get('description', '')
     reason = fields.get('reason', '')
     test = fields.get('test', '')
-    status = fields.get('status', 1)
+    hours = fields.get('hours','')
+    status = fields.get('status', Story.STATUS_UNSTARTED)
+    points = fields.get('points',Story.POINTS_NONE)
+    pause = fields.get('pause',False)
     
     story = Story(project=proj,
                   title=title, 
                   description=description,
                   reason=reason,
                   test=test,
-                  status=status)
+                  hours = hours,
+                  status=status,
+                  points = points,
+                  pause = pause
+                  )
     story.save()
     return story
 
