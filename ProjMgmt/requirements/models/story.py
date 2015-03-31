@@ -38,7 +38,7 @@ class Story(ProjMgmtBase):
     hours = models.CharField(default='', max_length=16, blank=True)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
-    pause = models.BooleanField() 
+    pause = models.BooleanField(default="Checked") 
     
     def __str__(self):
         return self.title
