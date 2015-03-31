@@ -61,30 +61,23 @@ class ProjectTestCase(TestCase):
                   "status" : 1}
         s = models.story.create_story(self.__user, self.__project, fields)
         self.assertEqual(1, self.__project.story_set.count())
+    
+    def test_create_story_fail(self):
+        fields = {"title" : "title",
+                  "description" : "desc",
+                  "reason" : "reason",
+                  "test" : "test",
+                  "status" : 1}
         
-    def test_create_story_fail_bad_fields(self):
-        fields = {"abc" : "xyz"}
-        s = models.story.create_story(self.__user, self.__project, fields)
+        #pass a null project
+        s = models.story.create_story(self.__user, None, fields)
+        self.assertEqual(0, self.__project.story_set.count())
+        
+        #create a project, but don't save it
+        p = Project(title="title", description="description")
+        s = models.story.create_story(self.__user, p, fields)
         self.assertEqual(0, self.__project.story_set.count())
          
-    def test_create_story_fail_bad_project(self):
-        fields = {"title" : "title",
-                  "description" : "desc",
-                  "reason" : "reason",
-                  "test" : "test",
-                  "status" : 1}
-        s = models.story.create_story(self.__user, {}, fields)
-        self.assertEqual(1, self.__project.story_set.count())
-         
-    def test_create_story_fail_bad_user(self):
-        fields = {"title" : "title",
-                  "description" : "desc",
-                  "reason" : "reason",
-                  "test" : "test",
-                  "status" : 1}
-        s = models.story.create_story({}, self.__project, fields)
-        self.assertEqual(1, self.__project.story_set.count())
-        
     def test_delete_story_pass(self):
         fields = {"title" : "title",
                   "description" : "desc",
