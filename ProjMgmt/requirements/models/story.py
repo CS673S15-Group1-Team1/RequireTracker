@@ -52,14 +52,22 @@ def get_story(storyID):
     return Story.objects.get(id=storyID)
     
 def create_story(user, proj, fields):
+    if proj is None: return None
+    if Project.objects.filter(id=proj.id).count() == 0: return None
+    if fields is None: return None
+    
+    title = fields.get('title', '')
+    description = fields.get('description', '')
+    reason = fields.get('reason', '')
+    test = fields.get('test', '')
+    status = fields.get('status', 1)
+    
     story = Story(project=proj,
-                  title=fields['title'], 
-                  description=fields['description'],
-                  reason=fields['reason'],
-                  test=fields['test'],
-                  hours=fields['hours'],
-                  status=fields['status'],
-                  points=fields['points'])
+                  title=title, 
+                  description=description,
+                  reason=reason,
+                  test=test,
+                  status=status)
     story.save()
     return story
 
