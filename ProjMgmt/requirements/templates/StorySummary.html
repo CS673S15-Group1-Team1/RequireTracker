@@ -52,7 +52,7 @@
                 </div>
                 <div class="modal-footer">
                     
-                    <a class = "btn btn-default" id ="btn-state" onclick="change_state();"> Next State</button>
+                    <a class = "btn btn-default" id ="btn-state" onclick="change_state();"> Next State</a>
                     <!--<a class="btn btn-default" onclick="change_state();">Status</a>-->
                     <a class="btn btn-default" href="javascript:void(0);" onclick="closeStoryDialog();">Close</a>
                     {% if confirm_message %}
@@ -86,15 +86,15 @@
 
         
         function change_state(){
-            var state = document.getElementById("id_status");
+            var state = document.getElementById("{{ form.status.id_for_label }}");
             if (state.selectedIndex<3){
                 document.getElementById("btn-state").disabled=false;
-                document.getElementById("btn-state").style.display="block";
+                document.getElementById("btn-state").style.visibility="visible";
                state.selectedIndex =state.selectedIndex+1;
             }
             else{
                 document.getElementById("btn-state").disabled=true;
-                document.getElementById("btn-state").style.display="none";
+                document.getElementById("btn-state").style.visibility="hidden";
             }
         }
              
