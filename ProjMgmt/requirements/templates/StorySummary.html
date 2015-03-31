@@ -32,7 +32,9 @@
                             {{ form.test.value }}
                         </h5>
                     {% else %}
-                        <h4>{{ form.title.label_tag }}</h4>
+
+                        <h4>{{ form.title.label_tag }}
+                        </h4>
                         <p>{{ form.title }}</p>
                         <hr>
                         <h4>{{ form.description.label_tag }}</h4>
@@ -45,15 +47,19 @@
                         <p>{{ form.test }}</p>
                         <hr>
                         <h4>{{ form.status.label_tag}}</h4>
-                        <p> {{ form.status }}</p>
+                        <p> {{ form.status }}</p>  
                     {% endif %}
                 </div>
                 <div class="modal-footer">
+                    
+                    <a class = "btn btn-default" id ="btn-state" onclick="change_state();"> Next State</button>
+                    <!--<a class="btn btn-default" onclick="change_state();">Status</a>-->
                     <a class="btn btn-default" href="javascript:void(0);" onclick="closeStoryDialog();">Close</a>
                     {% if confirm_message %}
                     <button type="submit" class="btn btn-danger">{{ desc }}</button>
                     {% else %}
                     <button type="submit" class="btn btn-primary">{{ desc }}</button>
+
                     {% endif %}
                 </div>
             </form>
@@ -77,4 +83,20 @@
             }).submit();
             e.stopPropagation();
         });
+
+        
+        function change_state(){
+            var state = document.getElementById("id_status");
+            if (state.selectedIndex<3){
+                document.getElementById("btn-state").disabled=false;
+                document.getElementById("btn-state").style.display="block";
+               state.selectedIndex =state.selectedIndex+1;
+            }
+            else{
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.display="none";
+            }
+        }
+             
+
     </script>
