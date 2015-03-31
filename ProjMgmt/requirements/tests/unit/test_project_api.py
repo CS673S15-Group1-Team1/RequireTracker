@@ -99,14 +99,18 @@ class ProjectTestCase(TestCase):
         self.assertEqual(1, Project.objects.filter(id=p.id).count())
     
     def test_create_project_fail_bad_fields(self):
-        fields = {"123" : "", "456" : ""}
-        p = models.project_api.create_project(self.__user, fields)
+        p = models.project_api.create_project(self.__user, None)
         self.assertEqual(0, Project.objects.count())
     
     def test_create_project_fail_bad_user(self):
-        user = User(username="unknownuser", password="pass")
         fields = {"title" : "title",
                   "description" : "desc"}
+        
+        #pass a null user
+        p = models.project_api.create_project(None, fields)
+        
+        user = User(username="unknownuser", password="pass")
+        
         p = models.project_api.create_project(user, fields)
         self.assertEqual(0, Project.objects.count())
     
@@ -126,10 +130,17 @@ class ProjectTestCase(TestCase):
     def test_add_user_to_project_fail_bad_user(self):
         p = Project(title="title", description="desc")
         p.save()
+        
+        #pass a null user
+        models.project_api.add_user_to_project(p.id, None)
+        self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
+                                                        user_id=self.__user.id).count(),0)
+            
+        #pass an unknown user
         user = User(username="unknownuser", password="pass")
         models.project_api.add_user_to_project(p.id, user)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
-                                                        user_id=user.id).count(),0)
+                                                        user_id=self.__user.id).count(),0)
     
     def test_remove_user_from_project_pass(self):
         p = Project(title="title", description="desc")
@@ -160,11 +171,16 @@ class ProjectTestCase(TestCase):
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),1)
         
+        #pass a null user
+        models.project_api.remove_user_from_project(p.id, None)
+        self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
+                                                        user_id=self.__user.id).count(),1)
+        #test an unknown user
         user = User(username="unknownuser", password="pass")
         models.project_api.remove_user_from_project(p.id, user.username)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
-                                                        user_id=user.id).count(),1)
-       
+                                                        user_id=self.__user.id).count(),1)
+               
     def test_delete_project_pass(self):
         p = Project(title="title", description="desc")
         p.save()
@@ -202,7 +218,8 @@ class ProjectTestCase(TestCase):
     def test_add_iteration_to_project_fail_bad_project(self):
         p = Project(title="title", description="desc")
         p.save()
-        projID = p.id - 1
+        
+        #pass a null prject
         title = "title"
         description = "description"
         start_date = datetime.date.today()
@@ -211,12 +228,16 @@ class ProjectTestCase(TestCase):
                                                                 description, 
                                                                 start_date, 
                                                                 end_date, 
+                                                                None)
+        self.assertEqual(0, p.iteration_set.count()) 
+        
+        #pass an unknown project
+        projID = p.id - 1
+        iteration = models.project_api.add_iteration_to_project(title, 
+                                                                description, 
+                                                                start_date, 
+                                                                end_date, 
                                                                 projID)
-          
-        self.assertEqual(start_date, iteration.start_date)
-        self.assertEqual(end_date, iteration.end_date)
-        self.assertEqual(title, iteration.title)
-        self.assertEqual(description, iteration.description)    
         self.assertEqual(0, p.iteration_set.count())    
         
     def test_get_iterations_for_project_none(self):
