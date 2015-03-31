@@ -62,8 +62,8 @@ def create_story(user, proj, fields):
     reason = fields.get('reason', '')
     test = fields.get('test', '')
     hours = fields.get('hours','')
-    status = fields.get('status', STATUS_UNSTARTED)
-    points = fields.get('points',POINTS_NONE)
+    status = fields.get('status', Story.STATUS_UNSTARTED)
+    points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
     
     story = Story(project=proj,
