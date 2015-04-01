@@ -165,7 +165,7 @@ def add_user_to_project(request, projectID, username):
                'users' : project.users.all,
                'activeUsers' : activeUsers,
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'title' : 'Add User into Project',
+               'title' : 'Add User to Project',
               }
     return render(request, 'UserSummary.html', context)
     
