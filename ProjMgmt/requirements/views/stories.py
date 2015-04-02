@@ -12,7 +12,7 @@ from django.shortcuts import render, redirect
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
     
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def new_story(request, projectID):
     if request.method == 'POST':
@@ -21,7 +21,7 @@ def new_story(request, projectID):
             project = project_api.get_project(projectID)
             story = models.story.create_story(request.user, project, request.POST)
             story = form.save(commit=False)
-        return redirect('/projects/' + projectID)
+            return redirect('/projects/' + projectID)
     else:
         form = StoryForm()
         
@@ -34,7 +34,7 @@ def new_story(request, projectID):
                'desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
@@ -42,13 +42,13 @@ def edit_story(request, projectID, storyID):
     if request.method == 'POST':
         form = StoryForm(request.POST, instance=story)
         if form.is_valid():
-            story = form.save(commit=False)
-            story.save()
-        return redirect('/projects/' + projectID)
+            story = form.save(commit=True)
+            return redirect('/projects/' + projectID)
      
     else:
         form = StoryForm(instance=story)
         
+<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,
@@ -59,7 +59,7 @@ def edit_story(request, projectID, storyID):
     
     return render(request, 'StorySummary.html', context )
 
-@login_required(login_url='/accounts/login/')
+@login_required(login_url='/signin')
 #TODO we need some kind of permission here - aat
 def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
@@ -71,6 +71,7 @@ def delete_story(request, projectID, storyID):
     else:
         form = StoryForm(instance=story)
 
+<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,

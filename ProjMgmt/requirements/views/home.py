@@ -1,6 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 def home_page(request):
-	context = {}
-	context['isUserSignzedIn'] = request.user.is_authenticated()
-	return render(request, 'Home.html',context)
+	if request.user.is_authenticated():
+		return redirect('/projects')
+	return render(request, 'Home.html')
