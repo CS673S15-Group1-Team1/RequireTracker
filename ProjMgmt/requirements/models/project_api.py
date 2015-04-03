@@ -56,8 +56,6 @@ def add_user_to_project( projectID, username, user_role):
     except ObjectDoesNotExist:
         return
     
-    association = UserAssociation(user=user,project=proj, role=ROLE_USER)
-    
 def remove_user_from_project(projectID, username):
     if projectID is None: return
     if username is None: return

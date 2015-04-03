@@ -51,19 +51,6 @@
                             </li>
                         {% endif %}
                     {% endfor %}
-                        {% for activeUser in activeUsers %}
-                            {% if not activeUser == user %}
-				            <li class="list-group-item">
-                                <i class="glyphicon glyphicon-user fa-fw"></i> {{ activeUser.username }}
-                                <span>
-                                	<a class="btn btn-link pull-right" href="/addusertoproject/{{ project.id }}/{{ activeUser.username }}">
-                                        <i class="glyphicon glyphicon-plus fa-fw"></i>
-                                        Add
-				                    </a>
-                                </span>
-                            </li>
-                            {% endif %}
-                        {% endfor %}
                     {% endif %}
                 </ul>
             </div>

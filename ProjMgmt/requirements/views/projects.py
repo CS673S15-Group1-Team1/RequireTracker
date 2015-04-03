@@ -141,8 +141,8 @@ def delete_project(request, id):
         
 @login_required(login_url='/signin')
 def add_user_to_project(request, projectID, username):
-	# If username = 0, displays an Add User to Project menu.
-	# Otherwise, adds username to the project specified by projectID.
+    # If username = 0, displays an Add User to Project menu.
+    # Otherwise, adds username to the project specified by projectID.
     project = project_api.get_project(projectID)
     if not username == '0': # A user to add has been specified.
         # Get the role that was sent via the dropdown in the form. 
