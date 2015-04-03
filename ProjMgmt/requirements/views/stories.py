@@ -48,7 +48,6 @@ def edit_story(request, projectID, storyID):
     else:
         form = StoryForm(instance=story)
         
-<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,
@@ -71,7 +70,6 @@ def delete_story(request, projectID, storyID):
     else:
         form = StoryForm(instance=story)
 
-<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'project' : project,

@@ -86,7 +86,6 @@ def new_project(request):
     else:
         form = NewProjectForm()
         
-<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'New Project',
@@ -105,7 +104,6 @@ def edit_project(request, id):
     else:
         form = NewProjectForm(instance=project)
         
-<<<<<<< HEAD
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Edit Project',
