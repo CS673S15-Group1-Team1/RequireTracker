@@ -3,12 +3,14 @@ from requirements import models
 from requirements.models import project_api
 from requirements.models import user_manager
 from requirements.models import story
+from requirements.models.user_association import UserAssociation
 from django.http import HttpResponse, HttpResponseRedirect
 from forms import AddIterationForm
 from forms import NewProjectForm
 from forms import SelectAccessLevelForm
-from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 import datetime
@@ -229,10 +231,31 @@ def show_iterations(request, projectID):
 @login_required(login_url='/accounts/login/')
 @permission_required(PERMISSION_OWN_PROJECT)     
 def manage_user_association(request, projectID, userID):
-	# TODO: There should be a conversion function and stuff. First, let's just get this up on the screen.
-	context = {
-        'project' : projectID,
-	    'user' : userID,
-	}
-	return render(request, 'ManageUserAssociation.html', context)
+    form = SelectAccessLevelForm()
+    the_project = project_api.get_project(projectID)
+    the_user = User.objects.get(id=userID)
+    association = UserAssociation.objects.get(user=the_user, project=the_project)
+    role = association.role
+
+    context = {
+        'form' : form,
+        'project' : the_project,
+        'user' : the_user,
+        'role' : role,
+    }
+    return render(request, 'ManageUserAssociation.html', context)
+
+def change_user_role(request, projectID, userID):
+    # Gets the project, user and role whose IDs have been passed to this view (the role 
+    # by POST) and passes them on to the project_api method of the same name.
+    project = project_api.get_project(projectID)
+    user = User.objects.get(id=userID)
+    print user.username #debug
+    
+    # Get the role that was sent via the dropdown in the form. 
+    retrieved_role = (request.POST).get('user_role')
+    print retrieved_role # to console for debugging
+    project_api.change_user_role(project, user, retrieved_role)
+    return redirect('/projects/' + projectID)
+
 

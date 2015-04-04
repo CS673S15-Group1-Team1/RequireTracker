@@ -55,7 +55,7 @@ urlpatterns = patterns('',
     url(r'^showiterations/(?P<projectID>\d+)',projects.show_iterations),
 
     url(r'^userprojectaccess/(?P<projectID>\d+)/(?P<userID>\d+)',projects.manage_user_association),
-    
+    url(r'^changeuserrole/(?P<projectID>\d+)/(?P<userID>\d+)',projects.change_user_role),
 
         #Default to login screen
 # >>>>>>> newfeature-be-editproject

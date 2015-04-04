@@ -20,6 +20,7 @@
 	        	{% endif %}
 				<ul class="list-group">
 					{% if confirm_message %}
+					    <!-- remove user from project -->
 					    {% for auser in users %}
                             {% if not auser == user %}
                             <li class="list-group-item">
@@ -34,6 +35,7 @@
                             {% endif %}
                         {% endfor %}
 					{% else %}
+					<!-- add user to project -->
 					{% for activeUser in activeUsers %}
                         {% if not activeUser == user %}
                             <li class="list-group-item">

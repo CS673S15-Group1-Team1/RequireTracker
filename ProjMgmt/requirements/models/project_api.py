@@ -111,6 +111,21 @@ def user_owns_project(user,project):
     if not ua_list.exists():
         return False
     return ROLE_OWNER == ua_list[0].role
+
+def change_user_role(the_project,the_user,the_role):
+    # Finds the user's association in the specified project, and changes role to the
+    # specified role. 
+    try:
+        association = UserAssociation.objects.get(user=the_user, project=the_project)
+        association.role = the_role
+        # print "Supposedly ran the code that changed "+(the_user.username)+"'s role to "+the_role+"."
+        # print "Association.role is "+association.role+"."
+        association.save()
+    except UserAssociation.DoesNotExist:
+        print "Error. Could not find association where user = "+(the_user.username)+" and project = "+the_project+"."
+
+    return
+
     
 def get_stories_for_iteration(iteration):
     return Story.objects.filter(iteration=iteration)
@@ -121,3 +136,6 @@ def get_stories_with_no_iteration(project):
 def get_iteration(iterID):
     return Iteration.objects.get(id=iterID)
         
+        
+
+
