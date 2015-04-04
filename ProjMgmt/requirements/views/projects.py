@@ -226,3 +226,13 @@ def show_iterations(request, projectID):
     }
     return render(request, 'SideBarIters.html', context)
 
+@login_required(login_url='/accounts/login/')
+@permission_required(PERMISSION_OWN_PROJECT)     
+def manage_user_association(request, projectID, userID):
+	# TODO: There should be a conversion function and stuff. First, let's just get this up on the screen.
+	context = {
+        'project' : projectID,
+	    'user' : userID,
+	}
+	return render(request, 'ManageUserAssociation.html', context)
+

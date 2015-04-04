@@ -53,6 +53,10 @@ urlpatterns = patterns('',
     url(r'^movestorytoiter/(?P<projectID>\d+)/(?P<storyID>\d+)/(?P<iterID>\d+)', projects.move_story_to_iter),
     url(r'^movestorytoicebox/(?P<projectID>\d+)/(?P<storyID>\d)', projects.move_story_to_icebox),
     url(r'^showiterations/(?P<projectID>\d+)',projects.show_iterations),
+
+    url(r'^userprojectaccess/(?P<projectID>\d+)/(?P<userID>\d+)',projects.manage_user_association),
+    
+
         #Default to login screen
 # >>>>>>> newfeature-be-editproject
     #TODO what if the user is already logged in?
@@ -65,4 +69,5 @@ urlpatterns = patterns('',
     url(r'^newStory', projects.new_story),
     url(r'^projectStories', projects.project_stories),
     url(r'^editproject', projects.edit_project),
+
 )

@@ -77,6 +77,8 @@
 						</div>
 					</div>
             	</div>
+
+		    <!-- Iterations -->
 		    {% for iteration in iterations %}
 		    	<div class="col-md-12">
             	    <!-- iterations panel -->
@@ -145,6 +147,8 @@
 				</div>
             {% endfor %}
             </div>
+
+            <!-- User List -->
 			<div class="col-lg-4 col-md-12">
 				<div class="col-md-12">
 					<div class="panel panel-primary" style="min-height: 200px">
@@ -152,7 +156,8 @@
 							<h2 class="panel-title">
 								<i class="fa fa-list fa-fw"></i>
 								User List
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');"> 
+{#                	                <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/userprojectaccess/1');"> #}
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
 								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/addusertoproject/{{ project.id }}/0');">
@@ -163,8 +168,12 @@
 						<div class="panel-body">
 							<ul class="list-group">
 								{% for auser in users %}
+								<!-- Display usernames. Click on username to edit permissions. -->
                 	            <li class="list-group-item">
-                	                <i class="glyphicon glyphicon-user fa-fw"></i> {{ auser.username }}
+                	                <i class="glyphicon glyphicon-user fa-fw"></i> 
+                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showUserDialog('/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
+                	                {{ auser.username }}
+                	                </a>
                 	                {% if auser.is_authenticated %}
                 	                <span class="label label-success pull-right">
 								    Online    
@@ -219,8 +228,8 @@
 	}
 	
 	// use ajax method to load User Dialog
-	// userUrl will be one of the following two:
-	// /addusertoproject/username or /removeuserfromproject/username
+	// userUrl will be one of the following three:
+	// /addusertoproject/userid , /removeuserfromproject/userid or /userprojectaccess/projectid/userid
 	function showUserDialog(userUrl){
 	    $.ajax({
 	        url: userUrl,
