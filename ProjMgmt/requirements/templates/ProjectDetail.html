@@ -157,7 +157,6 @@
 								<i class="fa fa-list fa-fw"></i>
 								User List
 								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');"> 
-{#                	                <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/userprojectaccess/1');"> #}
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
 								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/addusertoproject/{{ project.id }}/0');">
@@ -167,6 +166,9 @@
 						</div>
 						<div class="panel-body">
 							<ul class="list-group">
+							<!-- Display usernames. -->
+							<!-- IF user has permission to edit project, give option to edit permissions. -->
+							{% if can_edit_project %}
 								{% for auser in users %}
 								<!-- Display usernames. Click on username to edit permissions. -->
                 	            <li class="list-group-item">
@@ -175,16 +177,34 @@
                 	                {{ auser.username }}
                 	                </a>
                 	                {% if auser.is_authenticated %}
-                	                <span class="label label-success pull-right">
-								    Online    
-								    </span>
+                	                    <span class="label label-success pull-right">
+								        Online    
+								        </span>
 								    {% else %}
-								    <span class="label label-default pull-right">
-								    Offline    
-								    </span>
+								        <span class="label label-default pull-right">
+								        Offline    
+								        </span>
 								    {% endif %}
                 	            </li>
                 	            {% endfor %}
+                	        {% else %}    
+								{% for auser in users %}
+								<!-- Display usernames without option to click and edit. -->
+                	            <li class="list-group-item">
+                	                <i class="glyphicon glyphicon-user fa-fw"></i> 
+                	                {{ auser.username }}
+                	                {% if auser.is_authenticated %}
+                	                    <span class="label label-success pull-right">
+								        Online    
+								        </span>
+								    {% else %}
+								        <span class="label label-default pull-right">
+								        Offline    
+								        </span>
+								    {% endif %}
+                	            </li>
+                	            {% endfor %}
+                	        {% endif %}
                 	        </ul>
 						</div>
 					</div>

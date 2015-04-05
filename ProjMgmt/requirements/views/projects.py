@@ -54,17 +54,23 @@ def project_stories(request):
 @login_required(login_url='/signin')
 def project(request, proj):
     if project_api.can_user_access_project(request.user.id, proj) :
-        project = project_api.get_project(proj)
+        the_project = project_api.get_project(proj)
         activeUsers = user_manager.getActiveUsers()
-        iterations = project_api.get_iterations_for_project(project)
+        iterations = project_api.get_iterations_for_project(the_project)
+
+        # Determine whether the user has permission to do the stuff in ProjectDetail.
+        association = UserAssociation.objects.get(user=request.user, project=the_project)
+        can_edit = association.get_permission("EditProject")
+        print "Can_edit: "+str(can_edit) # debug
+
         context = {'projects' : project_api.get_projects_for_user(request.user.id),
-                   'project' : project,
-                   'stories' : story.get_project_stories(project.id),
-                   'users' : project.users.all,
+                   'project' : the_project,
+                   'stories' : story.get_project_stories(the_project.id),
+                   'users' : the_project.users.all,
                    'iterations' : iterations,
                    'activeUsers' : activeUsers,
                    'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                   'owns_project' : project_api.user_owns_project(request.user,project)
+                   'can_edit_project' : can_edit,
                    }
         return render(request, 'ProjectDetail.html', context)
     else:
