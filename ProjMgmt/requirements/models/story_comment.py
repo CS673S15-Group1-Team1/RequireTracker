@@ -20,7 +20,7 @@ def get_story_comments(stryID):
 def get_story_comment(commentID):
     return Story_comment.objects.get(id=commentID)
 
-def create_comment(user, stry, fields):
+def create_story_comment(user, stry, fields):
     if stry is None: return None
     if Story.objects.filter(id=stry.id).count() == 0: return None
     if fields is None: return None
