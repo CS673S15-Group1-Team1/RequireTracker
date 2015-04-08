@@ -235,7 +235,6 @@ def show_iterations(request, projectID):
     return render(request, 'SideBarIters.html', context)
 
 @login_required(login_url='/accounts/login/')
-@permission_required(PERMISSION_OWN_PROJECT)     
 def manage_user_association(request, projectID, userID):
     form = SelectAccessLevelForm()
     the_project = project_api.get_project(projectID)
