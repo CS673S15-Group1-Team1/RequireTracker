@@ -1,8 +1,5 @@
-<!DOCTYPE html>
-{% extends "DashBoard.html" %}
-{% block projectsummary %}
+{% load staticfiles %}
 
-<div id="myModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
 	{% if confirm_message %}
     <div class="modal-dialog modal-lg">
     {% else %}
@@ -10,10 +7,12 @@
     {% endif %}
       	<div class="modal-content">
 	        <div class="modal-header">
-	        	<a class="btn close" aria-label="Close" href="/projects"><span aria-hidden="true">×</span></a>
-	        	<h4 class="modal-title" id="myModalLabel">{{ title }}</h4>
+	        	<a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeProjectDialog();">
+	        		<span aria-hidden="true">×</span>
+	        	</a>
+	        	<h4 class="modal-title" id="projModalLabel">{{ title }}</h4>
 	        </div>
-	        <form class="form-horizontal" action="{{ action }}" method="post">
+	        <form id="projectForm" class="form-horizontal" action="{{ action }}" method="post">
 	        	{% csrf_token %}
 	        	<div class="modal-body">
 	        		{% if confirm_message %}
@@ -35,7 +34,7 @@
 	        		{% endif %}
 	        	</div>
         		<div class="modal-footer">
-        		  	<a class="btn btn-default" href="/projects">Close</a>
+        		  	<a class="btn btn-default" href="javascript:void(0);" onclick="closeProjectDialog();">Close</a>
         		  	{% if confirm_message %}
 					<button type="submit" class="btn btn-danger">{{ desc }}</button>
         		  	{% else %}
@@ -46,12 +45,22 @@
 
       	</div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
-</div>
 
-<script type="text/javascript">
-	$("#myModal").modal({
-		backdrop: false,
-		show: true
-	})
-</script>
-{% endblock projectsummary %}
+	<script type="text/javascript">
+		// detect submit button event to use ajax method to post the form
+		// and retrive the return data back if there is error object in form object.
+		$('#projectForm').on('submit',function(e){
+		    $(this).ajaxForm({
+		        type : "POST",
+		        cache : false,
+		        url : $(this).attr('action'),
+		        data : $(this).serialize(),
+		        success : function(data) {
+		            $("#projectModal").html(data);
+		        },
+		        async:false
+		    }).submit();
+		    e.stopPropagation();
+		});
+
+	</script>
