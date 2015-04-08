@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+{% load staticfiles %}
+
+{% if confirm_message %}
+<div class="modal-dialog modal-lg">
+{% else %}
+<div class="modal-dialog">
+{% endif %}
+    <div class="modal-content">
+        <div class="modal-header">
+        	<a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeUserDialog();">
+               <span aria-hidden="true">×</span>
+            </a>
+        	<h4 class="modal-title" id="userModalLabel">{{ title }}</h4>
+        </div>
+        <div class="modal-body">
+			<ul class="list-group">
+            {{ user }}'s role on project {{ project }} is currently {{ role }}. Select new role: 
+
+            <form action ="/changeuserrole/{{ project.id }}/{{ user.id }}" method="post">
+                {% csrf_token %}
+                {{ form }}
+            <span>
+                <a class="btn btn-link pull-right">
+                    <input type="submit" value="Change">
+                </a>
+            </span>
+            </form>
+
+            </ul>
+        </div>
+    	<div class="modal-footer">
+    	  	<a class="btn btn-default" href="javascript:void(0);" onclick="closeUserDialog();">Close</a>
+    	</div>
+  	</div><!-- /.modal-content -->
+</div><!-- /.modal-dialog -->
+
+
