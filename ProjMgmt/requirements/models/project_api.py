@@ -5,12 +5,16 @@ from django.core.exceptions import ObjectDoesNotExist
 from iteration import Iteration
 from story import Story
 
-ROLE_USER = "user"
+ROLE_CLIENT = "client"
+ROLE_DEVELOPER = "developer"
 ROLE_OWNER = "owner"
 
 
 def get_all_projects():
     return Project.objects.all()
+
+def get_associations_for_user(userID):
+	return UserAssociation.objects.filter(user__id=userID)
 
 def get_projects_for_user(userID):
     return Project.objects.filter(users__id__contains=userID)
@@ -21,7 +25,7 @@ def get_project(projID):
     return Project.objects.get(id=projID)
     
 def get_project_users(projID):
-    return UserAssociation.objects.filter(project__id=projID, role=ROLE_USER)
+    return UserAssociation.objects.filter(project__id=projID, role=ROLE_CLIENT)
 
 def can_user_access_project(userID, projectID):
     return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0
@@ -42,17 +46,15 @@ def create_project(user, fields):
     association.save()
     return proj
 
-def add_user_to_project(projectID, username):
+def add_user_to_project( projectID, username, user_role):
     try:
         proj = Project.objects.get(id=projectID)
         user = User.objects.get(username=username)
+        association = UserAssociation(user=user,project=proj, role=user_role)
+        association.save()
         
     except ObjectDoesNotExist:
         return
-    
-    association = UserAssociation(user=user,project=proj, role=ROLE_USER)
-    association.save()
-    association.save()
     
 def remove_user_from_project(projectID, username):
     if projectID is None: return
@@ -109,6 +111,21 @@ def user_owns_project(user,project):
     if not ua_list.exists():
         return False
     return ROLE_OWNER == ua_list[0].role
+
+def change_user_role(the_project,the_user,the_role):
+    # Finds the user's association in the specified project, and changes role to the
+    # specified role. 
+    try:
+        association = UserAssociation.objects.get(user=the_user, project=the_project)
+        association.role = the_role
+        # print "Supposedly ran the code that changed "+(the_user.username)+"'s role to "+the_role+"."
+        # print "Association.role is "+association.role+"."
+        association.save()
+    except UserAssociation.DoesNotExist:
+        print "Error. Could not find association where user = "+(the_user.username)+" and project = "+the_project+"."
+
+    return
+
     
 def get_stories_for_iteration(iteration):
     return Story.objects.filter(iteration=iteration)
@@ -119,3 +136,6 @@ def get_stories_with_no_iteration(project):
 def get_iteration(iterID):
     return Iteration.objects.get(id=iterID)
         
+        
+
+

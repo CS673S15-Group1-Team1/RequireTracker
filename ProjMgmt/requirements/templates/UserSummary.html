@@ -20,6 +20,7 @@
 	        	{% endif %}
 				<ul class="list-group">
 					{% if confirm_message %}
+					    <!-- remove user from project -->
 					    {% for auser in users %}
                             {% if not auser == user %}
                             <li class="list-group-item">
@@ -34,19 +35,24 @@
                             {% endif %}
                         {% endfor %}
 					{% else %}
-                        {% for activeUser in activeUsers %}
-                            {% if not activeUser == user %}
-				            <li class="list-group-item">
-                                <i class="glyphicon glyphicon-user fa-fw"></i> {{ activeUser.username }}
+					<!-- add user to project -->
+					{% for activeUser in activeUsers %}
+                        {% if not activeUser == user %}
+                            <li class="list-group-item">
+                            <i class="glyphicon glyphicon-user fa-fw"></i> {{ activeUser.username }}
+                            <form action ="/addusertoproject/{{ project.id }}/{{ activeUser.username }}" method="post">
+                                {% csrf_token %}
+                                {{ form }}
                                 <span>
-                                	<a class="btn btn-link pull-right" href="/addusertoproject/{{ project.id }}/{{ activeUser.username }}">
-                                        <i class="glyphicon glyphicon-plus fa-fw"></i>
-                                        Add
-				                    </a>
-                                </span>
+                            	    <a class="btn btn-link pull-right">
+		    				   		    <i class="glyphicon glyphicon-plus fa-fw"></i>
+			    				        <input type="submit" value="Add">
+				    		   	    </a>
+					    	    </span>
+                            </form>
                             </li>
-                            {% endif %}
-                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
                     {% endif %}
                 </ul>
             </div>
