@@ -4,6 +4,7 @@ from requirements.views import users
 from requirements.views import projects 
 from requirements.views import stories
 from requirements.views import home
+from requirements.views import story_comments
 
 urlpatterns = patterns('',
     
@@ -53,6 +54,7 @@ urlpatterns = patterns('',
     url(r'^movestorytoiter/(?P<projectID>\d+)/(?P<storyID>\d+)/(?P<iterID>\d+)', projects.move_story_to_iter),
     url(r'^movestorytoicebox/(?P<projectID>\d+)/(?P<storyID>\d)', projects.move_story_to_icebox),
     url(r'^showiterations/(?P<projectID>\d+)',projects.show_iterations),
+    url(r'^newcomment/(?P<projectID>\d+)/(?P<storyID>\d+)', story_comments.new_comment),
         #Default to login screen
 # >>>>>>> newfeature-be-editproject
     #TODO what if the user is already logged in?

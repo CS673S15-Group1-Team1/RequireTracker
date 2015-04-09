@@ -89,3 +89,8 @@ class AddIterationForm(forms.Form):
     description = forms.CharField(label='Description:', max_length=100, widget=forms.Textarea(attrs={'class':'form-control'}))
     start_date = forms.DateField(label='Start Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))
     end_date = forms.DateField(label='End Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))
+
+
+class AddCommentForm(forms.Form):
+	 title = forms.CharField(label='Title:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+	 comment = forms.CharField(label='Description:', max_length=100, widget=forms.Textarea(attrs={'class':'form-control'}))

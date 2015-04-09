@@ -14,22 +14,25 @@ class Story_comment(ProjMgmtBase):
     class Meta:
         app_label = 'requirements'
 
-def get_story_comments(stryID):
-    return Story_comment.objects.filter(story_id=stryID)
+    def get_story_comments(stryID):
+        return Story_comment.objects.filter(story_id=stryID)
 
-def get_story_comment(commentID):
-    return Story_comment.objects.get(id=commentID)
+    def get_story_comment(commentID):
+        return Story_comment.objects.get(id=commentID)
 
-def create_story_comment(user, stry, fields):
-    if stry is None: return None
-    if Story.objects.filter(id=stry.id).count() == 0: return None
-    if fields is None: return None
+    def create_story_comment(user, proj, stry, fields):
+        if stry is None: return None
+        if Project.objects.filter(id=proj.id).count() == 0: return None
+        if Story.objects.filter(id=stry.id).count() == 0: return None
+        if fields is None: return None
     
-    title = fields.get('title', '')
-    comment = fields.get('comment', '')
+        title = fields.get('title', '')
+        comment = fields.get('comment', '')
 
-    story_comment = Story_comment(story=stry,
-                  comment=comment
-                  )
-    story_comment.save()
-    return story_comment
+        story_comment = Story_comment(
+            project=proj, 
+            story=stry,
+            comment=comment
+        )
+        story_comment.save()
+        return story_comment
