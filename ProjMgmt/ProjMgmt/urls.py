@@ -41,8 +41,8 @@ urlpatterns = patterns('',
     #Default to login screen
 # =======
     url(r'^newproject', projects.new_project),
-    url(r'^editproject/(?P<id>\d+)', projects.edit_project),
-    url(r'^deleteproject/(?P<id>\d+)', projects.delete_project),
+    url(r'^editproject/(?P<projectID>\d+)', projects.edit_project),
+    url(r'^deleteproject/(?P<projectID>\d+)', projects.delete_project),
     
     url(r'^newstory/(?P<projectID>\d+)', stories.new_story),
     url(r'^editstory/(?P<projectID>\d+)/(?P<storyID>\d+)', stories.edit_story),

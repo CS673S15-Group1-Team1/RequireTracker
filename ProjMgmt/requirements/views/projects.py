@@ -14,6 +14,7 @@ from django.contrib.auth.models import User
 from django.template import RequestContext
 from django.shortcuts import render, redirect
 import datetime
+from requirements.models.user_manager import user_owns_project
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
@@ -101,9 +102,9 @@ def new_project(request):
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)
-def edit_project(request, id):
-    project = project_api.get_project(id)
+@user_owns_project()
+def edit_project(request, projectID):
+    project = project_api.get_project(projectID)
     if request.method == 'POST':
         form = NewProjectForm(request.POST, instance=project)
         if form.is_valid():
@@ -115,13 +116,13 @@ def edit_project(request, id):
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Edit Project',
-               'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes'}
+               'form' : form, 'action' : '/editproject/' + projectID, 'desc' : 'Save Changes'}
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)
-def delete_project(request, id):
-    project = project_api.get_project(id)
+@user_owns_project()
+def delete_project(request, projectID):
+    project = project_api.get_project(projectID)
     if request.method == 'POST':
         # form = NewProjectForm(request.POST, instance=project)
         # if form.is_valid():
@@ -148,6 +149,7 @@ def delete_project(request, id):
     
         
 @login_required(login_url='/signin')
+@user_owns_project()
 def add_user_to_project(request, projectID, username):
     # If username = 0, displays an Add User to Project menu.
     # Otherwise, adds username to the project specified by projectID.
@@ -176,7 +178,8 @@ def add_user_to_project(request, projectID, username):
     return render(request, 'UserSummary.html', context)
     
 
-@login_required(login_url='/signin')    
+@login_required(login_url='/signin')  
+@user_owns_project()  
 def remove_user_from_project(request, projectID, username):
     project = project_api.get_project(projectID)
     if not username == '0':
@@ -199,7 +202,7 @@ def show_new_iteration(request,projectID):
     return render(request, 'NewIterationForm.html',context)
     
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)    
+@user_owns_project()  
 def add_iteration_to_project(request,projectID):
     fields = request.POST
     project_api.add_iteration_to_project(fields['title'], fields['description'],
@@ -209,7 +212,7 @@ def add_iteration_to_project(request,projectID):
     return redirect('/projects/' + projectID)   
 
 @login_required(login_url='/accounts/login/')
-@permission_required(PERMISSION_OWN_PROJECT)  
+@user_owns_project() 
 def move_story_to_iter(request, projectID,storyID, iterID):
     stry = story.get_story(storyID)
     iteration = project_api.get_iteration(iterID)
@@ -217,7 +220,7 @@ def move_story_to_iter(request, projectID,storyID, iterID):
     return redirect('/projects/' + projectID)  
 
 @login_required(login_url='/accounts/login/')
-@permission_required(PERMISSION_OWN_PROJECT)     
+@user_owns_project()     
 def move_story_to_icebox(request,projectID,storyID):
     stry = story.get_story(storyID)
     project_api.move_story_to_icebox(stry)
@@ -235,6 +238,7 @@ def show_iterations(request, projectID):
     return render(request, 'SideBarIters.html', context)
 
 @login_required(login_url='/accounts/login/')
+@user_owns_project() 
 def manage_user_association(request, projectID, userID):
     form = SelectAccessLevelForm()
     the_project = project_api.get_project(projectID)
