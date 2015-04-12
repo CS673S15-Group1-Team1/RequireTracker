@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from base import ProjMgmtBase
 from project import Project
 from iteration import Iteration
+from user_association import UserAssociation
 
 class Story(ProjMgmtBase):
     STATUS_UNSTARTED = 1
@@ -36,6 +37,7 @@ class Story(ProjMgmtBase):
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
     hours = models.CharField(default='', max_length=16, blank=True)
+    owner = models.ForeignKey(UserAssociation,blank=True,null=True)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
     pause = models.BooleanField(default=False) 
@@ -62,6 +64,7 @@ def create_story(user, proj, fields):
     reason = fields.get('reason', '')
     test = fields.get('test', '')
     hours = fields.get('hours','')
+    owner = fields.get('owner', '')
     status = fields.get('status', Story.STATUS_UNSTARTED)
     points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
@@ -72,6 +75,7 @@ def create_story(user, proj, fields):
                   reason=reason,
                   test=test,
                   hours = hours,
+                  owner = owner,
                   status=status,
                   points = points,
                   pause = pause
