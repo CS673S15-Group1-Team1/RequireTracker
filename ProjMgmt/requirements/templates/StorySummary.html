@@ -41,7 +41,15 @@
                         </h4>
                         <p>{{ form.title }}</p>
                         <hr>
-                        
+                        <h4>{{ form.description.label_tag }}</h4>
+                        <p>{{ form.description }}</p>
+                        <hr>
+                        <h4>{{ form.reason.label_tag }}</h4>
+                        <p>{{ form.reason }}</p>
+                        <hr>
+                        <h4>{{ form.test.label_tag }}</h4>
+                        <p>{{ form.test }}</p>
+                        <hr>
                         <div id="tasks">
                             <h4 style="font-weight:bold">Tasks:</h4>
                             {{ formset.management_form }}
@@ -63,16 +71,6 @@
                                 </a>
                             </p>
                         </div>
-                        <hr>
-
-                        <h4>{{ form.description.label_tag }}</h4>
-                        <p>{{ form.description }}</p>
-                        <hr>
-                        <h4>{{ form.reason.label_tag }}</h4>
-                        <p>{{ form.reason }}</p>
-                        <hr>
-                        <h4>{{ form.test.label_tag }}</h4>
-                        <p>{{ form.test }}</p>
                         <hr>
                         <h4>{{ form.hours.label_tag }}</h4>
                         <p>{{ form.hours }}</p>
