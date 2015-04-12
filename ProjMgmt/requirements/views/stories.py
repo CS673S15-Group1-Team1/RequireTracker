@@ -16,12 +16,18 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 #TODO we need some kind of permission here - aat
 def new_story(request, projectID):
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         form = StoryForm(request.POST)
         if form.is_valid():
             project = project_api.get_project(projectID)
             story = models.story.create_story(request.user, project, request.POST)
             story = form.save(commit=False)
-            return redirect('/projects/' + projectID)
+            if next == None:
+                return redirect('/projects/' + projectID)
+            else:
+                return redirect(next)
     else:
         form = StoryForm()
         
@@ -36,12 +42,18 @@ def new_story(request, projectID):
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
+
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         form = StoryForm(request.POST, instance=story)
         if form.is_valid():
             story = form.save(commit=True)
-            return redirect('/projects/' + projectID)
-     
+            if next == None:
+                return redirect('/projects/' + projectID)
+            else:
+                return redirect(next)
     else:
         form = StoryForm(instance=story)
         
@@ -58,9 +70,14 @@ def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         models.story.delete_story(storyID)
-        return redirect('/projects/' + projectID)
-     
+        if next == None:
+            return redirect('/projects/' + projectID)
+        else:
+            return redirect(next)
     else:
         form = StoryForm(instance=story)
 
@@ -71,3 +88,20 @@ def delete_story(request, projectID, storyID):
                'desc' : 'Delete User Story' }
     
     return render(request, 'StorySummary.html', context )
+
+@login_required(login_url='/signin')
+def load_task(request, storyID):
+    # story = Story.get_story(storyID)
+    # tasks = Task.get_tasks(storyID)
+    # context = {'story': story,
+    #            'tasks': tasks}
+    return render(request, 'TaskList.html', context)
+
+@login_required(login_url='/signin')
+def load_comment(request, storyID):
+    # story = Story.get_story(storyID)
+    # comments = Comment.get_comments(storyID)
+    # context = {'story': story,
+    #            'comments': comments}
+    return render(request, 'CommentList.html', context)
+

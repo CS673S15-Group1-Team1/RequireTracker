@@ -3,6 +3,7 @@ from django.contrib import admin
 from requirements.views import users
 from requirements.views import projects 
 from requirements.views import stories
+from requirements.views import iterations
 from requirements.views import home
 
 urlpatterns = patterns('',
@@ -28,6 +29,7 @@ urlpatterns = patterns('',
     
     url(r'^projects', projects.list_projects),
 
+    url(r'^iterations/(?P<projectID>\d+)/(?P<iterationID>\d+)',iterations.iteration),
 # =======
 #     url(r'^projects', views.listProjects),
 # >>>>>>> newfeature-be-editproject
@@ -53,6 +55,7 @@ urlpatterns = patterns('',
     url(r'^movestorytoiter/(?P<projectID>\d+)/(?P<storyID>\d+)/(?P<iterID>\d+)', projects.move_story_to_iter),
     url(r'^movestorytoicebox/(?P<projectID>\d+)/(?P<storyID>\d)', projects.move_story_to_icebox),
     url(r'^showiterations/(?P<projectID>\d+)',projects.show_iterations),
+    url(r'^showiterationswithselection/(?P<projectID>\d+)/(?P<iterationID>\d+)',projects.show_iterations_with_selection),
         #Default to login screen
 # >>>>>>> newfeature-be-editproject
     #TODO what if the user is already logged in?
@@ -65,4 +68,8 @@ urlpatterns = patterns('',
     url(r'^newStory', projects.new_story),
     url(r'^projectStories', projects.project_stories),
     url(r'^editproject', projects.edit_project),
+
+    url(r'^loadtask/(?P<storyID>\d+)', stories.load_task),
+    url(r'^loadcomment/(?P<storyID>\d+)', stories.load_comment),
+
 )

@@ -116,6 +116,9 @@ def get_stories_for_iteration(iteration):
 def get_stories_with_no_iteration(project):
     return Story.objects.filter(project=project, iteration=None)
     
-def get_iteration(iterID):
-    return Iteration.objects.get(id=iterID)
+def get_iteration(iterationID):
+    try:
+        return Iteration.objects.get(id=iterationID)
+    except Exception, e:
+        return None
         
