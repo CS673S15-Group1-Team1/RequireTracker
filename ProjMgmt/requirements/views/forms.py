@@ -4,6 +4,7 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.contrib.auth.forms import UserCreationForm
 from requirements.models.project import Project
 from requirements.models.story import Story
+from requirements.models.user_manager import getActiveUsers
 
 ROLE_CLIENT = "client"
 ROLE_DEVELOPER = "developer"
@@ -78,11 +79,12 @@ class StoryForm(forms.ModelForm):
 
 	class Meta:
 		model = Story
-		fields = ('title', 'description', 'reason', 'test', 'hours' , 'status', 'points', 'pause')
+		fields = ('title', 'description', 'reason', 'test', 'hours' , 'owner', 'status', 'points', 'pause')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 			'reason': forms.Textarea(attrs={'rows': 5}),
 			'test': forms.Textarea(attrs={'rows': 5}),
+			'owner': forms.ModelChoiceField(choices=getActiveUsers()),
 		}
 		
 
