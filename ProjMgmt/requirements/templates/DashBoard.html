@@ -36,14 +36,14 @@
                                             {% for anAssociation in associationsWithUser %}
                                                 {% check_permission anAssociation theProject "DeleteProject" as can_delete %} 
                                                 {% if can_delete  %} 
-        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/deleteproject/{{ project.id }}');">
+        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/deleteproject/{{ theProject.id }}');">
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
                                                 {% endif %}
                                                 {% check_permission anAssociation theProject "EditProject" as can_edit %} 
                                                 {% if can_edit %} 
-         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/editproject/{{ project.id }}');">
+         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/editproject/{{ theProject.id }}');">
                                                     <i class="fa fa-edit fa-fw"></i>
                                                     Edit
                                                     </a>
