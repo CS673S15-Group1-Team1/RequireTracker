@@ -18,7 +18,7 @@
 							<i class="fa fa-list fa-fw"></i>
 							Project List
 							{% if canOwnProject %}
-							<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/newproject');">
+							<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/req/newproject');">
 								<i class="glyphicon glyphicon-plus"></i>
 							</a>
 							{% endif %}
@@ -36,20 +36,20 @@
                                             {% for anAssociation in associationsWithUser %}
                                                 {% check_permission anAssociation theProject "DeleteProject" as can_delete %} 
                                                 {% if can_delete  %} 
-        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/deleteproject/{{ project.id }}');">
+        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/req/deleteproject/{{ project.id }}');">
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
                                                 {% endif %}
                                                 {% check_permission anAssociation theProject "EditProject" as can_edit %} 
                                                 {% if can_edit %} 
-         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/editproject/{{ project.id }}');">
+         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/req/editproject/{{ project.id }}');">
                                                     <i class="fa fa-edit fa-fw"></i>
                                                     Edit
                                                     </a>
                                                 {% endif %}
                                             {% endfor %}
-							           		<a class="btn btn-link pull-right" href="/projects/{{ theProject.id }}">
+							           		<a class="btn btn-link pull-right" href="/req/projects/{{ theProject.id }}">
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
 							           			 Open
 							           		</a>

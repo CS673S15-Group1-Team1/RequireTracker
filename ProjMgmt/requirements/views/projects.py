@@ -76,7 +76,7 @@ def project(request, proj):
         return render(request, 'ProjectDetail.html', context)
     else:
         # return HttpResponse("You cannot access project " + proj)
-        return redirect('/projects')
+        return redirect('/req/projects')
 
 # @login_required(login_url='/accounts/login/')
 # def listProjects(request):
@@ -91,14 +91,14 @@ def new_project(request):
         if form.is_valid():
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
-            return redirect('/projects')
+            return redirect('/req/projects')
     else:
         form = NewProjectForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'New Project',
-               'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
+               'form' : form, 'action' : '/req/newproject' , 'desc' : 'Create Project' }
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
@@ -109,14 +109,14 @@ def edit_project(request, projectID):
         form = NewProjectForm(request.POST, instance=project)
         if form.is_valid():
             project = form.save(commit=True)
-            return redirect('/projects')
+            return redirect('/req/projects')
     else:
         form = NewProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Edit Project',
-               'form' : form, 'action' : '/editproject/' + projectID, 'desc' : 'Save Changes'}
+               'form' : form, 'action' : '/req/editproject/' + projectID, 'desc' : 'Save Changes'}
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
@@ -136,7 +136,7 @@ def delete_project(request, projectID):
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Delete Project',
                'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
-               'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
+               'form' : form, 'action' : '/req/deleteproject/' + id , 'desc' : 'Delete Project' }
     return render(request, 'ProjectSummary.html', context )
 
 #===============================================================================
@@ -159,7 +159,7 @@ def add_user_to_project(request, projectID, username):
         retrieved_role = (request.POST).get('user_role')
         print retrieved_role # to console for debugging
         project_api.add_user_to_project(projectID, username, retrieved_role)
-        return redirect('/projects/' + projectID)
+        return redirect('/req/projects/' + projectID)
     else:
         activeUsers = user_manager.getActiveUsers()
         for activeUser in activeUsers:
@@ -168,7 +168,7 @@ def add_user_to_project(request, projectID, username):
 	form = SelectAccessLevelForm()
     context = {
                'form' : form,
-               'action' : '/addusertoproject/{{ project.id }}/{{ activeUser.username }}',
+               'action' : '/req/addusertoproject/{{ project.id }}/{{ activeUser.username }}',
                'project' : project,
                'users' : project.users.all,
                'activeUsers' : activeUsers,
@@ -217,14 +217,14 @@ def move_story_to_iter(request, projectID,storyID, iterID):
     stry = story.get_story(storyID)
     iteration = project_api.get_iteration(iterID)
     project_api.add_story_to_iteration(stry,iteration)
-    return redirect('/projects/' + projectID)  
+    return redirect('/req/projects/' + projectID)  
 
 @login_required(login_url='/accounts/login/')
 @user_owns_project()     
 def move_story_to_icebox(request,projectID,storyID):
     stry = story.get_story(storyID)
     project_api.move_story_to_icebox(stry)
-    return redirect('/projects/' + projectID)
+    return redirect('/req/projects/' + projectID)
 
 @login_required(login_url='/signin')
 def show_iterations(request, projectID):
@@ -265,6 +265,6 @@ def change_user_role(request, projectID, userID):
     retrieved_role = (request.POST).get('user_role')
     print retrieved_role # to console for debugging
     project_api.change_user_role(project, user, retrieved_role)
-    return redirect('/projects/' + projectID)
+    return redirect('/req/projects/' + projectID)
 
 

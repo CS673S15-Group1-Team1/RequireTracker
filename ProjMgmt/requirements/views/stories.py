@@ -23,7 +23,7 @@ def new_story(request, projectID):
             project = project_api.get_project(projectID)
             story = models.story.create_story(request.user, project, request.POST)
             story = form.save(commit=False)
-            return redirect('/projects/' + projectID)
+            return redirect('/req/projects/' + projectID)
     else:
         form = StoryForm()
         
@@ -32,7 +32,7 @@ def new_story(request, projectID):
                'project' : project_api.get_project(projectID),
                'title' : 'New User Story',
                'form' : form, 
-               'action' : '/newstory/' + projectID , 
+               'action' : '/req/newstory/' + projectID , 
                'desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
@@ -45,7 +45,7 @@ def edit_story(request, projectID, storyID):
         form = StoryForm(request.POST, instance=story)
         if form.is_valid():
             story = form.save(commit=True)
-            return redirect('/projects/' + projectID)
+            return redirect('/req/projects/' + projectID)
      
     else:
         form = StoryForm(instance=story)
@@ -55,7 +55,7 @@ def edit_story(request, projectID, storyID):
                'project' : project,
                'title' : 'Edit User Story',
                'form' : form, 
-               'action' : '/editstory/' + projectID + '/' + storyID, 
+               'action' : '/req/editstory/' + projectID + '/' + storyID, 
                'desc' : 'Save Changes'}
     
     return render(request, 'StorySummary.html', context )
@@ -67,7 +67,7 @@ def delete_story(request, projectID, storyID):
     story = models.story.get_story(storyID)
     if request.method == 'POST':
         models.story.delete_story(storyID)
-        return redirect('/projects/' + projectID)
+        return redirect('/req/projects/' + projectID)
      
     else:
         form = StoryForm(instance=story)
@@ -78,7 +78,7 @@ def delete_story(request, projectID, storyID):
                'title' : 'Delete User Story',
                'confirm_message' : 'This is an irreversible procedure ! You will lose all information about this user story !',
                'form' : form, 
-               'action' : '/deletestory/' + projectID + '/' + storyID, 
+               'action' : '/req/deletestory/' + projectID + '/' + storyID, 
                'desc' : 'Delete User Story' }
     
     return render(request, 'StorySummary.html', context )

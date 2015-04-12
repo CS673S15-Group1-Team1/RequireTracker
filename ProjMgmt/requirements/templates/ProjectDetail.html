@@ -21,7 +21,7 @@
 									<a data-toggle="collapse" data-parent="" href="#iter_body_icebox" aria-expanded="true">
 									Icebox
 									</a>
-									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/newstory/{{ project.id }}');">
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/newstory/{{ project.id }}');">
 										<i class="glyphicon glyphicon-plus"></i>
 									</a>
 								</h2>
@@ -46,15 +46,15 @@
             	    	    	                      	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
             	    	    	                       		{% for iter_local in iterations %}
             	    	    	                        	<li role="presentation">
-            	    	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+            	    	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
             	    	    	                        	</li>
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
-						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
-            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 
 								                </h4>
@@ -112,17 +112,17 @@
             	    	    	                       		{% for iter_local in iterations %}
             	    	    	                        	{% if not iter_local.title = iteration.title %}
             	    	    	                        	<li role="presentation">
-            	    	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+            	    	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
             	    	    	                        	</li>
     														{% endif %}
             	    	    	                        	{% endfor %}
-            	    	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
+            	    	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
             	    	    	                      	</ul>
             	    	    	                    </div>
-													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                	</a>
-            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                	</a> 
 								                </h4>
@@ -156,10 +156,10 @@
 							<h2 class="panel-title">
 								<i class="fa fa-list fa-fw"></i>
 								User List
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');"> 
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/req/removeuserfromproject/{{ project.id }}/0');"> 
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/addusertoproject/{{ project.id }}/0');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/req/addusertoproject/{{ project.id }}/0');">
 									<i class="glyphicon glyphicon-plus"></i>
 								</a>
 							</h2>
@@ -173,7 +173,7 @@
 								<!-- Display usernames. Click on username to edit permissions. -->
                 	            <li class="list-group-item">
                 	                <i class="glyphicon glyphicon-user fa-fw"></i> 
-                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showUserDialog('/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
+                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showUserDialog('/req/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
                 	                {{ auser.username }}
                 	                </a>
                 	                {% if auser.is_authenticated %}
