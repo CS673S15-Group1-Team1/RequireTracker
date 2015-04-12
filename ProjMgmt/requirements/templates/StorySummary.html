@@ -41,6 +41,30 @@
                         </h4>
                         <p>{{ form.title }}</p>
                         <hr>
+                        
+                        <div id="tasks">
+                            <h4 style="font-weight:bold">Tasks:</h4>
+                            {{ formset.management_form }}
+                            {% for form in formset.forms %}
+                                <div class="item">
+                                    {{ form.as_table }}
+                                    <a  class="delete" 
+                                        href="javascript:void(0);">
+                                        <i class="fa fa-trash-o fa-fw"></i>
+                                             Delete
+                                    </a>
+                                </div>
+                            {% endfor %}
+                            <p>
+                                <a  id="add" 
+                                    href="#">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                        New Task
+                                </a>
+                            </p>
+                        </div>
+                        <hr>
+
                         <h4>{{ form.description.label_tag }}</h4>
                         <p>{{ form.description }}</p>
                         <hr>
@@ -97,7 +121,6 @@
             e.stopPropagation();
         });
 
-        
         function change_state(){
             var state = document.getElementById("{{ form.status.id_for_label }}");
             if (state.selectedIndex<3){
@@ -129,6 +152,72 @@
                 document.getElementById("btn-state").disabled=true;
                 document.getElementById("btn-state").style.visibility="hidden"   
             }
-        });      
+            
+            
+            //hide the delete label & checkbox that the management_form uses
+            $( "label[for*='DELETE']" ).each(function () {
+                $(this).attr('style', 'display:none');
+            });
+            
+            $( "input[id*='DELETE']" ).each(function () {
+                $(this).attr('style', 'display:none');
+            });
+        });    
+        
+        // Register the click event handlers
+        $("#add").click(function () {
+            return addForm(this, "task_set");
+        });
+    
+        $(".delete").click(function () {
+            return deleteForm(this, "task_set");
+        });
+  
+        //add a new task form to the formset
+        function addForm(btn, prefix) {
+            //get the mgmt section data
+            var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            
+            //copy the row & append it to the end
+            var row = $(".item:first").clone().get(0);
+            $(row).removeAttr('id').hide().insertAfter(".item:last").slideDown(300);
+            var newRef = prefix + "-" + formCount;
+            
+            //remove errors from the new row, if any
+            $(".errorlist", row).remove();
+            $(row).children().removeClass("error");
+            
+            //update the names & reset the vals
+            var html = $(".item:last").html();
+            html = html.replace(/task_set-0/g, newRef);
+            $(".item:last").html(html);
+            $(".item:last").children( "input" ).each(function () {
+                if ($(this).attr('id').indexOf("-story") == -1) {
+                    $(this).removeAttr("value");
+                }
+                if ($(this).attr('id').indexOf("-DELETE") > -1) {
+                    $(this).removeAttr("checked");
+                }
+            });
+            
+            // Add an event handler for the delete item/form link 
+            $(row).find(".delete").click(function () {
+                return deleteForm(this, prefix);
+            });
+        
+            // Update the total form count
+            $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+        }
 
+        function deleteForm(btn, prefix) {
+            var sibs = $(btn).siblings( "input" );
+            $(sibs).each(function () {
+                if ($(this).attr('id').indexOf("-DELETE") > 0) {
+                    $(this).attr('checked', 'true');
+                    $(btn).parents('.item').each(function () {
+                        $(this).attr('style', 'display:none');
+                    });
+                }
+            });
+        }
     </script>

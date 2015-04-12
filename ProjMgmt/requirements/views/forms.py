@@ -4,12 +4,14 @@ from django.forms.extras.widgets import SelectDateWidget
 from django.contrib.auth.forms import UserCreationForm
 from requirements.models.project import Project
 from requirements.models.story import Story
+from requirements.models.task import Task
+from django.forms.models import inlineformset_factory
+
 
 ROLE_CLIENT = "client"
 ROLE_DEVELOPER = "developer"
 ROLE_OWNER = "owner"
 
-# >>>>>>> newfeature-be-editproject
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(required=True)
 	
@@ -95,3 +97,4 @@ class StoryForm(forms.ModelForm):
 # 	password=forms.CharField(label='password:', max_length=100, widget=forms.PasswordInput())
 # 	confirmPassword=forms.CharField(label='Confirm password:', max_length=100)
 
+TaskFormSet = inlineformset_factory(Story, Task, fields=('title',), extra=0)
