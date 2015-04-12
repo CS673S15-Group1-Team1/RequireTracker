@@ -1,12 +1,12 @@
 from django.db import models
-from base import ProjMgmtBase
+from story import Story
 
-class Task(ProjMgmtBase):
-    story = models.ForeignKey('Story')    
+class Task(models.Model):
+    story = models.ForeignKey(Story)
+    description = models.CharField(max_length=1024, blank=True, default='')    
     
     def __str__(self):
-        return self.title
+        return self.description
         
     class Meta:
         app_label = 'requirements'
-        
