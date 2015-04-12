@@ -1,0 +1,11 @@
+{% load staticfiles %}
+
+<div class="list_group">
+	{% for comment in comments %}
+	<div class="list-group-item">
+		<h4 class="list-group-item-heading">{{ comment.title }}</h4>
+		<p class="list-group-item-text">{{ comment.description }}</p>
+	</div>
+	{% endfor %}
+</div>
+

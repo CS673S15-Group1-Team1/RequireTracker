@@ -42,6 +42,15 @@ class Story(ProjMgmtBase):
     
     def __str__(self):
         return self.title
+
+    def description_as_list(self):
+        return self.description.split('\n')
+
+    def reason_as_list(self):
+        return self.reason.split('\n')
+
+    def test_as_list(self):
+        return self.test.split('\n')
         
     class Meta:
         app_label = 'requirements'
@@ -50,7 +59,11 @@ def get_project_stories(projID):
     return Story.objects.filter(project_id=projID)
 
 def get_story(storyID):
-    return Story.objects.get(id=storyID)
+    try:
+        return Story.objects.get(id=storyID)
+    except Exception, e:
+        return None
+    
     
 def create_story(user, proj, fields):
     if proj is None: return None

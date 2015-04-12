@@ -20,7 +20,11 @@
                 {% ifequal aproject.id project.id %}
                 <ul id="proj_{{ aproject.id }}" class="collapse in" aria-expanded="true">
                     {% if iteration == None %}
+                    {% if isIceBox %}
+                    <li>
+                    {% else %}
                     <li class="active">
+                    {% endif %}
                     {% else %}
                     <li>
                     {% endif %}
@@ -34,7 +38,15 @@
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
                             <i class="fa fa-fw fa-tasks"></i> Iterations <i class="fa fa-fw fa-caret-down"></i>
                         </a> 
+                        {% if iteration == None %}
+                        {% if isIceBox %}
+                        <ul id="proj_{{ aproject.id }}_iters" class="collapse in" aria-expanded="true">
+                        {% else %}
                         <ul id="proj_{{ aproject.id }}_iters" class="collapse" aria-expanded="false">
+                        {% endif %}
+                        {% else %}
+                        <ul id="proj_{{ aproject.id }}_iters" class="collapse in" aria-expanded="true">
+                        {% endif %}
 <!--                             <li><a href="#"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
                             {% for aiteration in aproject.get_iterations %}
                             <li><a href="#"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
@@ -72,7 +84,13 @@
     {% for aproject in projects %}
     $(function() {
         $.ajax({
+            {% if aproject == project and iteration == None and isIceBox %}
+            url:'/showiterationswithselection/{{ aproject.id }}/0',
+            {% elif aproject == project and iteration != None %}
+            url:'/showiterationswithselection/{{ aproject.id }}/{{ iteration.id }}',
+            {% else %}
             url:'/showiterations/{{ aproject.id }}',
+            {% endif %}
             success: function(result) {
                 $("#proj_{{ aproject.id }}_iters").html(result);
             },
