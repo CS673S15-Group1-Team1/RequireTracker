@@ -67,7 +67,7 @@ class SelectAccessLevelForm(forms.Form):
                                              (ROLE_OWNER, "Owner"),
                                             ))
 
-class StoryForm(forms.ModelForm):
+class StoryForm(forms.ModelForm, AddUserForm):
 	def __init__(self, *args, **kwargs):
 		super(StoryForm, self).__init__(*args, **kwargs)
 		for name, field in self.fields.items():
@@ -77,12 +77,14 @@ class StoryForm(forms.ModelForm):
 				field.widget.attrs.update({'class':'form-control'})
 
 	class Meta:
+		USERNAME = AddUserForm()
 		model = Story
-		fields = ('title', 'description', 'reason', 'test', 'hours' , 'status', 'points', 'pause')
+		fields = ('title', 'description', 'reason', 'test', 'hours', 'owner', 'status', 'points', 'pause')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 			'reason': forms.Textarea(attrs={'rows': 5}),
 			'test': forms.Textarea(attrs={'rows': 5}),
+			'owner': forms.SelectMultiple(choices=USERNAME),
 		}
 		
 
