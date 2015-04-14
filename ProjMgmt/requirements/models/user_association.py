@@ -6,6 +6,9 @@ ROLE_CLIENT = "client"
 ROLE_DEVELOPER = "developer"
 ROLE_OWNER = "owner"
 
+PERM_CREATE_STORY = "CreateStory"
+PERM_EDIT_STORY = "EditStory"
+PERM_DELETE_STORY = "DeleteStory"
 
 class UserAssociation(models.Model):
     user = models.ForeignKey(User)
@@ -21,13 +24,14 @@ class UserAssociation(models.Model):
 		return false
 
     def get_role_permissions(self, role):
+        
         # The role passed should be one of the string constants defined above.
         # This method is where the permissions associated with a role are defined.
         # It should return an array of strings representing permissions.
         role_dictionary = {
-            ROLE_CLIENT: ["CreateStory"],
-            ROLE_DEVELOPER: ["CreateStory", "EditStory", "DeleteStory"],
-            ROLE_OWNER: ["CreateStory", "EditStory", "DeleteStory",
+            ROLE_CLIENT: [PERM_CREATE_STORY],
+            ROLE_DEVELOPER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY],
+            ROLE_OWNER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY,
                           "AddUser", "DeleteUser", "ChangePermissions", "EditProject", "DeleteProject", "AddIteration"]
         }
         # TODO: exception handling if permission not found.

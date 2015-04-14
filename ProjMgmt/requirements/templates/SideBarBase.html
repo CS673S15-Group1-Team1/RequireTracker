@@ -28,7 +28,7 @@
                 <ul id="proj_{{ aproject.id }}" class="collapse" aria-expanded="false">
                     <li>
                 {% endifequal %}
-                        <a href="/projects/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
+                        <a href="/req/projects/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
@@ -72,7 +72,7 @@
     {% for aproject in projects %}
     $(function() {
         $.ajax({
-            url:'/showiterations/{{ aproject.id }}',
+            url:'/req/showiterations/{{ aproject.id }}',
             success: function(result) {
                 $("#proj_{{ aproject.id }}_iters").html(result);
             },

@@ -18,7 +18,7 @@
 			<ul class="list-group">
             {{ user }}'s role on project {{ project }} is currently {{ role }}. Select new role: 
 
-            <form action ="/changeuserrole/{{ project.id }}/{{ user.id }}" method="post">
+            <form action ="/req/changeuserrole/{{ project.id }}/{{ user.id }}" method="post">
                 {% csrf_token %}
                 {{ form }}
             <span>
