@@ -267,4 +267,17 @@ def change_user_role(request, projectID, userID):
     project_api.change_user_role(project, user, retrieved_role)
     return redirect('/req/projects/' + projectID)
 
-
+@login_required(login_url='/signin')
+def show_iterations_with_selection(request, projectID, iterationID):
+    project = project_api.get_project(projectID)
+    iterations = project_api.get_iterations_for_project(project)
+    iteration = project_api.get_iteration(iterationID)
+    context = {
+        'project' : project,
+        'iterations' : iterations,
+        'iteration' : iteration,
+        'owns_project' : project_api.user_owns_project(request.user,project),
+    }
+    if iteration == None:
+        context['isIceBox'] = True
+    return render(request, 'SideBarIters.html', context)
