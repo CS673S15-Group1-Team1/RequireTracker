@@ -87,7 +87,8 @@ class StoryForm(forms.ModelForm):
 			'test': forms.Textarea(attrs={'rows': 5}),
 		}
 		
-
+class FileForm(forms.Form):
+    file = forms.FileField()
 
 # class registrationForm(forms.Form):
 # 	firstName = forms.CharField(label='First Name:', max_length=100)

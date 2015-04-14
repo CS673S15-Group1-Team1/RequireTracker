@@ -54,6 +54,7 @@
                             <li><a href="#"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li> -->
                         </ul>
                     </li>
+                    <li><a href="javascript:void(0)" onclick="openAttachmentsModal({{ aproject.id }});"><i class="fa fa-fw fa-folder-open-o"></i> Attachments</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Communication</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-road"></i> Issue Tracker</a></li>
                 </ul>
@@ -121,6 +122,25 @@
     function closeNewIterationDialog(){
         $("#iterationModal").modal('hide');
         $("#iterationModal").html('');
+    }
+    
+        function openAttachmentsModal(projectID){
+        $.ajax({
+            url: "/req/getattachments/"+projectID,
+            success: function(result) {
+                $("#projAttachModal").html(result);
+                $("#projAttachModal").modal({
+                    backdrop: false,
+                    show: true
+                })
+            },
+            async:false
+        }); 
+    }
+
+    function closeAttachmentsModal(){
+        $("#projAttachModal").modal('hide');
+        $("#projAttachModal").html('');
     }
 </script>
 
