@@ -20,8 +20,12 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 def new_story(request, projectID):
     story = Story()
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         form = StoryForm(request.POST)
         if form.is_valid():
+# <<<<<<< HEAD
             formset = TaskFormSet(request.POST, instance=story)
             if formset.is_valid():
                 story = models.story.create_story(request.user, 
@@ -29,7 +33,16 @@ def new_story(request, projectID):
                                                   request.POST)
                 formset.instance=story
                 formset.save()
-                return redirect('req/projects/' + projectID)
+                return redirect('/req/projects/' + projectID)
+# =======
+#             project = project_api.get_project(projectID)
+#             story = models.story.create_story(request.user, project, request.POST)
+#             story = form.save(commit=False)
+#             if next == None:
+#                 return redirect('/projects/' + projectID)
+#             else:
+#                 return redirect(next)
+# >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(instance=story)
         formset = TaskFormSet(instance=story)
@@ -50,9 +63,14 @@ def new_story(request, projectID):
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
+
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         form = StoryForm(request.POST, instance=story)
         if form.is_valid():
+# <<<<<<< HEAD
             story = form.save(commit=False)
             formset = TaskFormSet(request.POST, instance=story)
             
@@ -60,6 +78,13 @@ def edit_story(request, projectID, storyID):
                 story.save()
                 formset.save()
                 return redirect('/req/projects/' + projectID)
+# =======
+#             story = form.save(commit=True)
+#             if next == None:
+#                 return redirect('/projects/' + projectID)
+#             else:
+#                 return redirect(next)
+# >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(instance=story)
         formset = TaskFormSet(instance=story)
@@ -71,7 +96,7 @@ def edit_story(request, projectID, storyID):
                'title' : 'Edit User Story',
                'form' : form, 
                'formset' : formset,
-               'action' : '/editstory/' + projectID + '/' + storyID, 
+               'action' : '/req/editstory/' + projectID + '/' + storyID, 
                'desc' : 'Save Changes'}
     
     return render(request, 'StorySummary.html', context )
@@ -82,9 +107,19 @@ def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
     if request.method == 'POST':
+        next = None
+        if 'next' in request.POST:
+            next = request.POST['next']  
         models.story.delete_story(storyID)
+# <<<<<<< HEAD
         return redirect('/req/projects/' + projectID)
      
+# =======
+#         if next == None:
+#             return redirect('/projects/' + projectID)
+#         else:
+#             return redirect(next)
+# >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(instance=story)
 
@@ -98,3 +133,20 @@ def delete_story(request, projectID, storyID):
                'desc' : 'Delete User Story' }
     
     return render(request, 'StorySummary.html', context )
+
+@login_required(login_url='/signin')
+def load_task(request, storyID):
+    # story = Story.get_story(storyID)
+    # tasks = Task.get_tasks(storyID)
+    # context = {'story': story,
+    #            'tasks': tasks}
+    return render(request, 'TaskList.html', context)
+
+@login_required(login_url='/signin')
+def load_comment(request, storyID):
+    # story = Story.get_story(storyID)
+    # comments = Comment.get_comments(storyID)
+    # context = {'story': story,
+    #            'comments': comments}
+    return render(request, 'CommentList.html', context)
+

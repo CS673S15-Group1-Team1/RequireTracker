@@ -14,6 +14,4 @@ urlpatterns = patterns('',
     url(r'^admin', include(admin.site.urls)),
     url(r'^req/', include(req_urls)),
     url(r'^$', home.home_page),
-
-
 )
