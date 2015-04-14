@@ -99,3 +99,7 @@ class FileForm(forms.Form):
 # 	confirmPassword=forms.CharField(label='Confirm password:', max_length=100)
 
 TaskFormSet = inlineformset_factory(Story, Task, fields=('description',), extra=0)
+
+class AddCommentForm(forms.Form):
+	 title = forms.CharField(label='Title:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+	 comment = forms.CharField(label='Description:', max_length=100, widget=forms.Textarea(attrs={'class':'form-control'}))

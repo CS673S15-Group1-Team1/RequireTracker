@@ -2,8 +2,12 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from requirements.views import users
 from requirements.views import home
+<<<<<<< HEAD
 from requirements import req_urls
 
+=======
+from requirements.views import story_comments
+>>>>>>> newfeature-addcommentinstory
 
 urlpatterns = patterns('',
     

@@ -32,6 +32,7 @@ urlpatterns = patterns('',
 
     url(r'^loadtask/(?P<storyID>\d+)', stories.load_task),
     url(r'^loadcomment/(?P<storyID>\d+)', stories.load_comment),
+    url(r'^newcomment/(?P<projectID>\d+)/(?P<storyID>\d+)', story_comments.new_comment),
 
     url(r'^userprojectaccess/(?P<projectID>\d+)/(?P<userID>\d+)',projects.manage_user_association),
     url(r'^changeuserrole/(?P<projectID>\d+)/(?P<userID>\d+)',projects.change_user_role),
