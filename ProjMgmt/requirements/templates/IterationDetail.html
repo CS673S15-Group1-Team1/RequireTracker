@@ -6,8 +6,8 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<ol class="breadcrumb">
-					<li><a href="/projects">Dashboard</a></li>
-					<li><a href="/projects/{{ project.id }}">{{ project.title }}</a></li>
+					<li><a href="/req/projects">Dashboard</a></li>
+					<li><a href="/req/projects/{{ project.id }}">{{ project.title }}</a></li>
 					<li class="active" style="font-size: xx-large;">
 						{% if isIceBox %}
 						Icebox
@@ -39,15 +39,15 @@
 	    	                      	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
 	    	                       		{% for iter_local in iterations %}
 	    	                        	<li role="presentation">
-	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
 	    	                        	{% endfor %}
 	    	                      	</ul>
 	    	                    </div>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
 	    	                    </a>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
 	    	                    </a> 
 			                </h4>
@@ -123,7 +123,7 @@
 														<a data-toggle="collapse" data-parent="" href="#task_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-tasks fa-fw"></i> Tasks
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/newtask/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/req/newtask/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
@@ -142,7 +142,7 @@
 														<a data-toggle="collapse" data-parent="" href="#comment_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-comments fa-fw"></i> Comments
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/newcomment/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/req/newcomment/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
@@ -180,17 +180,17 @@
 	    	                       		{% for iter_local in iterations %}
 	    	                        	{% if not iter_local.title = iteration.title %}
 	    	                        	<li role="presentation">
-	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
 										{% endif %}
 	    	                        	{% endfor %}
-	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
+	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
 	    	                      	</ul>
 	    	                    </div>
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
 	    	                	</a>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
 	    	                	</a> 
 			                </h4>
@@ -266,7 +266,7 @@
 														<a data-toggle="collapse" data-parent="" href="#task_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-tasks fa-fw"></i> Tasks
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/newtask/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/req/newtask/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
@@ -285,7 +285,7 @@
 														<a data-toggle="collapse" data-parent="" href="#comment_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-comments fa-fw"></i> Comments
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/newcomment/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/req/newcomment/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
@@ -341,7 +341,7 @@
 	}
 
 	function loadTasks(storyID) {
-		var taskUrl = "/loadtasks/" + storyID;
+		var taskUrl = "/req/loadtasks/" + storyID;
 		var jquerySearchID = "#task_" + storyID;
 		$.ajax({
 			url: taskUrl,
@@ -353,7 +353,7 @@
 	}
 
 	function loadComments(storyID) {
-		var commentUrl = "/loadcomments/" + storyID;
+		var commentUrl = "/req/loadcomments/" + storyID;
 		var jquerySearchID = "#comment_" + storyID;
 		$.ajax({
 			url: commentUrl,

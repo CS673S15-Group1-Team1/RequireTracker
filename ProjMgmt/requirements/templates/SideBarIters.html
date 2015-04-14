@@ -5,7 +5,7 @@
 	{% else %}
 	<li>
 	{% endif %}
-    	<a href="/iterations/{{ project.id }}/0">
+    	<a href="/req/iterations/{{ project.id }}/0">
     		<i class="fa fa-fw fa-calendar"></i>
     		 Ice Box
     	</a>
@@ -16,7 +16,7 @@
     {% else %}
     <li>
     {% endif %}
-    	<a href="/iterations/{{ project.id }}/{{ aiteration.id }}">
+    	<a href="/req/iterations/{{ project.id }}/{{ aiteration.id }}">
     		<i class="fa fa-fw fa-calendar"></i>
     		 {{ aiteration.title }}
     	</a>
