@@ -8,6 +8,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from forms import AddIterationForm
 from forms import NewProjectForm
 from forms import SelectAccessLevelForm
+from forms import FileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import User
@@ -15,7 +16,9 @@ from django.template import RequestContext
 from django.shortcuts import render, redirect
 import datetime
 from requirements.models.user_manager import user_owns_project
-
+from requirements.models.user_manager import user_can_access_project
+from requirements.models.files import ProjectFile
+from django.utils.encoding import smart_str
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
 ROLE_CLIENT = "client"
@@ -254,6 +257,7 @@ def manage_user_association(request, projectID, userID):
     }
     return render(request, 'ManageUserAssociation.html', context)
 
+@user_owns_project()
 def change_user_role(request, projectID, userID):
     # Gets the project, user and role whose IDs have been passed to this view (the role 
     # by POST) and passes them on to the project_api method of the same name.
@@ -267,4 +271,37 @@ def change_user_role(request, projectID, userID):
     project_api.change_user_role(project, user, retrieved_role)
     return redirect('/req/projects/' + projectID)
 
+@user_can_access_project()    
+def get_attachments(request, projectID):
+    form = FileForm()
+    context = {
+    'form' : form,
+    'projectID' : projectID,
+    'referer' : request.META['HTTP_REFERER'],
+    'modalID' : 'projAttachModal',
+    'files' : ProjectFile.objects.filter(project__id=projectID)
+    }
+    return render(request, 'Attachments.html',context)
 
+@user_can_access_project()       
+def upload_attachment(request, projectID):
+
+    if 'file' not in request.FILES:
+        raise IOError("Missing file")
+    if request.FILES['file'].size > 1100000:
+        raise IOError("File too large")
+        
+    form = FileForm(request.POST, request.FILES)
+    if(form.is_valid()):
+        file = request.FILES['file']
+        f = ProjectFile(project = project_api.get_project(projectID), file = file, name = file.name)
+        f.save()
+    return redirect(request.POST['referer'])
+    
+@user_can_access_project()
+def download_file(request, projectID):
+
+    file = ProjectFile.objects.get(project__id=projectID,name=request.GET.get('file',''))
+    response = HttpResponse(file.file)
+    response['Content-Disposition'] = 'attachment; filename=' + file.name
+    return response

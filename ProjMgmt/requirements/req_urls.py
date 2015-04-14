@@ -28,9 +28,12 @@ urlpatterns = patterns('',
     url(r'^showiterations/(?P<projectID>\d+)',projects.show_iterations),
     url(r'^userprojectaccess/(?P<projectID>\d+)/(?P<userID>\d+)',projects.manage_user_association),
     url(r'^changeuserrole/(?P<projectID>\d+)/(?P<userID>\d+)',projects.change_user_role),
+    url(r'^getattachments/(?P<projectID>\d+)',projects.get_attachments),
     url(r'^newproject', projects.new_project),
     url(r'^newStory', projects.new_story),
     url(r'^projectStories', projects.project_stories),
     url(r'^editproject', projects.edit_project),
+    url(r'^uploadprojectattachment/(?P<projectID>\d+)', projects.upload_attachment),
+    url(r'^downprojectattach/(?P<projectID>\d+)/?', projects.download_file),
 
 )

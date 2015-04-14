@@ -56,7 +56,18 @@ def user_owns_project():
             return view_method(request,projectID,*args,**kwargs)
         return wraps(view_method)(_decorator)
     return _my_decorator    
-    
+
+#Decorator function that can be used to wrap a view method. The view method must take
+#request and projectID as arguments. The decorator will redirect to
+#a 401 screen if the user making a request does not have access to the project
+def user_can_access_project():
+    def _my_decorator(view_method):
+        def _decorator(request,projectID, *args, **kwargs):
+            if __getAssoc(projectID,request.user.id).count() == 0:
+                return HttpResponse('You do not have permision to perform this function', status=401)
+            return view_method(request,projectID,*args,**kwargs)
+        return wraps(view_method)(_decorator)
+    return _my_decorator     
     
 def canCreateStoryInProject(projectID,userID):
     return __hasRole(projectID,userID,user_association.PERM_CREATE_STORY)
