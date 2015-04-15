@@ -33,12 +33,16 @@
                       <div class="col-xs-12 col-sm-9"><h4>{{ form.reason.value|linebreaksbr }}</h4></div>
                     </div>
                     <div class="form-group">
-                      <div class="col-xs-12 col-sm-3"><h4>{{ form.hours.label_tag }}</h4></div>
-                      <div class="col-xs-12 col-sm-9"><h4>{{ form.hours.value }} Hrs</h4></div>
-                    </div>
-                    <div class="form-group">
                       <div class="col-xs-12 col-sm-3"><h4>{{ form.test.label_tag }}</h4></div>
                       <div class="col-xs-12 col-sm-9"><h4>{{ form.test.value|linebreaksbr }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.owner.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.owner.value }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.hours.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.hours.value }} Hrs</h4></div>
                     </div>
                     <div class="form-group">
                       <div class="col-xs-12 col-sm-3"><h4>{{ form.points.label_tag }}</h4></div>
@@ -85,6 +89,10 @@
                         </div>
                         <hr>
                         {% endcomment %}
+                    <div class="form-group">
+                        <label for="{{ form.owner.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Story Owner</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.owner }}</div>
+                    </div>
                     <div class="form-group">
                         <label for="{{ form.hours.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Hours</label>
                         <div class="col-xs-12 col-sm-9">

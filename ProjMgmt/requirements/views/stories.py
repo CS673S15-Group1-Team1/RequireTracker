@@ -25,7 +25,7 @@ def new_story(request, projectID):
     # story = Story()
     project = project_api.get_project(projectID)
     if request.method == 'POST':
-        form = StoryForm(request.POST)
+        form = StoryForm(request.POST,project=project)
         if form.is_valid():
 # <<<<<<< HEAD
             # formset = TaskFormSet(request.POST, instance=story)
@@ -46,7 +46,7 @@ def new_story(request, projectID):
                 return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
-        form = StoryForm()
+        form = StoryForm(project=project)
         # formset = TaskFormSet(instance=story)
         # formset.extra = 1
         
@@ -60,11 +60,12 @@ def new_story(request, projectID):
 @login_required(login_url='/signin')
 @user_has_role(user_association.PERM_EDIT_STORY)
 def edit_story(request, projectID, storyID):
+    project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
     if story == None: return redirect('/req/projectdetail/' + projectID)
     
     if request.method == 'POST':
-        form = StoryForm(request.POST, instance=story)
+        form = StoryForm(request.POST, instance=story, project=project)
         if form.is_valid():
 # <<<<<<< HEAD
             # story = form.save(commit=False)
@@ -83,7 +84,7 @@ def edit_story(request, projectID, storyID):
                 return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
-        form = StoryForm(instance=story)
+        form = StoryForm(instance=story, project=project)
         # formset = TaskFormSet(instance=story)
         # if story.task_set.count() == 0: formset.extra = 1
         
@@ -98,6 +99,7 @@ def edit_story(request, projectID, storyID):
 @login_required(login_url='/signin')
 @user_has_role(user_association.PERM_DELETE_STORY)
 def delete_story(request, projectID, storyID):
+    project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
     if story == None: return redirect('/req/projectdetail/' + projectID)
     if request.method == 'POST':
@@ -108,7 +110,7 @@ def delete_story(request, projectID, storyID):
             next = request.POST['next']
             return redirect(next)
     else:
-        form = StoryForm(instance=story)
+        form = StoryForm(instance=story, project=project)
 
     context = {'title' : 'Delete User Story',
                'confirm_message' : 'This is an irreversible procedure ! You will lose all information about this user story !',

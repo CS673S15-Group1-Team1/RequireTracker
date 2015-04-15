@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.forms.extras.widgets import SelectDateWidget
+from django.forms.extras.widgets import SelectDateWidget, Select
 from django.contrib.auth.forms import UserCreationForm
 from requirements.models.project import Project
 from requirements.models.story import Story
@@ -92,7 +92,11 @@ class SelectAccessLevelForm(forms.Form):
 
 class StoryForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
+		self.project = kwargs.pop('project', None)	#retrive the parameter project, then call the superclass init
 		super(StoryForm, self).__init__(*args, **kwargs)
+		#change the origin field 'owner' to ChoiceField 
+		self.fields['owner'] = forms.ModelChoiceField(queryset=self.project.users.all(), empty_label='None')
+		#add 'form-control' into all element's class attrtribute
 		for name, field in self.fields.items():
 			if field.widget.attrs.has_key('class'):
 				field.widget.attrs['class'] += ' form-control'
@@ -101,7 +105,7 @@ class StoryForm(forms.ModelForm):
 
 	class Meta:
 		model = Story
-		fields = ('title', 'description', 'reason', 'test', 'hours' , 'status', 'points', 'pause',)
+		fields = ('title', 'description', 'reason', 'test', 'hours', 'owner', 'status', 'points', 'pause')
 		widgets = {
 			'description': forms.Textarea(attrs={'rows': 5}),
 			'reason': forms.Textarea(attrs={'rows': 5}),
