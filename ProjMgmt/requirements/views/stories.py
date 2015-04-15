@@ -2,6 +2,7 @@ from django import forms
 from requirements import models
 from requirements.models.project import Project
 from requirements.models.story import Story
+from requirements.models.user_association import UserAssociation
 from requirements.models import project_api
 from requirements.models import iteration as mdl_iteration
 from requirements.models import story as mdl_story
@@ -61,9 +62,9 @@ def new_story(request, projectID):
 @user_has_role(user_association.PERM_EDIT_STORY)
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
-    story = models.story.get_story(storyID)
+    association = UserAssociation.objects.get(user=request.user, project=project)
+    story = mdl_story.get_story(storyID)
     if story == None: return redirect('/req/projectdetail/' + projectID)
-    
     if request.method == 'POST':
         form = StoryForm(request.POST, instance=story, project=project)
         if form.is_valid():
@@ -87,8 +88,17 @@ def edit_story(request, projectID, storyID):
         form = StoryForm(instance=story, project=project)
         # formset = TaskFormSet(instance=story)
         # if story.task_set.count() == 0: formset.extra = 1
+
+        # test that association and permissions are working
+        print "UserID "+str(request.user.id)+" and ProjectID "+projectID+" and storyID "+storyID
+        can_edit_hours = the_association.get_permission("EditHours") # should become unnecessary
+        str_edit_hours = str(can_edit_hours)
+        print "In association of user and project, permission EditHours is "+str_edit_hours
         
     context = {'title' : 'Edit User Story',
+               'project' : project,
+               'association' : association,
+               'title' : 'Edit User Story',
                'form' : form, 
                # 'formset' : formset,
                'action' : '/req/editstory/' + projectID + '/' + storyID, 

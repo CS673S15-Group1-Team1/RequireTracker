@@ -29,12 +29,23 @@ class UserAssociation(models.Model):
         # This method is where the permissions associated with a role are defined.
         # It should return an array of strings representing permissions.
         role_dictionary = {
-            ROLE_CLIENT: [PERM_CREATE_STORY],
-            ROLE_DEVELOPER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY],
-            ROLE_OWNER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY,
-                          "AddUser", "DeleteUser", "ChangePermissions", "EditProject", "DeleteProject", "AddIteration"]
+# <<<<<<< HEAD
+#             ROLE_CLIENT: [PERM_CREATE_STORY],
+#             ROLE_DEVELOPER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY],
+#             ROLE_OWNER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY,
+#                           "AddUser", "DeleteUser", "ChangePermissions", "EditProject", "DeleteProject", "AddIteration"]
+# =======
+            ROLE_CLIENT: [PERM_CREATE_STORY, "AcceptStory"],
+            ROLE_DEVELOPER: [PERM_CREATE_STORY, PERM_EDIT_STORY, "EditHours", "EditPoints",
+                             "ChangeStoryStatus", "AddTasks"],
+            ROLE_OWNER: [PERM_CREATE_STORY, PERM_EDIT_STORY, PERM_DELETE_STORY, "AcceptStory",
+                         "EditHours", "EditPoints", "ChangeStoryStatus", "AddTasks",
+                          "AddUser", "DeleteUser", "ChangePermissions", 
+                          "PauseStory", "EditAccepted", "EditPaused",
+                          "EditProject", "DeleteProject", "AddIteration"]
+# >>>>>>> newfeature-addpermissionforeditstory
         }
-        # TODO: exception handling if permission not found.
+        # TODO: exception handling if permission string not found.
         return role_dictionary[role]
 
 		

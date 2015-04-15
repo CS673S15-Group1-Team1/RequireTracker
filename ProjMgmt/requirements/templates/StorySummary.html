@@ -1,4 +1,5 @@
     {% load staticfiles %}
+    {% load require_tags %}
 
     {% if confirm_message %}
     <div class="modal-dialog modal-md">
@@ -93,6 +94,8 @@
                         <label for="{{ form.owner.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Story Owner</label>
                         <div class="col-xs-12 col-sm-9">{{ form.owner }}</div>
                     </div>
+                    {% check_permission association project "EditHours" as can_edit_hours %}
+                    {% if can_edit_hours %}
                     <div class="form-group">
                         <label for="{{ form.hours.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Hours</label>
                         <div class="col-xs-12 col-sm-9">
@@ -102,18 +105,25 @@
                             </div>
                         </div>
                     </div>
+                    {% endif %}
                     <div class="form-group">
                         <label for="{{ form.status.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Status</label>
                         <div class="col-xs-12 col-sm-9">{{ form.status }}</div>
                     </div>
+                    {% check_permission association project "EditPoints" as can_edit_points %}
+                    {% if can_edit_points %}
                     <div class="form-group">
                         <label for="{{ form.points.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Scale Points</label>
                         <div class="col-xs-12 col-sm-9">{{ form.points }}</div>
                     </div>
+                    {% endif %}
+                    {% check_permission association project "PauseStory" as can_pause %}
+                    {% if can_pause %}
                     <div class="form-group">
                         <label for="{{ form.pause.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Pause</label>
                         <div class="col-xs-12 col-sm-9">{{ form.pause }}</div>
                     </div>
+                    {% endif %}
                     {% endif %}
                 </div>
                 <div class="modal-footer">

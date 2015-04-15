@@ -1,4 +1,5 @@
 {% extends "SideBarBase.html" %}
+{% load require_tags %}
 {% block content2 %}
 
 <div id="wrapper">
@@ -51,9 +52,12 @@
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
+                                                    {% check_permission association project "DeleteProject" as can_delete %} 
+                                                    {% if can_delete %}
 						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
+            	    	    	                    {% endif %}
             	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 
@@ -120,9 +124,12 @@
             	    	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
             	    	    	                      	</ul>
             	    	    	                    </div>
+                                                    {% check_permission association project "DeleteProject" as can_delete %} 
+                                                    {% if can_delete %}
 													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                	</a>
+            	    	    	                	{% endif %}
             	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                	</a> 
