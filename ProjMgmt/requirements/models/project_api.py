@@ -19,10 +19,11 @@ def get_associations_for_user(userID):
 def get_projects_for_user(userID):
     return Project.objects.filter(users__id__contains=userID)
 
-def get_project(projID):
-    if Project.objects.filter(id=projID).count() == 0: 
-        return False
-    return Project.objects.get(id=projID)
+def get_project(projectID):
+    try:
+        return Project.objects.get(id=projectID)        
+    except Exception, e:
+        return None    
     
 def get_project_users(projID):
     return UserAssociation.objects.filter(project__id=projID, role=ROLE_CLIENT)

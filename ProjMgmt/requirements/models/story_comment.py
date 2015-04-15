@@ -1,12 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
-from base import ProjMgmtBase
 from story import Story
 
-class Story_comment(ProjMgmtBase):
-
-    story = models.ForeignKey(Story)    
-    comment= models.CharField(default='', max_length=1024, blank=True)
+class StoryComment(models.Model):
+    story = models.ForeignKey(Story)
+    title = models.CharField(default='', max_length=1024)  
+    comment = models.CharField(default='', max_length=1024)
     
     def __str__(self):
         return self.title
@@ -14,25 +13,27 @@ class Story_comment(ProjMgmtBase):
     class Meta:
         app_label = 'requirements'
 
-def get_story_comments(stryID):
-    return Story_comment.objects.filter(story_id=stryID)
+def get_comments_for_story(story):
+    if story == None: return None
+    return StoryComment.objects.filter(story_id=story.id)
 
-def get_story_comment(commentID):
-    return Story_comment.objects.get(id=commentID)
+def get_comment(commentID):
+    try:
+        return StoryComment.objects.get(id=commentID)
+    except Exception, e:
+        return None
 
-def create_story_comment(user, proj, stry, fields):
-    if stry is None: return None
-    if Project.objects.filter(id=proj.id).count() == 0: return None
-    if Story.objects.filter(id=stry.id).count() == 0: return None
+def create_comment(story, fields):
+    if story is None: return None
     if fields is None: return None
 
     title = fields.get('title', '')
     comment = fields.get('comment', '')
 
-    story_comment = Story_comment(
-        project=proj, 
-        story=stry,
+    aComment = StoryComment(
+        story=story,
+        title=title,
         comment=comment
     )
-    story_comment.save()
-    return story_comment
+    aComment.save()
+    return aComment
