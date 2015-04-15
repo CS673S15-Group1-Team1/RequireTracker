@@ -1,4 +1,5 @@
     {% load staticfiles %}
+    {% load require_tags %}
 
     {% if confirm_message %}
     <div class="modal-dialog modal-lg">
@@ -16,6 +17,7 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     {% if confirm_message %}
+                    <!-- This branch gives the option of deleting a story. -->
                         <h2><span class="label label-danger">Warning :</span></h2>
                         <h3>{{ confirm_message }}</h3>
                         <hr>
@@ -36,6 +38,7 @@
                         <h4>{{ form.points.label_tag }}</h4>
                         <h5>{{ form.points.value }}</h5>
                     {% else %}
+                    <!-- This branch gives the option of editing a story. -->
 
                         <h4>{{ form.title.label_tag }}
                         </h4>
@@ -50,17 +53,30 @@
                         <h4>{{ form.test.label_tag }}</h4>
                         <p>{{ form.test }}</p>
                         <hr>
-                        <h4>{{ form.hours.label_tag }}</h4>
-                        <p>{{ form.hours }}</p>
-                        <hr>
+                        
+                        {% check_permission association project "EditHours" as can_edit_hours %}
+                        {% if can_edit_hours %}
+                            <h4>{{ form.hours.label_tag }}</h4>
+                            <p>{{ form.hours }}</p>
+                            <hr>
+                        {% endif %}
+                        
+                        
                         <h4>{{ form.status.label_tag}}</h4>
                         <p> {{ form.status }}</p>
                         <hr>
-                        <h4>{{ form.points.label_tag}}</h4>
-                        <p> {{ form.points }}</p>
-                        <hr>
-                        <h4> {{ form.pause.label_tag}}</h4>
-                        <p>{{ form.pause }}</p>
+                        {% check_permission association project "EditPoints" as can_edit_points %}
+                        {% if can_edit_points %}
+                            <h4>{{ form.points.label_tag}}</h4>
+                            <p> {{ form.points }}</p>
+                            <hr>
+                        {% endif %}
+
+                        {% check_permission association project "PauseStory" as can_pause %}
+                        {% if can_pause %}
+                            <h4> {{ form.pause.label_tag}}</h4>
+                            <p>{{ form.pause }}</p>
+                        {% endif %}
                     {% endif %}
                 </div>
                 <div class="modal-footer">

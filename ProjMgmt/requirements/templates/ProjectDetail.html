@@ -1,4 +1,5 @@
 {% extends "SideBarBase.html" %}
+{% load require_tags %}
 {% block content2 %}
 
 <div id="wrapper">
@@ -51,9 +52,13 @@
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
+                                                    {% check_permission association project "DeleteProject" as can_delete %} 
+                                                    {% if can_delete %}
+                                                    <!-- BUG: This button only works the second time you push it. Seems to have to do with the jQuery and Ajax below, which I (AL) don't understand. -->
 						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
+            	    	    	                    {% endif %}
             	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 
@@ -77,6 +82,8 @@
 						</div>
 					</div>
             	</div>
+
+		    <!-- Iterations -->
 		    {% for iteration in iterations %}
 		    	<div class="col-md-12">
             	    <!-- iterations panel -->
@@ -145,6 +152,8 @@
 				</div>
             {% endfor %}
             </div>
+
+            <!-- User List -->
 			<div class="col-lg-4 col-md-12">
 				<div class="col-md-12">
 					<div class="panel panel-primary" style="min-height: 200px">
@@ -152,7 +161,7 @@
 							<h2 class="panel-title">
 								<i class="fa fa-list fa-fw"></i>
 								User List
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/removeuserfromproject/{{ project.id }}/0');"> 
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
 								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/addusertoproject/{{ project.id }}/0');">
@@ -162,20 +171,45 @@
 						</div>
 						<div class="panel-body">
 							<ul class="list-group">
+							<!-- Display usernames. -->
+							<!-- IF user has permission to edit project, give option to edit permissions. -->
+							{% if can_edit_project %}
 								{% for auser in users %}
+								<!-- Display usernames. Click on username to edit permissions. -->
                 	            <li class="list-group-item">
-                	                <i class="glyphicon glyphicon-user fa-fw"></i> {{ auser.username }}
+                	                <i class="glyphicon glyphicon-user fa-fw"></i> 
+                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showUserDialog('/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
+                	                {{ auser.username }}
+                	                </a>
                 	                {% if auser.is_authenticated %}
-                	                <span class="label label-success pull-right">
-								    Online    
-								    </span>
+                	                    <span class="label label-success pull-right">
+								        Online    
+								        </span>
 								    {% else %}
-								    <span class="label label-default pull-right">
-								    Offline    
-								    </span>
+								        <span class="label label-default pull-right">
+								        Offline    
+								        </span>
 								    {% endif %}
                 	            </li>
                 	            {% endfor %}
+                	        {% else %}    
+								{% for auser in users %}
+								<!-- Display usernames without option to click and edit. -->
+                	            <li class="list-group-item">
+                	                <i class="glyphicon glyphicon-user fa-fw"></i> 
+                	                {{ auser.username }}
+                	                {% if auser.is_authenticated %}
+                	                    <span class="label label-success pull-right">
+								        Online    
+								        </span>
+								    {% else %}
+								        <span class="label label-default pull-right">
+								        Offline    
+								        </span>
+								    {% endif %}
+                	            </li>
+                	            {% endfor %}
+                	        {% endif %}
                 	        </ul>
 						</div>
 					</div>
@@ -219,8 +253,8 @@
 	}
 	
 	// use ajax method to load User Dialog
-	// userUrl will be one of the following two:
-	// /addusertoproject/username or /removeuserfromproject/username
+	// userUrl will be one of the following three:
+	// /addusertoproject/userid , /removeuserfromproject/userid or /userprojectaccess/projectid/userid
 	function showUserDialog(userUrl){
 	    $.ajax({
 	        url: userUrl,
