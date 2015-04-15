@@ -1,4 +1,5 @@
 {% extends "SideBarBase.html" %}
+{% load require_tags %}
 {% block content2 %}
 
 <div id="wrapper">
@@ -51,9 +52,13 @@
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
+                                                    {% check_permission association project "DeleteProject" as can_delete %} 
+                                                    {% if can_delete %}
+                                                    <!-- BUG: This button only works the second time you push it. Seems to have to do with the jQuery and Ajax below, which I (AL) don't understand. -->
 						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
+            	    	    	                    {% endif %}
             	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 

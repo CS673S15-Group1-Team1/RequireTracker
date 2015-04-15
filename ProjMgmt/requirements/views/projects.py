@@ -59,8 +59,8 @@ def project(request, proj):
         iterations = project_api.get_iterations_for_project(the_project)
 
         # Determine whether the user has permission to do the stuff in ProjectDetail.
-        association = UserAssociation.objects.get(user=request.user, project=the_project)
-        can_edit = association.get_permission("EditProject")
+        the_association = UserAssociation.objects.get(user=request.user, project=the_project)
+        can_edit = the_association.get_permission("EditProject") # should become unnecessary
         print "Can_edit: "+str(can_edit) # debug
 
         context = {'projects' : project_api.get_projects_for_user(request.user.id),
@@ -69,8 +69,9 @@ def project(request, proj):
                    'users' : the_project.users.all,
                    'iterations' : iterations,
                    'activeUsers' : activeUsers,
+                   'association' : the_association,
                    'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                   'can_edit_project' : can_edit,
+                   'can_edit_project' : can_edit, # should become unnecessary
                    }
         return render(request, 'ProjectDetail.html', context)
     else:

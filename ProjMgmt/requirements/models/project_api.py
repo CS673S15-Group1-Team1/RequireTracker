@@ -14,7 +14,8 @@ def get_all_projects():
     return Project.objects.all()
 
 def get_associations_for_user(userID):
-	return UserAssociation.objects.filter(user__id=userID)
+    # Returns the associations between this user and his/her projects, including the user's role on those projects.
+    return UserAssociation.objects.filter(user__id=userID)
 
 def get_projects_for_user(userID):
     return Project.objects.filter(users__id__contains=userID)

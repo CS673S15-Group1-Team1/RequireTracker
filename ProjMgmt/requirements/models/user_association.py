@@ -25,12 +25,16 @@ class UserAssociation(models.Model):
         # This method is where the permissions associated with a role are defined.
         # It should return an array of strings representing permissions.
         role_dictionary = {
-            ROLE_CLIENT: ["CreateStory"],
-            ROLE_DEVELOPER: ["CreateStory", "EditStory", "DeleteStory"],
-            ROLE_OWNER: ["CreateStory", "EditStory", "DeleteStory",
-                          "AddUser", "DeleteUser", "ChangePermissions", "EditProject", "DeleteProject", "AddIteration"]
+            ROLE_CLIENT: ["CreateStory", "AcceptStory"],
+            ROLE_DEVELOPER: ["CreateStory", "EditStory", "EditHours", "EditPoints",
+                             "ChangeStoryStatus", "AddTasks"],
+            ROLE_OWNER: ["CreateStory", "EditStory", "DeleteStory", "AcceptStory",
+                         "EditHours", "EditPoints", "ChangeStoryStatus", "AddTasks",
+                          "AddUser", "DeleteUser", "ChangePermissions", 
+                          "PauseStory", "EditAccepted", "EditPaused",
+                          "EditProject", "DeleteProject", "AddIteration"]
         }
-        # TODO: exception handling if permission not found.
+        # TODO: exception handling if permission string not found.
         return role_dictionary[role]
 
 		
