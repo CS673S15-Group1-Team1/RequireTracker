@@ -53,7 +53,7 @@ def project(request, projectID):
 
     activeUsers = user_manager.getActiveUsers()
     iterations = mdl_iteration.get_iterations_for_project(project)
-    association = UserAssociation.objects.get(user=request.user, project=the_project)
+    association = UserAssociation.objects.get(user=request.user, project=project)
 
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'project' : project,

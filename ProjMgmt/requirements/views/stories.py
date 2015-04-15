@@ -90,10 +90,10 @@ def edit_story(request, projectID, storyID):
         # if story.task_set.count() == 0: formset.extra = 1
 
         # test that association and permissions are working
-        print "UserID "+str(request.user.id)+" and ProjectID "+projectID+" and storyID "+storyID
-        can_edit_hours = the_association.get_permission("EditHours") # should become unnecessary
-        str_edit_hours = str(can_edit_hours)
-        print "In association of user and project, permission EditHours is "+str_edit_hours
+        # print "UserID "+str(request.user.id)+" and ProjectID "+projectID+" and storyID "+storyID
+        # can_edit_hours = association.get_permission("EditHours") # should become unnecessary
+        # str_edit_hours = str(can_edit_hours)
+        # print "In association of user and project, permission EditHours is "+str_edit_hours
         
     context = {'title' : 'Edit User Story',
                'project' : project,
