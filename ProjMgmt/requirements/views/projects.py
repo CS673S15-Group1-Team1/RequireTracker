@@ -53,6 +53,7 @@ def project(request, projectID):
 
     activeUsers = user_manager.getActiveUsers()
     iterations = mdl_iteration.get_iterations_for_project(project)
+    association = UserAssociation.objects.get(user=request.user, project=project)
 
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'project' : project,
@@ -60,6 +61,7 @@ def project(request, projectID):
                'users' : project.users.all,
                'iterations' : iterations,
                'activeUsers' : activeUsers,
+               'association' : association,
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                # 'can_edit_project' : can_edit,
                }
