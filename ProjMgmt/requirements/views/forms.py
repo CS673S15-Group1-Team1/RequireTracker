@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.forms.widgets import ClearableFileInput
 from django.forms.extras.widgets import SelectDateWidget, Select
 from django.contrib.auth.forms import UserCreationForm
 from requirements.models.project import Project
@@ -113,7 +114,7 @@ class StoryForm(forms.ModelForm):
 		}
 		
 class FileForm(forms.Form):
-    file = forms.FileField()
+    file = forms.FileField(widget=ClearableFileInput(attrs={'class':'form-control'}))
 
 # class registrationForm(forms.Form):
 # 	firstName = forms.CharField(label='First Name:', max_length=100)

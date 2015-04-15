@@ -1,38 +1,39 @@
 {% load staticfiles %}
     <!-- attachements modal -->
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
       	<div class="modal-content">
 	        <div class="modal-header">
-	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeAttachmentsModal();">
+	        	<a class="btn close" aria-label="Close" href="javascript:void(0)" onclick="closeDialog();">
 	        		<span aria-hidden="true">x</span>
 	        	</a>
 	        	<h4 class="modal-title" id="iterModalLabel">Attachments</h4>
 	        </div>
-	       
-           {% for file in files %}
+            <div class="modal-body">
+                {% for file in files %}
 
-           <ul class="list-group">
-                <li class="list-group-item">
-                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="downloadProjectFile('{{file.name}}')">
-						<i class="glyphicon glyphicon-download-alt"></i>
-					</a>
-            {{file.name}}
-        </li>
-        </ul>
-           
-           {% endfor %}
-            <form id="attachmentForm" class="form-horizontal" action="/req/uploadprojectattachment/{{ projectID }}" method="post"
-            enctype="multipart/form-data">
-	        	{% csrf_token %}
-	        		<h4>Upload File (max size 10m)</h4>
-	        		<p>{{ form.file }}</p>
-	        		<hr>
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="downloadProjectFile('{{file.name}}')">
+                            <i class="glyphicon glyphicon-download-alt"></i>
+                        </a>
+                        {{file.name}}
+                    </li>
+                </ul>
+
+                {% endfor %}
+                <form id="attachmentForm" class="form-horizontal" action="/req/uploadprojectattachment/{{ projectID }}" method="post"
+                enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <h4>Upload File (max size 10m)</h4>
+                    <p>{{ form.file }}</p>
+                    <!-- <hr> -->
                     <input type="hidden" name="referer" value="{{ referer }}">
-        		<div class="modal-footer">
-        		  	<a class="btn btn-default" href="javascript:void(0)" onclick="closeAttachmentsModal();">Close</a>
-					<button type="submit" class="btn btn-primary">Upload</button>
-        		</div>
-	        </form>
+                    <div class="modal-footer">
+                        <a class="btn btn-default" href="javascript:void(0)" onclick="closeDialog();">Close</a>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </div>
+                </form>
+            </div>
       	</div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 
