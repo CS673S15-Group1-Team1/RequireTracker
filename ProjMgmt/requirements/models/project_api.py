@@ -25,8 +25,8 @@ def get_project(projectID):
     except Exception, e:
         return None    
     
-def get_project_users(projID):
-    return UserAssociation.objects.filter(project__id=projID, role=ROLE_CLIENT)
+def get_project_users(projectID):
+    return UserAssociation.objects.filter(project__id=projectID)
 
 def can_user_access_project(userID, projectID):
     return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0
