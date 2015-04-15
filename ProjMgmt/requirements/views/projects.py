@@ -2,11 +2,12 @@ from django import forms
 from requirements import models
 from requirements.models import project_api
 from requirements.models import user_manager
-from requirements.models import story
+from requirements.models import story as mdl_story
+from requirements.models import iteration as mdl_iteration
 from requirements.models.user_association import UserAssociation
 from django.http import HttpResponse, HttpResponseRedirect
-from forms import AddIterationForm
-from forms import NewProjectForm
+from forms import IterationForm
+from forms import ProjectForm
 from forms import SelectAccessLevelForm
 from forms import FileForm
 from django.contrib.auth import authenticate, login, logout
@@ -45,58 +46,36 @@ def list_projects(request):
     #     context['user'] = logedInUser
     return render(request, 'DashBoard.html', context)
     
-    
-def new_story(request):
-    return render(request, 'NewStory.html')
-
-def project_stories(request):
-    # In this section we need to load the djanog project and its stories to
-    # and send it to the view.  For nw I made a base def so I could test the
-    #links. --Jared
-    return render(request, 'ProjectStories.html')
-
 @login_required(login_url='/signin')
-def project(request, proj):
-    if project_api.can_user_access_project(request.user.id, proj) :
-        the_project = project_api.get_project(proj)
-        activeUsers = user_manager.getActiveUsers()
-        iterations = project_api.get_iterations_for_project(the_project)
+def project(request, projectID):
+    project = project_api.get_project(projectID)
+    if project == None: return redirect('/req/projects')
 
-        # Determine whether the user has permission to do the stuff in ProjectDetail.
-        association = UserAssociation.objects.get(user=request.user, project=the_project)
-        can_edit = association.get_permission("EditProject")
-        print "Can_edit: "+str(can_edit) # debug
+    activeUsers = user_manager.getActiveUsers()
+    iterations = mdl_iteration.get_iterations_for_project(project)
 
-        context = {'projects' : project_api.get_projects_for_user(request.user.id),
-                   'project' : the_project,
-                   'stories' : story.get_project_stories(the_project.id),
-                   'users' : the_project.users.all,
-                   'iterations' : iterations,
-                   'activeUsers' : activeUsers,
-                   'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                   'can_edit_project' : can_edit,
-                   }
-        return render(request, 'ProjectDetail.html', context)
-    else:
-        # return HttpResponse("You cannot access project " + proj)
-        return redirect('/req/projects')
-
-# @login_required(login_url='/accounts/login/')
-# def listProjects(request):
-#     context = {'projects' : models.getProjectsForUser(request.user.id)}
-#     return render(request, 'projects.html', context)
+    context = {'projects' : project_api.get_projects_for_user(request.user.id),
+               'project' : project,
+               'stories' : mdl_story.get_stories_for_project(project),
+               'users' : project.users.all,
+               'iterations' : iterations,
+               'activeUsers' : activeUsers,
+               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
+               # 'can_edit_project' : can_edit,
+               }
+    return render(request, 'ProjectDetail.html', context)
 
 @login_required(login_url='/signin')
 @permission_required(PERMISSION_OWN_PROJECT)
 def new_project(request):
     if request.method == 'POST':
-        form = NewProjectForm(request.POST)
+        form = ProjectForm(request.POST)
         if form.is_valid():
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
             return redirect('/req/projects')
     else:
-        form = NewProjectForm()
+        form = ProjectForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -109,12 +88,12 @@ def new_project(request):
 def edit_project(request, projectID):
     project = project_api.get_project(projectID)
     if request.method == 'POST':
-        form = NewProjectForm(request.POST, instance=project)
+        form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             project = form.save(commit=True)
             return redirect('/req/projects')
     else:
-        form = NewProjectForm(instance=project)
+        form = ProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -133,13 +112,13 @@ def delete_project(request, projectID):
         models.project_api.delete_project(project.id)
         return redirect('/projects')
     else:
-        form = NewProjectForm(instance=project)
+        form = ProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Delete Project',
                'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
-               'form' : form, 'action' : '/req/deleteproject/' + id , 'desc' : 'Delete Project' }
+               'form' : form, 'action' : '/req/deleteproject/' + projectID , 'desc' : 'Delete Project' }
     return render(request, 'ProjectSummary.html', context )
 
 #===============================================================================

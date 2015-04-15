@@ -4,7 +4,6 @@ from requirements.views import users
 from requirements.views import home
 from requirements import req_urls
 
-
 urlpatterns = patterns('',
     
     url(r'^signin', users.signin),

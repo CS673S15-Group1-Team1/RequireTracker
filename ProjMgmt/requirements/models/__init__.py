@@ -6,3 +6,4 @@ import requirements.models.user_manager
 from requirements.models.iteration import Iteration
 import requirements.models.iteration
 from requirements.models.files import ProjectFile
+from requirements.models.story_comment import StoryComment

@@ -21,7 +21,7 @@
 									<a data-toggle="collapse" data-parent="" href="#iter_body_icebox" aria-expanded="true">
 									Icebox
 									</a>
-									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/newstory/{{ project.id }}');">
+									<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newstory/{{ project.id }}');">
 										<i class="glyphicon glyphicon-plus"></i>
 									</a>
 								</h2>
@@ -51,10 +51,10 @@
             	    	    	                        	{% endfor %}
             	    	    	                      	</ul>
             	    	    	                    </div>
-						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
+						    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                    </a>
-            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                    </a> 
 								                </h4>
@@ -65,7 +65,7 @@
                                                     Last Updated: {{story.last_updated }}
                                                     </br></br>
                                                     {% endif %}
-								                    {{ story.description }}
+								                    {{ story.description|linebreaks }}
 								                </div>
 								            </div>
 								        </div>
@@ -102,6 +102,7 @@
 								        <div class="panel panel-default">
 								            <div class="panel-heading">
 								                <h4 class="panel-title">
+								                	<span id="storypoint_{{ story.id }}"></span>
 								                    <a data-toggle="collapse" data-parent="" href="#story_{{ story.id }}" aria-expanded="true" class="">{{ story.title }}</a>
             	    	    	                    <div class="btn-group pull-right">
             	    	    	                    	<button class="btn btn-default dropdown-toggle pull-right" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -110,7 +111,7 @@
             	    	    	                      	</button>
             	    	    	                      	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
             	    	    	                       		{% for iter_local in iterations %}
-            	    	    	                        	{% if not iter_local.title = iteration.title %}
+            	    	    	                        	{% if not iter_local == iteration %}
             	    	    	                        	<li role="presentation">
             	    	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
             	    	    	                        	</li>
@@ -119,10 +120,10 @@
             	    	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
             	    	    	                      	</ul>
             	    	    	                    </div>
-													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
+													<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
             	    	    	                	</a>
-            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
+            	    	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
             	    	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
             	    	    	                	</a> 
 								                </h4>
@@ -133,7 +134,7 @@
                                                     Last Updated: {{story.last_updated }}
                                                     </br></br>
                                                     {% endif %}
-								                    {{ story.description }}
+								                    {{ story.description|linebreaks }}
 								                </div>
 								            </div>
 								        </div>
@@ -156,10 +157,10 @@
 							<h2 class="panel-title">
 								<i class="fa fa-list fa-fw"></i>
 								User List
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/req/removeuserfromproject/{{ project.id }}/0');"> 
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/removeuserfromproject/{{ project.id }}/0');"> 
 									<i class="glyphicon glyphicon-minus"></i>
 								</a>
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showUserDialog('/req/addusertoproject/{{ project.id }}/0');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/addusertoproject/{{ project.id }}/0');">
 									<i class="glyphicon glyphicon-plus"></i>
 								</a>
 							</h2>
@@ -173,7 +174,7 @@
 								<!-- Display usernames. Click on username to edit permissions. -->
                 	            <li class="list-group-item">
                 	                <i class="glyphicon glyphicon-user fa-fw"></i> 
-                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showUserDialog('/req/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
+                	                <a class="btn btn-link" href="javascript:void(0);" onclick="showDialog('/req/userprojectaccess/{{ project.id }}/{{ auser.id }}');">
                 	                {{ auser.username }}
                 	                </a>
                 	                {% if auser.is_authenticated %}
@@ -211,63 +212,11 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-12">
-				{% block usersummary %}
-				{% endblock usersummary %}
-			</div>
-		</div>
 	</div>
 </div>
 
 <script type="text/javascript">
 	var winHeight = $(window).outerHeight();
 	$("#page-wrapper").css('min-height',winHeight);
-
-	// use ajax method to load Story Dialog
-	// storyUrl will be one of the following three:
-	// /newstory or /editstory/projID/storyID or /deletestory/projID/storyID
-	function showStoryDialog(storyUrl){
-	    $.ajax({
-	        url: storyUrl,
-	        success: function(result) {
-	            $("#storyModal").html(result);
-	            $("#storyModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// close Story Dialog and erase the content
-	function closeStoryDialog(){
-	    $("#storyModal").modal('hide');
-	    $("#storyModal").html('');
-	}
-	
-	// use ajax method to load User Dialog
-	// userUrl will be one of the following three:
-	// /addusertoproject/userid , /removeuserfromproject/userid or /userprojectaccess/projectid/userid
-	function showUserDialog(userUrl){
-	    $.ajax({
-	        url: userUrl,
-	        success: function(result) {
-	            $("#userModal").html(result);
-	            $("#userModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// close User Dialog and erase the content
-	function closeUserDialog(){
-	    $("#userModal").modal('hide');
-	    $("#userModal").html('');
-	}
 </script>
 {% endblock content2 %}
