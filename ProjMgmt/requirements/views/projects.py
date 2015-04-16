@@ -26,10 +26,6 @@ ROLE_CLIENT = "client"
 ROLE_DEVELOPER = "developer"
 ROLE_OWNER = "owner"
 
-
-def newProject(request):
-    return render(request, 'NewProject.html')
-
 @login_required(login_url='/signin')
 def list_projects(request):
     # Loads the DashBoard template, which contains a list of the project the user is
@@ -177,50 +173,7 @@ def remove_user_from_project(request, projectID, username):
                    'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
                   }        
         return render(request, 'UserSummary.html', context)
-
-@login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)    
-def show_new_iteration(request,projectID):
-    form = AddIterationForm()
-    context = {'projectID' : projectID, 'form' : form, 'title' : 'Create a new Iteration'}
-    return render(request, 'NewIterationForm.html',context)
     
-@login_required(login_url='/signin')
-@user_owns_project()  
-def add_iteration_to_project(request,projectID):
-    fields = request.POST
-    project_api.add_iteration_to_project(fields['title'], fields['description'],
-    datetime.date(int(fields['start_date_year']),int(fields['start_date_month']),int(fields['start_date_day'])),
-    datetime.date(int(fields['end_date_year']), int(fields['end_date_month']), int(fields['end_date_day']) ), projectID)
-    
-    return redirect('/projects/' + projectID)   
-
-@login_required(login_url='/accounts/login/')
-@user_owns_project() 
-def move_story_to_iter(request, projectID,storyID, iterID):
-    stry = story.get_story(storyID)
-    iteration = project_api.get_iteration(iterID)
-    project_api.add_story_to_iteration(stry,iteration)
-    return redirect('/req/projects/' + projectID)  
-
-@login_required(login_url='/accounts/login/')
-@user_owns_project()     
-def move_story_to_icebox(request,projectID,storyID):
-    stry = story.get_story(storyID)
-    project_api.move_story_to_icebox(stry)
-    return redirect('/req/projects/' + projectID)
-
-@login_required(login_url='/signin')
-def show_iterations(request, projectID):
-    project = project_api.get_project(projectID)
-    iterations = project_api.get_iterations_for_project(project)
-    context = {
-        'project' : project,
-        'iterations' : iterations,
-        'owns_project' : project_api.user_owns_project(request.user,project),
-    }
-    return render(request, 'SideBarIters.html', context)
-
 @login_required(login_url='/accounts/login/')
 @user_owns_project() 
 def manage_user_association(request, projectID, userID):
@@ -231,6 +184,7 @@ def manage_user_association(request, projectID, userID):
     role = association.role
 
     context = {
+        'title': 'Change User Access Level',
         'form' : form,
         'project' : the_project,
         'user' : the_user,
@@ -251,21 +205,6 @@ def change_user_role(request, projectID, userID):
     print retrieved_role # to console for debugging
     project_api.change_user_role(project, user, retrieved_role)
     return redirect('/req/projects/' + projectID)
-
-@login_required(login_url='/signin')
-def show_iterations_with_selection(request, projectID, iterationID):
-    project = project_api.get_project(projectID)
-    iterations = project_api.get_iterations_for_project(project)
-    iteration = project_api.get_iteration(iterationID)
-    context = {
-        'project' : project,
-        'iterations' : iterations,
-        'iteration' : iteration,
-        'owns_project' : project_api.user_owns_project(request.user,project),
-    }
-    if iteration == None:
-        context['isIceBox'] = True
-    return render(request, 'SideBarIters.html', context)
 
 @user_can_access_project()    
 def get_attachments(request, projectID):

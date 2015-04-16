@@ -89,7 +89,7 @@ class SelectAccessLevelForm(forms.Form):
                                              (ROLE_CLIENT, "Client"),
                                              (ROLE_DEVELOPER, "Developer"),
                                              (ROLE_OWNER, "Owner"),
-                                            ))
+                                            ), widget=Select(attrs={'class':'form-control'}))
 
 class StoryForm(forms.ModelForm):
 	def __init__(self, *args, **kwargs):
