@@ -4,7 +4,7 @@
 	{% for acomment in comments %}
 	<div class="list-group-item">
 		<h4 class="list-group-item-heading">{{ acomment.title }}</h4>
-		<p class="list-group-item-text">{{ acomment.comment|linebreaks }}</p>
+		<p class="list-group-item-text">{{ acomment.comment|linebreaksbr }}</p>
 	</div>
 	{% endfor %}
 </div>
