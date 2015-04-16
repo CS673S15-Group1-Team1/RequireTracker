@@ -1,40 +1,46 @@
 {% load staticfiles %}
 
 	{% if confirm_message %}
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
     {% else %}
     <div class="modal-dialog">
     {% endif %}
       	<div class="modal-content">
 	        <div class="modal-header">
-	        	<a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeProjectDialog();">
+	        	<a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeDialog();">
 	        		<span aria-hidden="true">×</span>
 	        	</a>
-	        	<h4 class="modal-title" id="projModalLabel">{{ title }}</h4>
+	        	<h4 class="modal-title" id="dialogModalLabel">{{ title }}</h4>
 	        </div>
 	        <form id="projectForm" class="form-horizontal" action="{{ action }}" method="post">
 	        	{% csrf_token %}
 	        	<div class="modal-body">
 	        		{% if confirm_message %}
-						<h2><span class="label label-danger">Warning :</span></h2>
-						<h3>{{ confirm_message }}</h3>
-						<hr>
-	        			<h4>{{ form.title.label_tag }}</h4>
-						<h5>{{ form.title.value }}</h5>
-						<h4>{{ form.description.label_tag }}</h4>
-						<h5>
-							{{ form.description.value }}
-					    </h5>
+	        		<div class="form-group">
+	        			<div class="col-xs-12 col-sm-3"><h2><span class="label label-danger">Warning</span></h2></div>
+	        			<div class="col-xs-12 col-sm-9"><h3>{{ confirm_message }}</h3></div>
+	        		</div>
+	        		<div class="form-group">
+	        			<div class="col-xs-12 col-sm-3"><h4>{{ form.title.label_tag }}</h4></div>
+	        			<div class="col-xs-12 col-sm-9"><h4>{{ form.title.value }}</h4></div>
+	        		</div>
+	        		<div class="form-group">
+	        			<div class="col-xs-12 col-sm-3"><h4>{{ form.description.label_tag }}</h4></div>
+	        			<div class="col-xs-12 col-sm-9"><h4>{{ form.description.value|linebreaksbr }}</h4></div>
+	        		</div>
 	        		{% else %}
-	        			<h4>{{ form.title.label_tag }}</h4>
-	        			<p>{{ form.title }}</p>
-	        			<hr>
-	        			<h4>{{ form.description.label_tag }}</h4>
-	        			<p>{{ form.description }}</p>
+	        		<div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Title</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.title }}</div>
+	        		</div>
+	        		<div class="form-group">
+                        <label for="{{ form.description.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Description</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.description }}</div>
+	        		</div>
 	        		{% endif %}
 	        	</div>
         		<div class="modal-footer">
-        		  	<a class="btn btn-default" href="javascript:void(0);" onclick="closeProjectDialog();">Close</a>
+        		  	<a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
         		  	{% if confirm_message %}
 					<button type="submit" class="btn btn-danger">{{ desc }}</button>
         		  	{% else %}

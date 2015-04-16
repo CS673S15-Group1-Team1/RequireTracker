@@ -1,13 +1,14 @@
     {% load staticfiles %}
+    {% load require_tags %}
 
     {% if confirm_message %}
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-md">
     {% else %}
     <div class="modal-dialog">
     {% endif %}
         <div class="modal-content">
             <div class="modal-header">
-                <a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeStoryDialog();">
+                <a class="btn close" aria-label="Close" href="javascript:void(0);" onclick="closeDialog();">
                     <span aria-hidden="true">×</span>
                 </a>
                 <h4 class="modal-title" id="storyModalLabel">{{ title }}</h4>
@@ -16,63 +17,125 @@
                 {% csrf_token %}
                 <div class="modal-body">
                     {% if confirm_message %}
-                        <h2><span class="label label-danger">Warning :</span></h2>
-                        <h3>{{ confirm_message }}</h3>
-                        <hr>
-                        <h4>{{ form.title.label_tag }}</h4>
-                        <h5>{{ form.title.value }}</h5>
-                        <h4>{{ form.description.label_tag }}</h4>
-                        <h5>
-                            {{ form.description.value }}
-                        </h5>
-                        <h4>{{ form.reason.label_tag }}</h4>
-                        <h5>{{ form.reason.value }}</h5>
-                        <h4>{{ form.hours.label_tag }}</h4>
-                        <h5>{{ form.hours.value }}</h5>
-                        <h4>{{ form.test.label_tag }}</h4>
-                        <h5>
-                            {{ form.test.value }}
-                        </h5>
-                        <h4>{{ form.points.label_tag }}</h4>
-                        <h5>{{ form.points.value }}</h5>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h2><span class="label label-danger">Warning</span></h2></div>
+                      <div class="col-xs-12 col-sm-9"><h3>{{ confirm_message }}</h3></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.title.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.title.value }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.description.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.description.value|linebreaksbr }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.reason.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.reason.value|linebreaksbr }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.test.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.test.value|linebreaksbr }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.owner.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.owner.value }}</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.hours.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4>{{ form.hours.value }} Hrs</h4></div>
+                    </div>
+                    <div class="form-group">
+                      <div class="col-xs-12 col-sm-3"><h4>{{ form.points.label_tag }}</h4></div>
+                      <div class="col-xs-12 col-sm-9"><h4 id="story_point">{{ form.points.value }}</h4></div>
+                    </div>
                     {% else %}
-
-                        <h4>{{ form.title.label_tag }}
-                        </h4>
-                        <p>{{ form.title }}</p>
+                    <div class="form-group">
+                        <label for="{{ form.title.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Title</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.title }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.description.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Description</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.description }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.reason.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Reason</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.reason }}</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.test.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Test</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.test }}</div>
+                    </div>
+                        {% comment "No Use" %}
+                        <div id="tasks">
+                            <h4 style="font-weight:bold">Tasks:</h4>
+                            {{ formset.management_form }}
+                            {% for form in formset.forms %}
+                                <div class="item">
+                                    {{ form.as_table }}
+                                    <a  class="delete" 
+                                        href="javascript:void(0);">
+                                        <i class="fa fa-trash-o fa-fw"></i>
+                                             Delete
+                                    </a>
+                                </div>
+                            {% endfor %}
+                            <p>
+                                <a  id="add" 
+                                    href="#">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                        New Task
+                                </a>
+                            </p>
+                        </div>
                         <hr>
-                        <h4>{{ form.description.label_tag }}</h4>
-                        <p>{{ form.description }}</p>
-                        <hr>
-                        <h4>{{ form.reason.label_tag }}</h4>
-                        <p>{{ form.reason }}</p>
-                        <hr>
-                        <h4>{{ form.test.label_tag }}</h4>
-                        <p>{{ form.test }}</p>
-                        <hr>
-                        <h4>{{ form.hours.label_tag }}</h4>
-                        <p>{{ form.hours }}</p>
-                        <hr>
-                        <h4>{{ form.status.label_tag}}</h4>
-                        <p> {{ form.status }}</p>
-                        <hr>
-                        <h4>{{ form.points.label_tag}}</h4>
-                        <p> {{ form.points }}</p>
-                        <hr>
-                        <h4> {{ form.pause.label_tag}}</h4>
-                        <p>{{ form.pause }}</p>
+                        {% endcomment %}
+                    <div class="form-group">
+                        <label for="{{ form.owner.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Story Owner</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.owner }}</div>
+                    </div>
+                    {% check_permission association project "EditHours" as can_edit_hours %}
+                    {% if can_edit_hours %}
+                    <div class="form-group">
+                        <label for="{{ form.hours.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Hours</label>
+                        <div class="col-xs-12 col-sm-9">
+                            <div class="input-group">
+                                {{ form.hours }}
+                                <span class="input-group-addon">Hrs</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="form-group">
+                        <label for="{{ form.status.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Status</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.status }}</div>
+                    </div>
+                    {% check_permission association project "EditPoints" as can_edit_points %}
+                    {% if can_edit_points %}
+                    <div class="form-group">
+                        <label for="{{ form.points.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Scale Points</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.points }}</div>
+                    </div>
+                    {% endif %}
+                    {% check_permission association project "PauseStory" as can_pause %}
+                    {% if can_pause %}
+                    <div class="form-group">
+                        <label for="{{ form.pause.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Pause</label>
+                        <div class="col-xs-12 col-sm-9">{{ form.pause }}</div>
+                    </div>
+                    {% endif %}
                     {% endif %}
                 </div>
                 <div class="modal-footer">
                     
-                    <a class = "btn btn-default" id ="btn-state" onclick="change_state();"> Next State</a>
                     <!--<a class="btn btn-default" onclick="change_state();">Status</a>-->
-                    <a class="btn btn-default" href="javascript:void(0);" onclick="closeStoryDialog();">Close</a>
                     {% if confirm_message %}
-                    <button type="submit" class="btn btn-danger">{{ desc }}</button>
+                    <a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
+                    <button type="submit" class="btn btn-danger">{{ button_desc }}</button>
                     {% else %}
-                    <button type="submit" class="btn btn-primary">{{ desc }}</button>
-
+                    <a class = "btn btn-default" id ="btn-state" onclick=""> Next State</a>
+                    <a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
+                    <button type="submit" class="btn btn-primary">{{ button_desc }}</button>
                     {% endif %}
                 </div>
             </form>
@@ -97,38 +160,106 @@
             e.stopPropagation();
         });
 
+        $(function() {
+            $("#story_point").html(getStoryPointHtml({{ form.points.value }}));
+        });
+       //  function change_state(){
+       //      var state = document.getElementById("{{ form.status.id_for_label }}");
+       //      if (state.selectedIndex<3){
+       //          document.getElementById("btn-state").disabled=false;
+       //          document.getElementById("btn-state").style.visibility="visible";
+       //         state.selectedIndex =state.selectedIndex+1;
+       //      }
+       //      else{
+       //          document.getElementById("btn-state").disabled=true;
+       //          document.getElementById("btn-state").style.visibility="hidden";
+       //      }
+       //  }
+
+       // /*
+       // When edit form is loaded, the following function checks the status of the story, if it is accepted, the 
+       // next state button is disabled because there are no more states. After that, it checks the paused feature, if the checkbox is checked, you cannot go to the next state, so the next state button is disabled, if it is unchecked, the next state button is enabled. 
+       // */
+
+       // $(document).ready(function() {
+       //      var state = document.getElementById("{{ form.status.id_for_label }}");
+       //      var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
         
-        function change_state(){
-            var state = document.getElementById("{{ form.status.id_for_label }}");
-            if (state.selectedIndex<3){
-                document.getElementById("btn-state").disabled=false;
-                document.getElementById("btn-state").style.visibility="visible";
-               state.selectedIndex =state.selectedIndex+1;
-            }
-            else{
-                document.getElementById("btn-state").disabled=true;
-                document.getElementById("btn-state").style.visibility="hidden";
-            }
-        }
+       //      if (state.selectedIndex>2){
+       //          document.getElementById("btn-state").disabled=true;
+       //          document.getElementById("btn-state").style.visibility="hidden";
+       //      }
 
-       /*
-       When edit form is loaded, the following function checks the status of the story, if it is accepted, the 
-       next state button is disabled because there are no more states. After that, it checks the paused feature, if the checkbox is checked, you cannot go to the next state, so the next state button is disabled, if it is unchecked, the next state button is enabled. 
-       */
-
-       $(document).ready(function() {
-            var state = document.getElementById("{{ form.status.id_for_label }}");
-            var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
+       //      if (paused.checked==true){
+       //          document.getElementById("btn-state").disabled=true;
+       //          document.getElementById("btn-state").style.visibility="hidden"   
+       //      }
+            
+            
+       //      //hide the delete label & checkbox that the management_form uses
+       //      $( "label[for*='DELETE']" ).each(function () {
+       //          $(this).attr('style', 'display:none');
+       //      });
+            
+       //      $( "input[id*='DELETE']" ).each(function () {
+       //          $(this).attr('style', 'display:none');
+       //      });
+       //  });    
         
-            if (state.selectedIndex>2){
-                document.getElementById("btn-state").disabled=true;
-                document.getElementById("btn-state").style.visibility="hidden";
-            }
+       //  // Register the click event handlers
+       //  $("#add").click(function () {
+       //      return addForm(this, "task_set");
+       //  });
+    
+       //  $(".delete").click(function () {
+       //      return deleteForm(this, "task_set");
+       //  });
+  
+       //  //add a new task form to the formset
+       //  function addForm(btn, prefix) {
+       //      //get the mgmt section data
+       //      var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+            
+       //      //copy the row & append it to the end
+       //      var row = $(".item:first").clone().get(0);
+       //      $(row).removeAttr('id').hide().insertAfter(".item:last").slideDown(300);
+       //      var newRef = prefix + "-" + formCount;
+            
+       //      //remove errors from the new row, if any
+       //      $(".errorlist", row).remove();
+       //      $(row).children().removeClass("error");
+            
+       //      //update the names & reset the vals
+       //      var html = $(".item:last").html();
+       //      html = html.replace(/task_set-0/g, newRef);
+       //      $(".item:last").html(html);
+       //      $(".item:last").children( "input" ).each(function () {
+       //          if ($(this).attr('id').indexOf("-story") == -1) {
+       //              $(this).removeAttr("value");
+       //          }
+       //          if ($(this).attr('id').indexOf("-DELETE") > -1) {
+       //              $(this).removeAttr("checked");
+       //          }
+       //      });
+            
+       //      // Add an event handler for the delete item/form link 
+       //      $(row).find(".delete").click(function () {
+       //          return deleteForm(this, prefix);
+       //      });
+        
+       //      // Update the total form count
+       //      $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+       //  }
 
-            if (paused.checked==true){
-                document.getElementById("btn-state").disabled=true;
-                document.getElementById("btn-state").style.visibility="hidden"   
-            }
-        });      
-
+       //  function deleteForm(btn, prefix) {
+       //      var sibs = $(btn).siblings( "input" );
+       //      $(sibs).each(function () {
+       //          if ($(this).attr('id').indexOf("-DELETE") > 0) {
+       //              $(this).attr('checked', 'true');
+       //              $(btn).parents('.item').each(function () {
+       //                  $(this).attr('style', 'display:none');
+       //              });
+       //          }
+       //      });
+       //  }
     </script>

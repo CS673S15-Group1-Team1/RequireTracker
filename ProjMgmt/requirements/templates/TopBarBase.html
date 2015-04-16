@@ -7,10 +7,13 @@
 	<link rel="stylesheet" href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" />
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/RequireTracker.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}sb-admin/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{{ STATIC_URL }}bs-datetimepicker/css/bootstrap-datetimepicker.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/tooltip.js" type="text/javascript"></script>
     <script src="{{ STATIC_URL }}js/popover.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}bs-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+    <script src ="{{ STATIC_URL }}js/RequireTracker.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -52,7 +55,7 @@
     {% endblock content %}
 
     <!-- put all dialog tag in topbar because it can prevent the dialogs are hidden in back of other elements. -->
-    <span id="iterationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="iterModalLabel" aria-hidden="true" style="display: none;">
+<!--     <span id="iterationModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="iterModalLabel" aria-hidden="true" style="display: none;">
     </span>
 
     <div id="projectModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="projModalLabel" aria-hidden="true" style="display: none;">
@@ -63,5 +66,20 @@
 
     <div id="userModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true" style="display: none;">
     </div>
+
+    <div id="taskModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="taskModalLabel" aria-hidden="true" style="display: none;">
+    </div>
+
+    <div id="commentModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true" style="display: none;">
+    </div>
+    
+    <span id="projAttachModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="projAttachModalLabel" aria-hidden="true" style="display: none;">
+    </span> -->
+    
+    <div id="dialogModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialogModalLabel" aria-hidden="true" style="display: none;">
+    </div>
+
+    <script type="text/javascript">
+    </script>
 </body>
 </html>

@@ -18,7 +18,7 @@
 							<i class="fa fa-list fa-fw"></i>
 							Project List
 							{% if canOwnProject %}
-							<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/newproject');">
+							<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newproject');">
 								<i class="glyphicon glyphicon-plus"></i>
 							</a>
 							{% endif %}
@@ -26,30 +26,30 @@
 					</div>
 					<div class="panel-body">
 					    <div class="panel-group" id="accordion">
-					    	{% for theProject in projects %}
+					    	{% for aProject in projects %}
 					        <div class="panel panel-default">
 					            <div class="panel-heading">
 							        <h4 class="panel-title">
 							        	<a data-toggle="collapse" data-target="#{{ theProject.id }}" href="#{{ theProject.id }}" aria-expanded="true" class=""><i class="fa fa-briefcase fa-fw"></i>
-								             {{ theProject.title}}
+								             {{ aProject.title}}
 								            <!-- <div id="panelbar-{{ theProject.id }}" class="pull-right"> -->
                                             {% for anAssociation in associationsWithUser %}
-                                                {% check_permission anAssociation theProject "DeleteProject" as can_delete %} 
+                                                {% check_permission anAssociation aProject "DeleteProject" as can_delete %} 
                                                 {% if can_delete  %} 
-        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/deleteproject/{{ project.id }}');">
+        							        		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deleteproject/{{ aProject.id }}');">
                                                     <i class="fa fa-trash-o fa-fw"></i>
                                                      Delete
                                                     </a>
                                                 {% endif %}
-                                                {% check_permission anAssociation theProject "EditProject" as can_edit %} 
+                                                {% check_permission anAssociation aProject "EditProject" as can_edit %} 
                                                 {% if can_edit %} 
-         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showProjectDialog('/editproject/{{ project.id }}');">
+         							           		<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editproject/{{ aProject.id }}');">
                                                     <i class="fa fa-edit fa-fw"></i>
                                                     Edit
                                                     </a>
                                                 {% endif %}
                                             {% endfor %}
-							           		<a class="btn btn-link pull-right" href="/projects/{{ theProject.id }}">
+							           		<a class="btn btn-link pull-right" href="/req/projectdetail/{{ aProject.id }}">
 							           			<i class="glyphicon glyphicon-folder-open fa-fw"></i>
 							           			 Open
 							           		</a>
@@ -57,11 +57,9 @@
 								        </a>
 							        </h4>
 					            </div>
-					            <div id="{{ theProject.id }}" class="panel-collapse collapse in" aria-expanded="true">
+					            <div id="{{ aProject.id }}" class="panel-collapse collapse in" aria-expanded="true">
 					                <div class="panel-body">
-					                	{% for line_description in theProject.description_as_list %}
-											{{ line_description }}<br>
-					                	{% endfor %}
+					                	{{ aProject.description|linebreaks }}
 					                </div>
 					            </div>
 					        </div>
@@ -76,30 +74,6 @@
 
 <script type="text/javascript">
 	var winHeight = $(window).outerHeight();
-	$("#page-wrapper").css('height',winHeight);
-
-	// use ajax method to load the content for Dialog
-	// projUrl will be one of the following three:
-	// /newproject or /editproject/projID or /deleteproject/projID
-	function showProjectDialog(projUrl){
-	    $.ajax({
-	        url: projUrl,
-	        success: function(result) {
-	            $("#projectModal").html(result);
-	            $("#projectModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// when click close button in Dialog, close it and erase the content.
-	function closeProjectDialog(){
-	    $("#projectModal").modal('hide');
-	    $("#projectModal").html('');
-	}
-	
+	$("#page-wrapper").css('height',winHeight);	
 </script>
 {% endblock content2 %}

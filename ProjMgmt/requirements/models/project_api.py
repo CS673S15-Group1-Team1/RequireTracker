@@ -14,18 +14,20 @@ def get_all_projects():
     return Project.objects.all()
 
 def get_associations_for_user(userID):
-	return UserAssociation.objects.filter(user__id=userID)
+    # Returns the associations between this user and his/her projects, including the user's role on those projects.
+    return UserAssociation.objects.filter(user__id=userID)
 
 def get_projects_for_user(userID):
     return Project.objects.filter(users__id__contains=userID)
 
-def get_project(projID):
-    if Project.objects.filter(id=projID).count() == 0: 
-        return False
-    return Project.objects.get(id=projID)
+def get_project(projectID):
+    try:
+        return Project.objects.get(id=projectID)        
+    except Exception, e:
+        return None    
     
-def get_project_users(projID):
-    return UserAssociation.objects.filter(project__id=projID, role=ROLE_CLIENT)
+def get_project_users(projectID):
+    return UserAssociation.objects.filter(project__id=projectID)
 
 def can_user_access_project(userID, projectID):
     return UserAssociation.objects.filter(user__id=userID, project__id=projectID).count() > 0
@@ -133,9 +135,9 @@ def get_stories_for_iteration(iteration):
 def get_stories_with_no_iteration(project):
     return Story.objects.filter(project=project, iteration=None)
     
-def get_iteration(iterID):
-    return Iteration.objects.get(id=iterID)
-        
-        
-
+def get_iteration(iterationID):
+    try:
+        return Iteration.objects.get(id=iterationID)
+    except Exception, e:
+        return None
 
