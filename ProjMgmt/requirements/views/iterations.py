@@ -2,12 +2,14 @@ from django import forms
 from requirements import models
 from requirements.models import project_api
 from requirements.models import user_manager
-from requirements.models import story
-from forms import AddIterationForm
-from forms import NewProjectForm
+from requirements.models import story as mdl_story
+from requirements.models import iteration as mdl_iteration
+from requirements.models.user_manager import user_owns_project
+from forms import IterationForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 import datetime
+
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
@@ -34,143 +36,94 @@ def iteration(request, projectID, iterationID):
         return render(request, 'IterationDetail.html', context)
     else:
         # return HttpResponse("You cannot access project " + proj)
-        return redirect('/projects')
-
-# @login_required(login_url='/accounts/login/')
-# def listProjects(request):
-#     context = {'projects' : models.getProjectsForUser(request.user.id)}
-#     return render(request, 'projects.html', context)
+        return redirect('/req/projects')
 
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)
-def new_project(request):
+@user_owns_project()  
+def new_iteration(request, projectID):
+    project = project_api.get_project(projectID)
     if request.method == 'POST':
-        form = NewProjectForm(request.POST)
+        form = IterationForm(request.POST)
         if form.is_valid():
-            project_api.create_project(request.user, request.POST)
-            project = form.save(commit=False)
-            return redirect('/projects')
+            mdl_iteration.create_iteration(project,request.POST)
+            form.save(commit=False)
+            return redirect('/req/projectdetail/' + projectID)
     else:
-        form = NewProjectForm()
-        
-    context = {'title' : 'New Project',
-               'form' : form, 'action' : '/newproject' , 'desc' : 'Create Project' }
-    return render(request, 'ProjectSummary.html', context )
+        form = IterationForm()
+    context = {
+        'title': 'Create New Iteration',
+        'action': '/req/newiteration/' + projectID,
+        'form': form,
+        'button_desc': 'Create'
+    }
+    return render(request, 'IterationSummary.html', context)
 
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)
-def edit_project(request, id):
-    project = project_api.get_project(id)
-    if request.method == 'POST':
-        form = NewProjectForm(request.POST, instance=project)
+@user_owns_project()  
+def edit_iteration(request,projectID,iterationID):
+    project = project_api.get_project(projectID)
+    iteration = mdl_iteration.get_iteration(iterationID)
+    if project == None or iteration == None or iteration.project != project:
+        return redirect('/req/projectdetail/' + projectID)
+    if request.method == "POST":
+        form = IterationForm(request.POST, instance=iteration)
         if form.is_valid():
-            project = form.save(commit=True)
-            return redirect('/projects')
+            form.save(commit=True)
+            return redirect('/req/projects/' + projectID)
     else:
-        form = NewProjectForm(instance=project)
-        
-    context = {'title' : 'Edit Project',
-               'form' : form, 'action' : '/editproject/' + id, 'desc' : 'Save Changes'}
-    return render(request, 'ProjectSummary.html', context )
+        form = IterationForm(instance=iteration)
+    context = {
+        'title': 'Edit Iteration',
+        'action': '/req/edititeration/' + projectID + '/' + iterationID,
+        'form': form,
+        'button_desc': 'Save Changes'
+    }
+    return render(request, 'IterationSummary.html', context)
 
 @login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)
-def delete_project(request, id):
-    project = project_api.get_project(id)
-    if request.method == 'POST':
-        # form = NewProjectForm(request.POST, instance=project)
-        # if form.is_valid():
-        #     project = form.save(commit=False)
-        models.project_api.delete_project(project.id)
-        return redirect('/projects')
-    else:
-        form = NewProjectForm(instance=project)
-      
-    context = {'title' : 'Delete Project',
-               'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
-               'form' : form, 'action' : '/deleteproject/' + id , 'desc' : 'Delete Project' }
-    return render(request, 'ProjectSummary.html', context )
-
-#===============================================================================
-# @login_required(login_url='/accounts/login/')
-# @permission_required('projects.own_project')
-# def createProject(request):
-#     proj = models.createProject(request.user, request.POST)
-#     return redirect('/projects')
-#===============================================================================
-    
-        
-@login_required(login_url='/signin')
-def add_user_to_project(request, projectID, username):
+@user_owns_project()  
+def delete_iteration(request,projectID,iterationID):
     project = project_api.get_project(projectID)
-    if not username == '0':
-        project_api.add_user_to_project(projectID, username)
-        return redirect('/projects/' + projectID)
+    iteration = mdl_iteration.get_iteration(iterationID)
+    if project == None or iteration == None or iteration.project != project:
+        return redirect('/req/projectdetail/' + projectID)
+    if request.method == "POST":
+        iteration.delete()
+        return redirect('/req/projectdetail/' + projectID)
     else:
-        activeUsers = user_manager.getActiveUsers()
-        for activeUser in activeUsers:
-            if project_api.can_user_access_project(activeUser.id, projectID) == True:
-                del activeUser
-        context = {'project' : project,
-                   'activeUsers' : activeUsers,
-                   'title' : 'Add User into Project',
-                  }
-        return render(request, 'UserSummary.html', context)
+        form = IterationForm(instance=iteration)
+    context = {
+        'title': 'Edit Iteration',
+        'confirm_message': 'This is an irreversible procedure ! You will lose all information about this iteration and stories it contains !',
+        'action': '/req/deleteiteration/' + projectID + '/' + iterationID,
+        'form': form,
+        'button_desc': 'Delete'
+    }
+    return render(request, 'IterationSummary.html', context)
 
-@login_required(login_url='/signin')    
-def remove_user_from_project(request, projectID, username):
+@login_required(login_url='/signin')
+def list_iterations_for_project(request, projectID):
     project = project_api.get_project(projectID)
-    if not username == '0':
-        project_api.remove_user_from_project(projectID, username)
-        return redirect('/projects/' + projectID)
-    else:
-        context = {'project' : project,
-                   'users' : project.users.all,
-                   'title' : 'Remove User from Project',
-                   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
-                  }        
-        return render(request, 'UserSummary.html', context)
-
-@login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)    
-def show_new_iteration(request,projectID):
-    form = AddIterationForm()
-    context = {'projectID' : projectID, 'form' : form, 'title' : 'Create a new Iteration'}
-    return render(request, 'NewIterationForm.html',context)
-    
-@login_required(login_url='/signin')
-@permission_required(PERMISSION_OWN_PROJECT)    
-def add_iteration_to_project(request,projectID):
-    fields = request.POST
-    project_api.add_iteration_to_project(fields['title'], fields['description'],
-    datetime.date(int(fields['start_date_year']),int(fields['start_date_month']),int(fields['start_date_day'])),
-    datetime.date(int(fields['end_date_year']), int(fields['end_date_month']), int(fields['end_date_day']) ), projectID)
-    
-    return redirect('/projects/' + projectID)   
-
-@login_required(login_url='/accounts/login/')
-@permission_required(PERMISSION_OWN_PROJECT)  
-def move_story_to_iter(request, projectID,storyID, iterID):
-    stry = story.get_story(storyID)
-    iteration = project_api.get_iteration(iterID)
-    project_api.add_story_to_iteration(stry,iteration)
-    return redirect('/projects/' + projectID)  
-
-@login_required(login_url='/accounts/login/')
-@permission_required(PERMISSION_OWN_PROJECT)     
-def move_story_to_icebox(request,projectID,storyID):
-    stry = story.get_story(storyID)
-    project_api.move_story_to_icebox(stry)
-    return redirect('/projects/' + projectID)
-
-@login_required(login_url='/signin')
-def show_iterations(request, projectID):
-    project = project_api.get_project(projectID)
-    iterations = project_api.get_iterations_for_project(project)
+    iterations = mdl_iteration.get_iterations_for_project(project)
     context = {
         'project' : project,
         'iterations' : iterations,
         'owns_project' : project_api.user_owns_project(request.user,project),
     }
+    return render(request, 'SideBarIters.html', context)
+
+@login_required(login_url='/signin')
+def list_iterations_for_project_with_selection(request, projectID, iterationID):
+    project = project_api.get_project(projectID)
+    iterations = mdl_iteration.get_iterations_for_project(project)
+    iteration = mdl_iteration.get_iteration(iterationID)
+    context = {
+        'project' : project,
+        'iterations' : iterations,
+        'iteration' : iteration,
+        'owns_project' : project_api.user_owns_project(request.user,project),
+    }
+    if iteration == None:
+        context['isIceBox'] = True
     return render(request, 'SideBarIters.html', context)
 

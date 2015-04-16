@@ -22,23 +22,26 @@ class Story(ProjMgmtBase):
     POINTS_TWO = 2
     POINTS_THREE = 3
     POINTS_FOUR = 4
-    
+    POINTS_FIVE = 5
+
     POINTS_CHOICES = (
-        (POINTS_NONE,"0 Not Scaled"),
+        (POINTS_NONE,"Not Scaled"),
         (POINTS_ONE, "1 Point"),
         (POINTS_TWO, "2 Points"),
         (POINTS_THREE, "3 Points"),
-        (POINTS_FOUR, "4 Points")
+        (POINTS_FOUR, "4 Points"),
+        (POINTS_FIVE, "5 Points"),
     )
 
     project = models.ForeignKey(Project)    
     iteration = models.ForeignKey(Iteration,blank=True,null=True)
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
-    hours = models.CharField(default='', max_length=16, blank=True)
+    hours = models.IntegerField(default=0)
+    owner = models.ForeignKey(User, blank=True,null=True)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
-    pause = models.BooleanField(default=False) 
+    pause = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title
@@ -55,8 +58,9 @@ class Story(ProjMgmtBase):
     class Meta:
         app_label = 'requirements'
     
-def get_project_stories(projID):
-    return Story.objects.filter(project_id=projID)
+def get_stories_for_project(project):
+    if project == None: return None
+    return Story.objects.filter(project_id=project.id)
 
 def get_story(storyID):
     try:
@@ -65,9 +69,8 @@ def get_story(storyID):
         return None
     
     
-def create_story(user, proj, fields):
-    if proj is None: return None
-    if Project.objects.filter(id=proj.id).count() == 0: return None
+def create_story(project, fields):
+    if project is None: return None
     if fields is None: return None
     
     title = fields.get('title', '')
@@ -75,16 +78,18 @@ def create_story(user, proj, fields):
     reason = fields.get('reason', '')
     test = fields.get('test', '')
     hours = fields.get('hours','')
+    owner = fields.get('owner', '')
     status = fields.get('status', Story.STATUS_UNSTARTED)
     points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
     
-    story = Story(project=proj,
+    story = Story(project=project,
                   title=title, 
                   description=description,
                   reason=reason,
                   test=test,
                   hours = hours,
+                  owner = owner,
                   status=status,
                   points = points,
                   pause = pause

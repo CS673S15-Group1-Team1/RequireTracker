@@ -6,8 +6,8 @@
 		<div class="row">
 			<div class="col-lg-12">
 				<ol class="breadcrumb">
-					<li><a href="/projects">Dashboard</a></li>
-					<li><a href="/projects/{{ project.id }}">{{ project.title }}</a></li>
+					<li><a href="/req/projects">Dashboard</a></li>
+					<li><a href="/req/projectdetail/{{ project.id }}">{{ project.title }}</a></li>
 					<li class="active" style="font-size: xx-large;">
 						{% if isIceBox %}
 						Icebox
@@ -39,15 +39,15 @@
 	    	                      	<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
 	    	                       		{% for iter_local in iterations %}
 	    	                        	<li role="presentation">
-	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
 	    	                        	{% endfor %}
 	    	                      	</ul>
 	    	                    </div>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
 	    	                    </a>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
 	    	                    </a> 
 			                </h4>
@@ -123,12 +123,12 @@
 														<a data-toggle="collapse" data-parent="" href="#task_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-tasks fa-fw"></i> Tasks
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/newtask/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newtask/{{ project.id }}/0/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
                                 				</div>
-                                				<div id="task_{{ story.id }}" class="panel-collapse collapse" aria-expanded="false">
+                                				<div id="task_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
                                 					<!-- Load Tasks through ajax -->
                                 				</div>
                                 			</div>
@@ -142,12 +142,12 @@
 														<a data-toggle="collapse" data-parent="" href="#comment_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-comments fa-fw"></i> Comments
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/newcomment/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newcomment/{{ project.id }}/0/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
                                 				</div>
-                                				<div id="comment_{{ story.id }}" class="panel-collapse collapse" aria-expanded="false">
+                                				<div id="comment_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
                                 					<!-- Load Comments through ajax -->
                                 				</div>
                                 			</div>
@@ -180,17 +180,17 @@
 	    	                       		{% for iter_local in iterations %}
 	    	                        	{% if not iter_local.title = iteration.title %}
 	    	                        	<li role="presentation">
-	    	                        		<a role="menuitem" tabindex="-1" href="/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
+	    	                        		<a role="menuitem" tabindex="-1" href="/req/movestorytoiter/{{project.id}}/{{story.id}}/{{iter_local.id}}">{{iter_local.title}}</a>
 	    	                        	</li>
 										{% endif %}
 	    	                        	{% endfor %}
-	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
+	    	                        	<li role="presentation"><a role="menuitem" tabindex="-1" href="/req/movestorytoicebox/{{project.id}}/{{story.id}}">Icebox</a></li>
 	    	                      	</ul>
 	    	                    </div>
-								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/deletestory/{{ project.id }}/{{ story.id }}');">
+								<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/deletestory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-trash-o fa-fw"></i>Delete
 	    	                	</a>
-	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showStoryDialog('/editstory/{{ project.id }}/{{ story.id }}');">
+	    	                    <a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/editstory/{{ project.id }}/{{ story.id }}');">
 	    	                    	<i class="fa fa-edit fa-fw"></i>Edit
 	    	                	</a> 
 			                </h4>
@@ -204,9 +204,7 @@
 			                				<h4><strong>Description</strong></h4>
 			                			</div>
 			                			<div class="col-xs-12 col-sm-9">
-			                				{% for line_desc in story.description_as_list %}
-												<h5>{{ line_desc }}</h5>
-			                				{% endfor %}
+			                				<h5>{{ story.description|linebreaks }}</h5>
 			                			</div>
 			                			</div>
 			                		</div>
@@ -216,9 +214,7 @@
 			                				<h4><strong>Reason</strong></h4>
 			                			</div>
 			                			<div class="col-xs-12 col-sm-9">
-			                				{% for line_reason in story.reason_as_list %}
-												<h5>{{ line_reason }}</h5>
-			                				{% endfor %}
+			                				<h5>{{ story.reason|linebreaks }}</h5>
 			                			</div>
 			                			</div>
                                 	</div>
@@ -230,9 +226,7 @@
 			                				<h4><strong>Test Accept</strong></h4>
 			                			</div>
 			                			<div class="col-xs-12 col-sm-9">
-			                				{% for line_test in story.test_as_list %}
-												<h5>{{ line_test }}</h5>
-			                				{% endfor %}
+			                				<h5>{{ story.test|linebreaks }}</h5>
 			                			</div>
 			                			</div>
                                 	</div>
@@ -266,12 +260,12 @@
 														<a data-toggle="collapse" data-parent="" href="#task_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-tasks fa-fw"></i> Tasks
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showTaskDialog('/newtask/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newtask/{{ project.id }}/{{ iteration.id }}/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
                                 				</div>
-                                				<div id="task_{{ story.id }}" class="panel-collapse collapse" aria-expanded="false">
+                                				<div id="task_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
                                 					<!-- Load Tasks through ajax -->
                                 				</div>
                                 			</div>
@@ -285,12 +279,12 @@
 														<a data-toggle="collapse" data-parent="" href="#comment_{{ story.id }}" aria-expanded="true" class="">
 															<i class="fa fa-comments fa-fw"></i> Comments
 														</a>
-														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showCommentDialog('/newcomment/{{ story.id }}');">
+														<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="showDialog('/req/newcomment/{{ project.id }}/{{ iteration.id }}/{{ story.id }}');">
 															<i class="glyphicon glyphicon-plus"></i>
 														</a>
 													</h4>
                                 				</div>
-                                				<div id="comment_{{ story.id }}" class="panel-collapse collapse" aria-expanded="false">
+                                				<div id="comment_{{ story.id }}" class="panel-collapse collapse in" aria-expanded="true">
                                 					<!-- Load Comments through ajax -->
                                 				</div>
                                 			</div>
@@ -310,7 +304,6 @@
 </div>
 
 <script type="text/javascript">
-
 	$(function() {
 		var winHeight = $(window).outerHeight();
 		$("#page-wrapper").css('min-height',winHeight);
@@ -324,112 +317,5 @@
 
 		{% endfor %}
 	});
-
-	function getStoryPointHtml(point) {
-		var pointhtml = '';
-		if (point <= 0) {
-			pointhtml = '<i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i>';
-		} else {
-			for (var i = 0; i < point; i++) {
-				pointhtml += '<i class="fa fa-star fw"></i>'
-			}
-			for (var i = 5; i > point; i--) {
-				pointhtml += '<i class="fa fa-star-o fw"></i>'
-			}
-		}
-		return pointhtml;
-	}
-
-	function loadTasks(storyID) {
-		var taskUrl = "/loadtasks/" + storyID;
-		var jquerySearchID = "#task_" + storyID;
-		$.ajax({
-			url: taskUrl,
-			success: function(result) {
-				$(jquerySearchID).html(result);
-			},
-			async: true
-		});
-	}
-
-	function loadComments(storyID) {
-		var commentUrl = "/loadcomments/" + storyID;
-		var jquerySearchID = "#comment_" + storyID;
-		$.ajax({
-			url: commentUrl,
-			success: function(result) {
-				$(jquerySearchID).html(result);
-			},
-			async: true
-		});
-	}
-	// use ajax method to load Story Dialog
-	// storyUrl will be one of the following three:
-	// /newstory or /editstory/projID/storyID or /deletestory/projID/storyID
-	function showStoryDialog(storyUrl){
-	    $.ajax({
-	        url: storyUrl,
-	        success: function(result) {
-	            $("#storyModal").html(result);
-	            $("#storyModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// close Story Dialog and erase the content
-	function closeStoryDialog(){
-	    $("#storyModal").modal('hide');
-	    $("#storyModal").html('');
-	}
-	
-	// use ajax method to load Task Dialog
-	// taskUrl will be one of the following two:
-	// /newtask/storyID or /edittask/storyID/taskID or /deletetask/storyID/taskID
-	function showTaskDialog(taskUrl){
-	    $.ajax({
-	        url: taskUrl,
-	        success: function(result) {
-	            $("#taskModal").html(result);
-	            $("#taskModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// close Task Dialog and erase the content
-	function closeTaskDialog(){
-	    $("#taskModal").modal('hide');
-	    $("#taskModal").html('');
-	}
-
-	// use ajax method to load Comment Dialog
-	// commentUrl will be one of the following three:
-	// /newcomment/storyID or /editcomment/storyID/commentID or /deletecomment/storyID/commentID
-	function showCommentDialog(commentUrl){
-	    $.ajax({
-	        url: commentUrl,
-	        success: function(result) {
-	            $("#commentModal").html(result);
-	            $("#commentModal").modal({
-	            	backdrop: false,
-	            	show: true
-	            })
-	        },
-	        async:false
-	    }); 
-	}
-
-	// close Comment Dialog and erase the content
-	function closeCommentDialog(){
-	    $("#commentModal").modal('hide');
-	    $("#commentModal").html('');
-	}
 </script>
 {% endblock content2 %}

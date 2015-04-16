@@ -9,7 +9,7 @@
             {% else %}
             <li class="active">
             {% endif %}
-                <a href="/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
+                <a href="/req/projects"><i class="fa fa-fw fa-dashboard"></i> Dashboard</a>
             </li>
 
             {% for aproject in projects %}
@@ -32,7 +32,7 @@
                 <ul id="proj_{{ aproject.id }}" class="collapse" aria-expanded="false">
                     <li>
                 {% endifequal %}
-                        <a href="/projects/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
+                        <a href="/req/projectdetail/{{ aproject.id }}"><i class="fa fa-fw fa-list-alt"></i> Project Detail</a>
                     </li>
                     <li>
                         <a href="javascript:void(0);" data-toggle="collapse" data-target="#proj_{{ aproject.id }}_iters">
@@ -54,6 +54,7 @@
                             <li><a href="#"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li> -->
                         </ul>
                     </li>
+                    <li><a href="javascript:void(0)" onclick="showDialog('/req/getattachments/{{ aproject.id }}');"><i class="fa fa-fw fa-folder-open-o"></i> Attachments</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Communication</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-road"></i> Issue Tracker</a></li>
                 </ul>
@@ -85,11 +86,11 @@
     $(function() {
         $.ajax({
             {% if aproject == project and iteration == None and isIceBox %}
-            url:'/showiterationswithselection/{{ aproject.id }}/0',
+            url:'/req/iterationswithselection/{{ aproject.id }}/0',
             {% elif aproject == project and iteration != None %}
-            url:'/showiterationswithselection/{{ aproject.id }}/{{ iteration.id }}',
+            url:'/req/iterationswithselection/{{ aproject.id }}/{{ iteration.id }}',
             {% else %}
-            url:'/showiterations/{{ aproject.id }}',
+            url:'/req/iterations/{{ aproject.id }}',
             {% endif %}
             success: function(result) {
                 $("#proj_{{ aproject.id }}_iters").html(result);
@@ -121,6 +122,25 @@
     function closeNewIterationDialog(){
         $("#iterationModal").modal('hide');
         $("#iterationModal").html('');
+    }
+    
+        function openAttachmentsModal(projectID){
+        $.ajax({
+            url: "/req/getattachments/"+projectID,
+            success: function(result) {
+                $("#projAttachModal").html(result);
+                $("#projAttachModal").modal({
+                    backdrop: false,
+                    show: true
+                })
+            },
+            async:false
+        }); 
+    }
+
+    function closeAttachmentsModal(){
+        $("#projAttachModal").modal('hide');
+        $("#projAttachModal").html('');
     }
 </script>
 
