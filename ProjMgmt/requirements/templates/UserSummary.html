@@ -14,9 +14,10 @@
 	        </div>
 	        <div class="modal-body">
 	        	{% if confirm_message %}
-					<h2><span class="label label-danger">Warning :</span></h2>
-					<h3>{{ confirm_message }}</h3>
-					<hr>
+                    <div class="form-group">
+                        <div class="col-xs-12 col-sm-3"><h2><span class="label label-danger">Warning</span></h2></div>
+                        <div class="col-xs-12 col-sm-9"><h3>{{ confirm_message }}</h3></div>
+                    </div>
 	        	{% endif %}
 				<ul class="list-group">
 					{% if confirm_message %}
@@ -68,3 +69,7 @@
         	</div>
       	</div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
+
+    <script type="text/javascript">
+        
+    </script>
