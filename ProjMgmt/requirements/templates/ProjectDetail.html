@@ -172,7 +172,8 @@
 								</a>
 							</h2>
 						</div>
-						<div class="panel-body">
+						<div id="userlist_{{ project.id }}" class="panel-body">
+							{% comment "No Use" %}
 							<ul class="list-group">
 							<!-- Display usernames. -->
 							<!-- IF user has permission to edit project, give option to edit permissions. -->
@@ -199,6 +200,7 @@
                 	            </li>
                 	            {% endfor %}
                 	        </ul>
+                	        {% endcomment %}
 						</div>
 					</div>
 				</div>
@@ -210,5 +212,9 @@
 <script type="text/javascript">
 	var winHeight = $(window).outerHeight();
 	$("#page-wrapper").css('min-height',winHeight);
+
+	$(function() {
+		loadUsersInProject({{ project.id }});
+	});
 </script>
 {% endblock content2 %}

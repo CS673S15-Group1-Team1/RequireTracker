@@ -1,7 +1,7 @@
 from django import forms
 from requirements import models
 from requirements.models import project_api
-from requirements.models import user_manager
+from requirements.models import user_manager, user_association
 from requirements.models import story as mdl_story
 from requirements.models import iteration as mdl_iteration
 from requirements.models.user_association import UserAssociation
@@ -126,53 +126,70 @@ def delete_project(request, projectID):
 #     proj = models.createProject(request.user, request.POST)
 #     return redirect('/projects')
 #===============================================================================
+
+@login_required(login_url='/signin')
+def list_users_in_project(request, projectID):
+    project = project_api.get_project(projectID)
+    users = project.users.all()
+    pmusers = User.objects.filter(project__id=project.id,userassociation__role=user_association.ROLE_OWNER)
+    devusers = User.objects.filter(project__id=project.id,userassociation__role=user_association.ROLE_DEVELOPER)
+    cliusers = User.objects.filter(project__id=project.id,userassociation__role=user_association.ROLE_CLIENT)
     
-        
+    context = {
+        'project': project,
+        'users': users,
+        'pmusers': pmusers,
+        'devusers': devusers,
+        'cliusers': cliusers,
+        'canOwnProject': request.user.has_perm(PERMISSION_OWN_PROJECT),
+    }
+    return render(request, 'UserList.html', context)
+
 @login_required(login_url='/signin')
 @user_owns_project()
 def add_user_to_project(request, projectID, username):
-    # If username = 0, displays an Add User to Project menu.
-    # Otherwise, adds username to the project specified by projectID.
     project = project_api.get_project(projectID)
-    if not username == '0': # A user to add has been specified.
-        # Get the role that was sent via the dropdown in the form. 
-        retrieved_role = (request.POST).get('user_role')
-        print retrieved_role # to console for debugging
-        project_api.add_user_to_project(projectID, username, retrieved_role)
-        return redirect('/req/projects/' + projectID)
+    if request.method == 'POST':
+        form = SelectAccessLevelForm(request.POST)
+        if form.is_valid():
+            user_role = (request.POST).get('user_role','')
+            project_api.add_user_to_project(projectID,username,user_role)
     else:
-        activeUsers = user_manager.getActiveUsers()
-        for activeUser in activeUsers:
-            if project_api.can_user_access_project(activeUser.id, projectID) == True:
-                del activeUser
-	form = SelectAccessLevelForm()
+        form = SelectAccessLevelForm()
+
+    users = user_manager.getActiveUsers()
+    for puser in project.users.all():
+        users = users.exclude(username=puser.username)
     context = {
-               'form' : form,
-               'action' : '/req/addusertoproject/{{ project.id }}/{{ activeUser.username }}',
-               'project' : project,
-               'users' : project.users.all,
-               'activeUsers' : activeUsers,
-               'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               'title' : 'Add User to Project',
-              }
+        'title': 'Add User to Project',
+        'form': form,
+        'project': project,
+        'users': users,
+    }
+
     return render(request, 'UserSummary.html', context)
     
-
 @login_required(login_url='/signin')  
 @user_owns_project()  
 def remove_user_from_project(request, projectID, username):
     project = project_api.get_project(projectID)
-    if not username == '0':
+    if request.method == 'POST':
+        form = SelectAccessLevelForm()
         project_api.remove_user_from_project(projectID, username)
-        return redirect('/projects/' + projectID)
     else:
-        context = {'project' : project,
-                   'users' : project.users.all,
-                   'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-                   'title' : 'Remove User from Project',
-                   'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !'
-                  }        
-        return render(request, 'UserSummary.html', context)
+        form = SelectAccessLevelForm()
+    users = project.users.all()
+    users = users.exclude(username=request.user.username)
+    
+    context = {
+        'title': 'Remove User from Project',
+        'form': form,
+        'project': project,
+        'users': users,
+        'confirm_message' : 'This is an unrevert procedure ! This user will lose the permission to access this project !',
+    }
+
+    return render(request, 'UserSummary.html', context)
     
 @login_required(login_url='/accounts/login/')
 @user_owns_project() 

@@ -33,6 +33,19 @@ function getStoryPointHtml(point) {
 	return pointhtml;
 }
 
+
+function loadUsersInProject(projectID) {
+	var taskUrl = "/req/usersinproject/" + projectID;
+	var jquerySearchID = "#userlist_" + projectID;
+	$.ajax({
+		url: taskUrl,
+		success: function(result) {
+			$(jquerySearchID).html(result);
+		},
+		async: true
+	});
+}
+
 function loadTasks(storyID) {
 	var taskUrl = "/req/tasks/" + storyID;
 	var jquerySearchID = "#task_" + storyID;
