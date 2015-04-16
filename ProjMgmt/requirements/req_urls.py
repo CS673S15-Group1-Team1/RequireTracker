@@ -11,6 +11,7 @@ urlpatterns = patterns('',
     url(r'^projectdetail/(?P<projectID>\d+)', projects.project),
     url(r'^addusertoproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', projects.add_user_to_project),
     url(r'^removeuserfromproject/(?P<projectID>\d+)/(?P<username>[a-z0-9]+)', projects.remove_user_from_project),
+    url(r'^usersinproject/(?P<projectID>\d+)', projects.list_users_in_project),
     
     url(r'^newproject', projects.new_project),
     url(r'^editproject/(?P<projectID>\d+)', projects.edit_project),

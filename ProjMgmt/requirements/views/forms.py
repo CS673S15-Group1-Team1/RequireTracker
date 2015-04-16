@@ -56,16 +56,6 @@ class IterationForm(forms.ModelForm):
 			'end_date' : forms.TextInput(attrs={'readonly': 'readonly'}),
 		}
 
-class AddIterationForm(forms.Form):
-    title = forms.CharField(label='Title:', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-    description = forms.CharField(label='Description:', max_length=100, widget=forms.Textarea(attrs={'class':'form-control'}))
-    start_date = forms.DateField(label='Start Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))
-    end_date = forms.DateField(label='End Date:', widget=SelectDateWidget(attrs={'class':'form-control'}))
-
-class AddUserForm(forms.Form):
-	users = User.objects.filter(is_active=True).order_by('id')
-	username = forms.ModelChoiceField(queryset=users, empty_label=None)
-
 class ProjectForm(forms.ModelForm):
 	
 	def __init__(self, *args, **kwargs):
