@@ -147,5 +147,5 @@ class TaskForm(forms.ModelForm):
 		model = Task
 		fields = ('description',)
 		widgets = {
-			'description' : forms.Textarea(attrs={'rows': 3}),
+			'description' : forms.Textarea(attrs={'rows': 1}),
 		}	

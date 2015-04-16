@@ -58,6 +58,68 @@ function loadTasks(storyID) {
 	});
 }
 
+function addTaskIntoList(storyID) {
+	var addTaskUrl = "/req/addtaskintolist/" + storyID;
+	var formID = "#newtask_form_" + storyID;
+	var listID = "#task_" + storyID
+	$.ajax({
+        type : "POST",
+        cache : false,
+        url : addTaskUrl,
+        data : $(formID).serialize(),
+        success : function(data) {
+            $(listID).html(data);
+        },
+        async:true
+	});
+}
+
+function showEditTaskInList(storyID, taskID) {
+	var showEditTaskUrl = "/req/edittaskinlist/" + storyID + "/" + taskID;
+	var listID = "#task_" + storyID;
+	$.ajax({
+		type: "GET",
+		cache: false,
+		url: showEditTaskUrl,
+		success: function(data) {
+			$(listID).html(data);
+		},
+		async: true
+	});
+}
+
+function saveEditTaskInList(storyID, taskID) {
+	var showEditTaskUrl = "/req/edittaskinlist/" + storyID + "/" + taskID;
+	var formID = "#edittask_form_" + storyID
+	var listID = "#task_" + storyID;
+	$.ajax({
+		type: "POST",
+		cache: false,
+		url: showEditTaskUrl,
+		data: $(formID).serialize(),
+		success: function(data) {
+			loadTasks(storyID);
+		},
+		async: true
+	});
+}
+
+function removeTaskFromList(storyID, taskID) {
+	var removeTaskUrl = "/req/removetaskfromlist/" + storyID + "/" + taskID;
+	var formID = "#removetask_form_" + storyID;
+	var listID = "#task_" + storyID;
+	$.ajax({
+		type: "POST",
+		cache: false,
+		url: removeTaskUrl,
+		data: $(formID).serialize(),
+		success: function(data) {
+			$(listID).html(data);
+		},
+		async: true
+	});
+}
+
 function loadComments(storyID) {
 	var commentUrl = "/req/comments/" + storyID;
 	var jquerySearchID = "#comment_" + storyID;

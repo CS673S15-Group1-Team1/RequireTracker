@@ -149,7 +149,27 @@ def move_story_to_icebox(request,projectID,storyID):
 def list_tasks(request, storyID):
     story = mdl_story.get_story(storyID)
     tasks = mdl_task.get_tasks_for_story(story)
-    context = {'tasks': tasks}
+    form = TaskForm()
+    context = {'story': story,
+                'tasks': tasks,
+                'newform': form}
+    return render(request, 'TaskList.html', context)
+
+@login_required(login_url='/signin')
+def add_task_into_list(request, storyID):
+    story = mdl_story.get_story(storyID)
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            mdl_task.create_task(story,request.POST)
+    else:
+        form = TaskForm()
+    tasks = mdl_task.get_tasks_for_story(story)
+    context = {
+        'story': story,
+        'tasks': tasks,
+        'newform': form
+    }
     return render(request, 'TaskList.html', context)
 
 @login_required(login_url='/signin')
@@ -172,6 +192,27 @@ def new_task(request, projectID, iterationID, storyID):
     return render(request, 'TaskSummary.html', context)
 
 @login_required(login_url='/signin')
+def edit_task_in_list(request, storyID, taskID):
+    story = mdl_story.get_story(storyID)
+    task = mdl_task.get_task(taskID)
+    if request.method == 'POST':
+        form = TaskForm(request.POST, instance=task)
+        if form.is_valid():
+            task = form.save(commit=True)
+    else:
+        form = TaskForm(instance=task)
+    tasks = mdl_task.get_tasks_for_story(story)
+
+    context = {
+        'story': story,
+        'tasks': tasks,
+        'task': task,
+        'editform': form,
+    }
+
+    return render(request, 'TaskList.html', context)
+
+@login_required(login_url='/signin')
 def edit_task(request, projectID, iterationID, storyID, taskID):
     story = mdl_story.get_story(storyID)
     task = mdl_task.get_task(taskID)
@@ -191,6 +232,23 @@ def edit_task(request, projectID, iterationID, storyID, taskID):
         'button_desc': 'Save Changes'
     }
     return render(request, 'TaskSummary.html', context)
+
+@login_required(login_url='/signin')
+def remove_task_from_list(request, storyID, taskID):
+    story = mdl_story.get_story(storyID)
+    task = mdl_task.get_task(taskID)
+    if request.method == 'POST':
+        task.delete()
+    tasks = mdl_task.get_tasks_for_story(story)
+    form = TaskForm()
+
+    context = {
+        'story': story,
+        'tasks': tasks,
+        'newform': form
+    }
+
+    return render(request, 'TaskList.html', context)
 
 @login_required(login_url='/signin')
 def delete_task(request, projectID, iterationID, storyID, taskID):
