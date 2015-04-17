@@ -5,10 +5,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from iteration import Iteration
 from story import Story
 
-ROLE_CLIENT = "client"
-ROLE_DEVELOPER = "developer"
-ROLE_OWNER = "owner"
-
 
 def get_all_projects():
     return Project.objects.all()
@@ -44,7 +40,7 @@ def create_project(user, fields):
     description = fields.get('description', '')
     proj = Project(title=title, description=description)
     proj.save()
-    association = UserAssociation(user=user,project=proj, role=ROLE_OWNER)
+    association = UserAssociation(user=user,project=proj, role=user_association.ROLE_OWNER)
     association.save()
     return proj
 
@@ -112,7 +108,7 @@ def user_owns_project(user,project):
     ua_list = UserAssociation.objects.filter(user=user,project=project)
     if not ua_list.exists():
         return False
-    return ROLE_OWNER == ua_list[0].role
+    return user_association.ROLE_OWNER == ua_list[0].role
 
 def change_user_role(the_project,the_user,the_role):
     # Finds the user's association in the specified project, and changes role to the
