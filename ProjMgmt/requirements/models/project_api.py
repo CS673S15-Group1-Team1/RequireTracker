@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from iteration import Iteration
 from story import Story
-
+import user_association
 
 def get_all_projects():
     return Project.objects.all()
