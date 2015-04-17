@@ -51,14 +51,16 @@ def new_story(request, projectID):
         form = StoryForm(project=project)
         # formset = TaskFormSet(instance=story)
         # formset.extra = 1
-        
+    project = project_api.get_project(projectID)
+    association = UserAssociation.objects.get(user=request.user, project=project)    
     context = {'title' : 'New User Story',
                'form' : form,
                # 'formset' : formset,
                'project': project,
                'association': association,
                'action' : '/req/newstory/' + projectID , 
-               'button_desc' : 'Create User Story' }
+               'button_desc' : 'Create User Story',
+                }
     return render(request, 'StorySummary.html', context )
 
 @login_required(login_url='/signin')
