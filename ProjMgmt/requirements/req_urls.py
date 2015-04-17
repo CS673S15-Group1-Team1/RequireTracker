@@ -34,12 +34,18 @@ urlpatterns = patterns('',
     url(r'^comments/(?P<storyID>\d+)', stories.list_comments),
     
     url(r'^newtask/(?P<projectID>\d+)/(?P<iterationID>\d+)/(?P<storyID>\d+)', stories.new_task),
+    url(r'^addtaskintolist/(?P<storyID>\d+)', stories.add_task_into_list),
     url(r'^edittask/(?P<projectID>\d+)/(?P<iterationID>\d+)/(?P<storyID>\d+)/(?P<taskID>\d+)', stories.edit_task),
+    url(r'^edittaskinlist/(?P<storyID>\d+)/(?P<taskID>\d+)', stories.edit_task_in_list),
     url(r'^deletetask/(?P<projectID>\d+)/(?P<iterationID>\d+)/(?P<storyID>\d+)/(?P<taskID>\d+)', stories.delete_task),
+    url(r'^removetaskfromlist/(?P<storyID>\d+)/(?P<taskID>\d+)', stories.remove_task_from_list),
     
     url(r'^newcomment/(?P<projectID>\d+)/(?P<iterationID>\d+)/(?P<storyID>\d+)', stories.new_comment),
+    url(r'^addcommentintolist/(?P<storyID>\d+)', stories.add_comment_into_list),
     url(r'^editcomment/(?P<storyID>\d+)', stories.list_tasks),
+    url(r'^editcommentinlist/(?P<storyID>\d+)/(?P<commentID>\d+)', stories.edit_comment_in_list),
     url(r'^deletecomment/(?P<storyID>\d+)', stories.list_tasks),
+    url(r'^removecommentfromlist/(?P<storyID>\d+)/(?P<commentID>\d+)', stories.remove_comment_from_list),
     
     url(r'^iterationdetail/(?P<projectID>\d+)/(?P<iterationID>\d+)',iterations.iteration),
 

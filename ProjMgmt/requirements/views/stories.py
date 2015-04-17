@@ -25,6 +25,7 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 def new_story(request, projectID):
     # story = Story()
     project = project_api.get_project(projectID)
+    association = UserAssociation.objects.get(user=request.user, project=project)
     if request.method == 'POST':
         form = StoryForm(request.POST,project=project)
         if form.is_valid():
@@ -54,6 +55,8 @@ def new_story(request, projectID):
     context = {'title' : 'New User Story',
                'form' : form,
                # 'formset' : formset,
+               'project': project,
+               'association': association,
                'action' : '/req/newstory/' + projectID , 
                'button_desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
@@ -149,133 +152,251 @@ def move_story_to_icebox(request,projectID,storyID):
 def list_tasks(request, storyID):
     story = mdl_story.get_story(storyID)
     tasks = mdl_task.get_tasks_for_story(story)
-    context = {'tasks': tasks}
+    form = TaskForm()
+    context = {'story': story,
+                'tasks': tasks,
+                'newform': form}
     return render(request, 'TaskList.html', context)
 
 @login_required(login_url='/signin')
-def new_task(request, projectID, iterationID, storyID):
+def add_task_into_list(request, storyID):
     story = mdl_story.get_story(storyID)
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             mdl_task.create_task(story,request.POST)
-            form.save(commit=False)
-            return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
     else:
         form = TaskForm()
+    tasks = mdl_task.get_tasks_for_story(story)
     context = {
-        'title': 'Create New Task',
-        'action': '/req/newtask/' + projectID + '/' + iterationID + '/' + storyID,
-        'form': form,
-        'button_desc': 'Create Task'
+        'story': story,
+        'tasks': tasks,
+        'newform': form
     }
-    return render(request, 'TaskSummary.html', context)
+    return render(request, 'TaskList.html', context)
+
+# @login_required(login_url='/signin')
+# def new_task(request, projectID, iterationID, storyID):
+#     story = mdl_story.get_story(storyID)
+#     if request.method == 'POST':
+#         form = TaskForm(request.POST)
+#         if form.is_valid():
+#             mdl_task.create_task(story,request.POST)
+#             form.save(commit=False)
+#             return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = TaskForm()
+#     context = {
+#         'title': 'Create New Task',
+#         'action': '/req/newtask/' + projectID + '/' + iterationID + '/' + storyID,
+#         'form': form,
+#         'button_desc': 'Create Task'
+#     }
+#     return render(request, 'TaskSummary.html', context)
 
 @login_required(login_url='/signin')
-def edit_task(request, projectID, iterationID, storyID, taskID):
+def edit_task_in_list(request, storyID, taskID):
     story = mdl_story.get_story(storyID)
     task = mdl_task.get_task(taskID)
-    if story == None or task == None or task.story != story:
-        return redirect('/req/iterations/' + projectID + '/' + iterationID)
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
-            form.save(commit=True)
-            return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+            task = form.save(commit=True)
     else:
         form = TaskForm(instance=task)
+    tasks = mdl_task.get_tasks_for_story(story)
+
     context = {
-        'title': 'Edit Task',
-        'action': '/req/edittask/' + projectID + '/' + iterationID + '/' + storyID + '/' + taskID,
-        'form': form,
-        'button_desc': 'Save Changes'
+        'story': story,
+        'tasks': tasks,
+        'task': task,
+        'editform': form,
     }
-    return render(request, 'TaskSummary.html', context)
+
+    return render(request, 'TaskList.html', context)
+
+# @login_required(login_url='/signin')
+# def edit_task(request, projectID, iterationID, storyID, taskID):
+#     story = mdl_story.get_story(storyID)
+#     task = mdl_task.get_task(taskID)
+#     if story == None or task == None or task.story != story:
+#         return redirect('/req/iterations/' + projectID + '/' + iterationID)
+#     if request.method == 'POST':
+#         form = TaskForm(request.POST, instance=task)
+#         if form.is_valid():
+#             form.save(commit=True)
+#             return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = TaskForm(instance=task)
+#     context = {
+#         'title': 'Edit Task',
+#         'action': '/req/edittask/' + projectID + '/' + iterationID + '/' + storyID + '/' + taskID,
+#         'form': form,
+#         'button_desc': 'Save Changes'
+#     }
+#     return render(request, 'TaskSummary.html', context)
 
 @login_required(login_url='/signin')
-def delete_task(request, projectID, iterationID, storyID, taskID):
+def remove_task_from_list(request, storyID, taskID):
     story = mdl_story.get_story(storyID)
     task = mdl_task.get_task(taskID)
-    if story == None or task == None or task.story != story:
-        return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
-    if request.method == "POST":
+    if request.method == 'POST':
         task.delete()
-        return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
-    else:
-        form = TaskForm(instance=task)
+    tasks = mdl_task.get_tasks_for_story(story)
+    form = TaskForm()
+
     context = {
-        'title': 'Delete Task',
-        'confirm_message': 'This is an irreversible procedure ! You will lose all information about this task !',
-        'action': '/req/deletetask/' + projectID + '/' + iterationID + '/' + storyID + '/' + taskID,
-        'form': form,
-        'button_desc': 'Delete Task'
+        'story': story,
+        'tasks': tasks,
+        'newform': form
     }
-    return render(request, 'IterationSummary.html', context)
+
+    return render(request, 'TaskList.html', context)
+
+# @login_required(login_url='/signin')
+# def delete_task(request, projectID, iterationID, storyID, taskID):
+#     story = mdl_story.get_story(storyID)
+#     task = mdl_task.get_task(taskID)
+#     if story == None or task == None or task.story != story:
+#         return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     if request.method == "POST":
+#         task.delete()
+#         return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = TaskForm(instance=task)
+#     context = {
+#         'title': 'Delete Task',
+#         'confirm_message': 'This is an irreversible procedure ! You will lose all information about this task !',
+#         'action': '/req/deletetask/' + projectID + '/' + iterationID + '/' + storyID + '/' + taskID,
+#         'form': form,
+#         'button_desc': 'Delete Task'
+#     }
+#     return render(request, 'IterationSummary.html', context)
 
 @login_required(login_url='/signin')
 def list_comments(request, storyID):
     story = mdl_story.get_story(storyID)
     comments = mdl_comment.get_comments_for_story(story)
-    context = {'comments': comments}
+    form = CommentForm()
+    context = {
+        'story': story,
+        'comments': comments,
+        'newform': form
+    }
     return render(request, 'CommentList.html', context)
 
 @login_required(login_url='/signin')
-def new_comment(request, projectID, iterationID, storyID):
+def add_comment_into_list(request, storyID):
     story = mdl_story.get_story(storyID)
     if request.method == 'POST':
         form = CommentForm(request.POST)
         if form.is_valid():
             mdl_comment.create_comment(story,request.POST)
-            form.save(commit=False)
-            return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
     else:
         form = CommentForm()
+    comments = mdl_comment.get_comments_for_story(story)
     context = {
-        'title': 'Create New Comment',
-        'action': '/req/newcomment/' + projectID + '/' + iterationID + '/' + storyID,
-        'form': form,
-        'button_desc': 'Create Comment'
+        'story': story,
+        'comments': comments,
+        'newform': form
     }
-    return render(request, 'CommentSummary.html', context)
+    return render(request, 'CommentList.html', context)
+
+# @login_required(login_url='/signin')
+# def new_comment(request, projectID, iterationID, storyID):
+#     story = mdl_story.get_story(storyID)
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST)
+#         if form.is_valid():
+#             mdl_comment.create_comment(story,request.POST)
+#             form.save(commit=False)
+#             return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = CommentForm()
+#     context = {
+#         'title': 'Create New Comment',
+#         'action': '/req/newcomment/' + projectID + '/' + iterationID + '/' + storyID,
+#         'form': form,
+#         'button_desc': 'Create Comment'
+#     }
+#     return render(request, 'CommentSummary.html', context)
 
 @login_required(login_url='/signin')
-def edit_comment(request, projectID, iterationID, storyID, commentID):
+def edit_comment_in_list(request, storyID, commentID):
     story = mdl_story.get_story(storyID)
     comment = mdl_comment.get_comment(commentID)
-    if story == None or comment == None or comment.story != story:
-        return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
     if request.method == 'POST':
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
-            form.save(commit=True)
-            return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+            comment = form.save(commit=True)
     else:
         form = CommentForm(instance=comment)
+    comments = mdl_comment.get_comments_for_story(story)
+
     context = {
-        'title': 'Edit Comment',
-        'action': '/req/editcomment/' + projectID + '/' + iterationID + '/' + storyID + '/' + commentID,
-        'form': form,
-        'button_desc': 'Save Changes'
+        'story': story,
+        'comments': comments,
+        'comment': comment,
+        'editform': form,
     }
-    return render(request, 'CommentSummary.html', context)
+
+    return render(request, 'CommentList.html', context)
+
+# @login_required(login_url='/signin')
+# def edit_comment(request, projectID, iterationID, storyID, commentID):
+#     story = mdl_story.get_story(storyID)
+#     comment = mdl_comment.get_comment(commentID)
+#     if story == None or comment == None or comment.story != story:
+#         return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     if request.method == 'POST':
+#         form = CommentForm(request.POST, instance=comment)
+#         if form.is_valid():
+#             form.save(commit=True)
+#             return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = CommentForm(instance=comment)
+#     context = {
+#         'title': 'Edit Comment',
+#         'action': '/req/editcomment/' + projectID + '/' + iterationID + '/' + storyID + '/' + commentID,
+#         'form': form,
+#         'button_desc': 'Save Changes'
+#     }
+#     return render(request, 'CommentSummary.html', context)
 
 @login_required(login_url='/signin')
-def delete_comment(request, projectID, iterationID, storyID, commentID):
+def remove_comment_from_list(request, storyID, commentID):
     story = mdl_story.get_story(storyID)
-    comment = mdl_comment.get_task(commentID)
-    if story == None or comment == None or comment.story != story:
-        return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
-    if request.method == "POST":
+    comment = mdl_comment.get_comment(commentID)
+    if request.method == 'POST':
         comment.delete()
-        return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
-    else:
-        form = CommentForm(instance=comment)
+    comments = mdl_comment.get_comments_for_story(story)
+    form = CommentForm()
+
     context = {
-        'title': 'Delete Comment',
-        'confirm_message': 'This is an irreversible procedure ! You will lose all information about this comment !',
-        'action': '/req/deletecomment/' + projectID + '/' + iterationID + '/' + storyID + '/' + commentID,
-        'form': form,
-        'button_desc': 'Delete Comment'
+        'story': story,
+        'comments': comments,
+        'newform': form
     }
-    return render(request, 'CommentSummary.html', context)
+
+    return render(request, 'CommentList.html', context)
+
+# @login_required(login_url='/signin')
+# def delete_comment(request, projectID, iterationID, storyID, commentID):
+#     story = mdl_story.get_story(storyID)
+#     comment = mdl_comment.get_task(commentID)
+#     if story == None or comment == None or comment.story != story:
+#         return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     if request.method == "POST":
+#         comment.delete()
+#         return redirect('/req/iterationdetail/' + projectID + '/' + iterationID)
+#     else:
+#         form = CommentForm(instance=comment)
+#     context = {
+#         'title': 'Delete Comment',
+#         'confirm_message': 'This is an irreversible procedure ! You will lose all information about this comment !',
+#         'action': '/req/deletecomment/' + projectID + '/' + iterationID + '/' + storyID + '/' + commentID,
+#         'form': form,
+#         'button_desc': 'Delete Comment'
+#     }
+#     return render(request, 'CommentSummary.html', context)
 
