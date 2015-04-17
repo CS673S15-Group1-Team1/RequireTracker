@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.forms.widgets import ClearableFileInput
 from django.forms.extras.widgets import SelectDateWidget, Select
 from django.contrib.auth.forms import UserCreationForm
+from requirements.models import user_association
 from requirements.models.project import Project
 from requirements.models.story import Story
 from requirements.models.task import Task
@@ -11,9 +12,6 @@ from requirements.models.story_comment import StoryComment
 from django.forms.models import inlineformset_factory
 
 
-ROLE_CLIENT = "client"
-ROLE_DEVELOPER = "developer"
-ROLE_OWNER = "owner"
 
 class SignUpForm(UserCreationForm):
 	email = forms.EmailField(required=True)
@@ -76,9 +74,9 @@ class ProjectForm(forms.ModelForm):
 class SelectAccessLevelForm(forms.Form):
     # Dropdown list to select from one of the current access levels for a project. 
     user_role = forms.ChoiceField(choices = (
-                                             (ROLE_CLIENT, "Client"),
-                                             (ROLE_DEVELOPER, "Developer"),
-                                             (ROLE_OWNER, "Owner"),
+                                             (user_association.ROLE_CLIENT, "Client"),
+                                             (user_association.ROLE_DEVELOPER, "Developer"),
+                                             (user_association.ROLE_OWNER, "Owner"),
                                             ), widget=Select(attrs={'class':'form-control'}))
 
 class StoryForm(forms.ModelForm):
@@ -147,5 +145,5 @@ class TaskForm(forms.ModelForm):
 		model = Task
 		fields = ('description',)
 		widgets = {
-			'description' : forms.Textarea(attrs={'rows': 3}),
+			'description' : forms.Textarea(attrs={'rows': 1}),
 		}	
