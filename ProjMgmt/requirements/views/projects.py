@@ -22,10 +22,6 @@ from requirements.models.files import ProjectFile
 from django.utils.encoding import smart_str
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
 
-ROLE_CLIENT = "client"
-ROLE_DEVELOPER = "developer"
-ROLE_OWNER = "owner"
-
 @login_required(login_url='/signin')
 def list_projects(request):
     # Loads the DashBoard template, which contains a list of the project the user is

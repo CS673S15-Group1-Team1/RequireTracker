@@ -77,7 +77,7 @@ class ProjectTestCase(TestCase):
     def test_get_project_users_one(self):
         p = Project(title="title", description="desc")
         p.save()
-        models.project_api.add_user_to_project(p.id, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual( models.project_api.get_all_projects().count(), 1)
         
     def test_can_user_access_project_cant(self):
@@ -117,13 +117,13 @@ class ProjectTestCase(TestCase):
     def test_add_user_to_project_pass(self):
         p = Project(title="title", description="desc")
         p.save()
-        models.project_api.add_user_to_project(p.id, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),1)
         
     def test_add_user_to_project_fail_bad_project(self):
         projID = 0
-        models.project_api.add_user_to_project(projID, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(projID, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=projID,
                                                         user_id=self.__user.id).count(),0)
         
@@ -132,20 +132,20 @@ class ProjectTestCase(TestCase):
         p.save()
         
         #pass a null user
-        models.project_api.add_user_to_project(p.id, None, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, None, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),0)
             
         #pass an unknown user
         user = User(username="unknownuser", password="pass")
-        models.project_api.add_user_to_project(p.id, user, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, user, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),0)
     
     def test_remove_user_from_project_pass(self):
         p = Project(title="title", description="desc")
         p.save()
-        models.project_api.add_user_to_project(p.id, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),1)
         models.project_api.remove_user_from_project(p.id, self.__user.username)
@@ -155,7 +155,7 @@ class ProjectTestCase(TestCase):
     def test_remove_user_from_project_fail_bad_project(self):
         p = Project(title="title", description="desc")
         p.save()
-        models.project_api.add_user_to_project(p.id, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),1)
         
@@ -167,7 +167,7 @@ class ProjectTestCase(TestCase):
     def test_remove_user_from_project_fail_bad_user(self):
         p = Project(title="title", description="desc")
         p.save()
-        models.project_api.add_user_to_project(p.id, self.__user.username, models.project_api.ROLE_DEVELOPER)
+        models.project_api.add_user_to_project(p.id, self.__user.username, models.user_association.ROLE_DEVELOPER)
         self.assertEqual(UserAssociation.objects.filter(project_id=p.id,
                                                         user_id=self.__user.id).count(),1)
         
