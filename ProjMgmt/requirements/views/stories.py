@@ -25,6 +25,7 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 def new_story(request, projectID):
     # story = Story()
     project = project_api.get_project(projectID)
+    association = UserAssociation.objects.get(user=request.user, project=project)
     if request.method == 'POST':
         form = StoryForm(request.POST,project=project)
         if form.is_valid():
@@ -54,6 +55,7 @@ def new_story(request, projectID):
     context = {'title' : 'New User Story',
                'form' : form,
                # 'formset' : formset,
+               'association': association,
                'action' : '/req/newstory/' + projectID , 
                'button_desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
