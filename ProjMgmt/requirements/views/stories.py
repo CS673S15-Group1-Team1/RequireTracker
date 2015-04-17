@@ -60,7 +60,7 @@ def new_story(request, projectID):
                'association': association,
                'action' : '/req/newstory/' + projectID , 
                'button_desc' : 'Create User Story',
-               'project' : project, 'association' : association}
+                }
     return render(request, 'StorySummary.html', context )
 
 @login_required(login_url='/signin')
