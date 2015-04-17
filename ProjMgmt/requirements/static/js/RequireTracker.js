@@ -90,7 +90,7 @@ function showEditTaskInList(storyID, taskID) {
 
 function saveEditTaskInList(storyID, taskID) {
 	var showEditTaskUrl = "/req/edittaskinlist/" + storyID + "/" + taskID;
-	var formID = "#edittask_form_" + storyID
+	var formID = "#edittask_form_" + storyID;
 	var listID = "#task_" + storyID;
 	$.ajax({
 		type: "POST",
@@ -131,3 +131,67 @@ function loadComments(storyID) {
 		async: true
 	});
 }
+
+
+function addCommentIntoList(storyID) {
+	var addCommentUrl = "/req/addcommentintolist/" + storyID;
+	var formID = "#newcomment_form_" + storyID;
+	var listID = "#comment_" + storyID
+	$.ajax({
+        type : "POST",
+        cache : false,
+        url : addCommentUrl,
+        data : $(formID).serialize(),
+        success : function(data) {
+            $(listID).html(data);
+        },
+        async:true
+	});
+}
+
+function showEditCommentInList(storyID, commentID) {
+	var showEditCommentUrl = "/req/editcommentinlist/" + storyID + "/" + commentID;
+	var listID = "#comment_" + storyID;
+	$.ajax({
+		type: "GET",
+		cache: false,
+		url: showEditCommentUrl,
+		success: function(data) {
+			$(listID).html(data);
+		},
+		async: true
+	});
+}
+
+function saveEditCommentInList(storyID, commentID) {
+	var showEditCommentUrl = "/req/editcommentinlist/" + storyID + "/" + commentID;
+	var formID = "#editcomment_form_" + storyID;
+	var listID = "#comment_" + storyID;
+	$.ajax({
+		type: "POST",
+		cache: false,
+		url: showEditCommentUrl,
+		data: $(formID).serialize(),
+		success: function(data) {
+			loadComments(storyID);
+		},
+		async: true
+	});
+}
+
+function removeCommentFromList(storyID, commentID) {
+	var removeCommentUrl = "/req/removecommentfromlist/" + storyID + "/" + commentID;
+	var formID = "#removecomment_form_" + storyID;
+	var listID = "#comment_" + storyID;
+	$.ajax({
+		type: "POST",
+		cache: false,
+		url: removeCommentUrl,
+		data: $(formID).serialize(),
+		success: function(data) {
+			$(listID).html(data);
+		},
+		async: true
+	});
+}
+
