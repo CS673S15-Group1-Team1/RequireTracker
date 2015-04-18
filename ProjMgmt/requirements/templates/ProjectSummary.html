@@ -1,4 +1,3 @@
-{% load staticfiles %}
 
 	{% if confirm_message %}
     <div class="modal-dialog modal-md">
@@ -29,23 +28,33 @@
 	        			<div class="col-xs-12 col-sm-9"><h4>{{ form.description.value|linebreaksbr }}</h4></div>
 	        		</div>
 	        		{% else %}
-	        		<div class="form-group">
+                    {% if form.title.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
+                    <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.title.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Title</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.title }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.title.id_for_label }}_popover">{{ form.title }}</div>
 	        		</div>
-	        		<div class="form-group">
+                    {% if form.desciption.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
+                    <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.description.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Description</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.description }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.description.id_for_label }}_popover">{{ form.description }}</div>
 	        		</div>
 	        		{% endif %}
 	        	</div>
         		<div class="modal-footer">
         		  	<a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
         		  	{% if confirm_message %}
-					<button type="submit" class="btn btn-danger">{{ desc }}</button>
-        		  	{% else %}
-        		  	<button type="submit" class="btn btn-primary">{{ desc }}</button>
-        		  	{% endif %}
+        		  	<a class="btn btn-danger" href="javascript:void(0);" onclick="saveProjectChanges();">{{ button_desc }}</a>
+                    <!-- <button type="submit" class="btn btn-danger">{{ button_desc }}</button> -->
+					{% else %}
+        		  	<a class="btn btn-primary" href="javascript:void(0);" onclick="saveProjectChanges();">{{ button_desc }}</a>
+        		  	<!-- <button type="submit" class="btn btn-primary">{{ button_desc }}</button> -->
+                    {% endif %}
         		</div>
 	        </form>
 
@@ -53,20 +62,52 @@
     </div><!-- /.modal-dialog -->
 
 	<script type="text/javascript">
+        {% for field in form %}
+        {% if field.errors %}
+        var {{ field.id_for_label}}_errors = '';
+        {% for error in field.errors %}
+        {{ field.id_for_label }}_errors += '{{ error|escape }}';
+        {% endfor %}
+        $("#{{ field.id_for_label }}_popover").popover({
+            animation: true,
+            html: true,
+            content: {{ field.id_for_label }}_errors,
+            placement: 'right',
+            trigger: 'hover'
+        });
+        {% endif %}
+        {% endfor %}
+
+
+        // detect submit button event to use ajax method to post the form
+        // and retrive the return data back if there is error object in form object.
+        function saveProjectChanges() {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: $("#projectForm").attr('action'),
+                data: $("#projectForm").serialize(),
+                success: function(data) {
+                    $("#dialogModal").html(data);
+                },
+                async: false
+            });
+        }
+
 		// detect submit button event to use ajax method to post the form
 		// and retrive the return data back if there is error object in form object.
-		$('#projectForm').on('submit',function(e){
-		    $(this).ajaxForm({
-		        type : "POST",
-		        cache : false,
-		        url : $(this).attr('action'),
-		        data : $(this).serialize(),
-		        success : function(data) {
-		            $("#projectModal").html(data);
-		        },
-		        async:false
-		    }).submit();
-		    e.stopPropagation();
-		});
+		// $('#projectForm').on('submit',function(e){
+		//     $(this).ajaxForm({
+		//         type : "POST",
+		//         cache : false,
+		//         url : $(this).attr('action'),
+		//         data : $(this).serialize(),
+		//         success : function(data) {
+		//             $("#dialogModal").html(data);
+		//         },
+		//         async:false
+		//     }).submit();
+		//     e.stopPropagation();
+		// });
 
 	</script>

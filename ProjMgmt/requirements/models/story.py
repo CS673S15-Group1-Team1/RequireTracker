@@ -38,7 +38,7 @@ class Story(ProjMgmtBase):
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
     hours = models.IntegerField(default=0)
-    owner = models.ForeignKey(User, blank=True,null=True)
+    owner = models.ForeignKey(User,blank=True,null=True,default=None)
     status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
     points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
     pause = models.BooleanField(default=False)
@@ -77,12 +77,17 @@ def create_story(project, fields):
     description = fields.get('description', '')
     reason = fields.get('reason', '')
     test = fields.get('test', '')
-    hours = fields.get('hours','')
-    owner = fields.get('owner', '')
+    hours = fields.get('hours',0)
+    owner = fields.get('owner', None)
     status = fields.get('status', Story.STATUS_UNSTARTED)
     points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
     
+    if owner != '':
+        owner = User.objects.get(id=owner)
+    else:
+        owner = None
+
     story = Story(project=project,
                   title=title, 
                   description=description,
