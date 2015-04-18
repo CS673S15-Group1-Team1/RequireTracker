@@ -50,27 +50,93 @@
                         <h4>{{ form.test.label_tag }}</h4>
                         <p>{{ form.test }}</p>
                         <hr>
-                        <div id="tasks">
-                            <h4 style="font-weight:bold">Tasks:</h4>
-                            {{ formset.management_form }}
+                              
+                        <!--
+                            Tasks section - Django uses these 4 hidden inputs (before the loop) to
+                            decide how to process the forms.  Nothing needs to be done here, but
+                            note that when a user clicks "Add Task", the "addForm" js function below
+                            increments the value of the task-set-TOTAL_FORMS element by one.
+                        -->                 
+                        <div>
+                            <h4     style="font-weight:bold">Tasks:</h4>
+                            <input  id="id_task_set-TOTAL_FORMS" 
+                                    name="task_set-TOTAL_FORMS" 
+                                    type="hidden" value="{{ numTasks }}" />
+                            <input  id="id_task_set-INITIAL_FORMS" 
+                                    name="task_set-INITIAL_FORMS" 
+                                    type="hidden" value="{{ initTasks }}" />
+                            <input  id="id_task_set-MIN_NUM_FORMS" 
+                                    name="task_set-MIN_NUM_FORMS" 
+                                    type="hidden" value="0" />
+                            <input  id="id_task_set-MAX_NUM_FORMS" 
+                                    name="task_set-MAX_NUM_FORMS" 
+                                    type="hidden" value="1000" />
+                            
+                            <!--
+                                Here, each task's form is rendered in a loop. If a story doesn't have any 
+                                initial Tasks, one empty form is provided, so there's always at
+                                least one.  Note: this is also important for the addForm js function,
+                                because in order to create a new form dynamically, that function copies
+                                the first in this list -- so there has to be one to start! 
+                            -->
                             {% for form in formset.forms %}
-                                <div class="item">
-                                    {{ form.as_table }}
-                                    <a  class="delete" 
-                                        href="javascript:void(0);">
-                                        <i class="fa fa-trash-o fa-fw"></i>
-                                             Delete
-                                    </a>
-                                </div>
+                            <div class="item">
+                                <label  for="id_task_set-{{ forloop.counter0 }}-description">Description:</label>
+                                <input  id="id_task_set-{{ forloop.counter0 }}-description" 
+                                        maxlength="1024" 
+                                        name="task_set-{{ forloop.counter0 }}-description" 
+                                        type="text" 
+                                        value="{{ form.description.value }}" />
+                                <input  id="id_task_set-{{ forloop.counter0 }}-DELETE" 
+                                        name="task_set-{{ forloop.counter0 }}-DELETE" 
+                                        style="display:none"
+                                        type="checkbox" />
+                                        
+                                <!--
+                                    New tasks will not have a "value" attribute in the "input" 
+                                    element for task_id. That's how Django knows they're new, and it 
+                                    will create a new id once it's submitted.   
+                                -->
+                                {% if form.id.value == None %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-id"
+                                        name="task_set-{{ forloop.counter0 }}-id" 
+                                        type="hidden" />
+                                {% else %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-id" 
+                                        name="task_set-{{ forloop.counter0 }}-id" 
+                                        type="hidden" 
+                                        value="{{ form.id.value }}" />
+                                {% endif %}
+                                
+                                <!--
+                                    The same practice goes for stories.  If it's new, don't
+                                    include the "value" attribute on story_id.
+                                -->
+                                {% if form.story.id.value == '' %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-story" 
+                                        name="task_set-{{ forloop.counter0 }}-story" 
+                                        type="hidden" />
+                                {% else %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-story" 
+                                        name="task_set-{{ forloop.counter0 }}-story" 
+                                        type="hidden" 
+                                        value="{{ form.story.id }}" />
+                                {% endif %}
+                                        
+                                <a class="delete" href="javascript:void(0);">
+                                    <i class="fa fa-trash-o fa-fw"></i>
+                                     Delete
+                                </a>                                        
+                            </div>
                             {% endfor %}
-                            <p>
-                                <a  id="add" 
-                                    href="#">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                        New Task
-                                </a>
-                            </p>
+                            <a  id="add" href="#">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                New Task
+                            </a>
                         </div>
+                        <!--End tasks section-->
+
+                        
                         <hr>
                         <h4>{{ form.hours.label_tag }}</h4>
                         <p>{{ form.hours }}</p>
@@ -150,16 +216,6 @@
                 document.getElementById("btn-state").disabled=true;
                 document.getElementById("btn-state").style.visibility="hidden"   
             }
-            
-            
-            //hide the delete label & checkbox that the management_form uses
-            $( "label[for*='DELETE']" ).each(function () {
-                $(this).attr('style', 'display:none');
-            });
-            
-            $( "input[id*='DELETE']" ).each(function () {
-                $(this).attr('style', 'display:none');
-            });
         });    
         
         // Register the click event handlers

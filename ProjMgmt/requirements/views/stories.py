@@ -39,12 +39,14 @@ def new_story(request, projectID):
                'title' : 'New User Story',
                'form' : form,
                'formset' : formset,
+               'initTasks' : 0,
+               'numTasks' : 1,
                'action' : '/newstory/' + projectID , 
                'desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
 @login_required(login_url='/signin')
-#TODO we need some kind of permission here - aat
+#TODAO we need some kind of permission here - aat
 def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
@@ -62,7 +64,10 @@ def edit_story(request, projectID, storyID):
     else:
         form = StoryForm(instance=story)
         formset = TaskFormSet(instance=story)
-        if story.task_set.count() == 0: formset.extra = 1
+        numTasks = initTasks = story.task_set.count()
+        if numTasks == 0: 
+            formset.extra = 1
+            numTasks = 1
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
@@ -70,6 +75,8 @@ def edit_story(request, projectID, storyID):
                'title' : 'Edit User Story',
                'form' : form, 
                'formset' : formset,
+               'initTasks' : initTasks,
+               'numTasks' : numTasks,
                'action' : '/editstory/' + projectID + '/' + storyID, 
                'desc' : 'Save Changes'}
     
