@@ -17,6 +17,7 @@ from django.template import RequestContext
 from django.shortcuts import render, redirect
 from requirements.models.user_manager import user_has_role, user_owns_project
 from requirements.models import user_association
+import datetime
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
     
@@ -294,6 +295,8 @@ def add_comment_into_list(request, storyID):
         form = CommentForm(request.POST)
         if form.is_valid():
             mdl_comment.create_comment(story,request.POST)
+            story.last_updated=datetime.datetime.now()
+            story.save()
     else:
         form = CommentForm()
     comments = mdl_comment.get_comments_for_story(story)
@@ -331,6 +334,8 @@ def edit_comment_in_list(request, storyID, commentID):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=True)
+            story.last_updated=datetime.datetime.now()
+            story.save()
     else:
         form = CommentForm(instance=comment)
     comments = mdl_comment.get_comments_for_story(story)
@@ -371,8 +376,11 @@ def remove_comment_from_list(request, storyID, commentID):
     comment = mdl_comment.get_comment(commentID)
     if request.method == 'POST':
         comment.delete()
+        story.last_updated=datetime.datetime.now()
+        story.save()
     comments = mdl_comment.get_comments_for_story(story)
     form = CommentForm()
+
 
     context = {
         'story': story,
