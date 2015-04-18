@@ -64,45 +64,61 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% if form.description.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.description.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Description</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.description }}</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.reason.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Reason</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.reason }}</div>
-                    </div>
-                    <div class="form-group">
-                        <label for="{{ form.test.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Test</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.test }}</div>
-                    </div>
-                        {% comment "No Use" %}
-                        <div id="tasks">
-                            <h4 style="font-weight:bold">Tasks:</h4>
-                            {{ formset.management_form }}
-                            {% for form in formset.forms %}
-                                <div class="item">
-                                    {{ form.as_table }}
-                                    <a  class="delete" 
-                                        href="javascript:void(0);">
-                                        <i class="fa fa-trash-o fa-fw"></i>
-                                             Delete
-                                    </a>
-                                </div>
-                            {% endfor %}
-                            <p>
-                                <a  id="add" 
-                                    href="#">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                        New Task
-                                </a>
-                            </p>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.description.id_for_label }}_popover">
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
                         </div>
-                        <hr>
-                        {% endcomment %}
+                    </div>
+                    {% if form.reason.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
+                        <label for="{{ form.reason.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Reason</label>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.reason.id_for_label }}_popover">
+                            {{ form.reason }}
+                            {% if form.reason.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if form.test.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
+                    <div class="form-group">
+                    {% endif %}
+                        <label for="{{ form.test.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Test</label>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.test.id_for_label }}_popover">
+                            {{ form.test }}
+                            {% if form.test.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if form.owner.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
+                    <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.owner.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Story Owner</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.owner }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.owner.id_for_label }}_popover">
+                            {{ form.owner }}
+                            {% if form.owner.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
                     {% check_permission association project "EditHours" as can_edit_hours %}
                     {% if can_edit_hours %}
@@ -116,30 +132,60 @@
                             <div class="input-group">
                                 {{ form.hours }}
                                 {% if form.hours.errors %}
-                                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
-                                <span id="inputError2Status" class="sr-only">(error)</span>
+                                <span class="glyphicon glyphicon-remove form-control-feedback input-group-addon" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only input-group-addon">(error)</span>
                                 {% endif %}
                                 <span class="input-group-addon">Hrs</span>
                             </div>
                         </div>
                     </div>
                     {% endif %}
+                    {% if form.status.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.status.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Status</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.status }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.status.id_for_label }}_popover">
+                            {{ form.status }}
+                            {% if form.status.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
                     {% check_permission association project "EditPoints" as can_edit_points %}
                     {% if can_edit_points %}
+                    {% if form.points.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.points.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Scale Points</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.points }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.points.id_for_label }}_popover">
+                            {{ form.points }}
+                            {% if form.points.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
                     {% endif %}
                     {% check_permission association project "PauseStory" as can_pause %}
                     {% if can_pause %}
+                    {% if form.pause.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.pause.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Pause</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.pause }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.pause.id_for_label }}_popover">
+                            {{ form.pause }}
+                            {% if form.pause.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
                     {% endif %}
                     {% endif %}
@@ -149,7 +195,8 @@
                     <!--<a class="btn btn-default" onclick="change_state();">Status</a>-->
                     {% if confirm_message %}
                     <a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
-                    <button type="submit" class="btn btn-danger">{{ button_desc }}</button>
+                    <a class="btn btn-danger" href="javascript:void(0);" onclick="saveStoryChanges();">{{ button_desc }}</a>
+                    <!-- <button type="submit" class="btn btn-danger">{{ button_desc }}</button> -->
                     {% else %}
                     <a class = "btn btn-default" id ="btn-state" onclick=""> Next State</a>
                     <a class="btn btn-default" href="javascript:void(0);" onclick="closeDialog();">Close</a>
@@ -195,19 +242,19 @@
             });
         }
 
-        $('#storyForm').on('submit',function(e){
-            $(this).ajaxForm({
-                type : "POST",
-                cache : false,
-                url : $(this).attr('action'),
-                data : $(this).serialize(),
-                success : function(data) {
-                    $("#storyModal").html(data);
-                },
-                async:false
-            }).submit();
-            e.stopPropagation();
-        });
+        // $('#storyForm').on('submit',function(e){
+        //     $(this).ajaxForm({
+        //         type : "POST",
+        //         cache : false,
+        //         url : $(this).attr('action'),
+        //         data : $(this).serialize(),
+        //         success : function(data) {
+        //             $("#dialogModal").html(data);
+        //         },
+        //         async:false
+        //     }).submit();
+        //     e.stopPropagation();
+        // });
 
         $(function() {
             $("#story_point").html(getStoryPointHtml({{ form.points.value }}));

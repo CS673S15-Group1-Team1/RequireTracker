@@ -11,28 +11,64 @@
 	        <form id="iterationForm" class="form-horizontal" action="{{ action }}" method="post">
 	        	{% csrf_token %}
 	        	<div class="modal-body">
+                    {% if form.title.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.title.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Title</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.title }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.title.id_for_label }}_popover">
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
+                    {% if form.description.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.description.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Description</label>
-                        <div class="col-xs-12 col-sm-9">{{ form.description }}</div>
+                        <div class="col-xs-12 col-sm-9" id="{{ form.description.id_for_label }}_popover">
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                            <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+                            <span id="inputError2Status" class="sr-only">(error)</span>
+                            {% endif %}
+                        </div>
                     </div>
+                    {% if form.start_date.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.start_date.id_for_label }}" class="col-xs-12 col-sm-3 control-label">Start Date</label>
-                        <div class="col-xs-12 col-sm-9">
+                        <div class="col-xs-12 col-sm-9" id="{{ form.start_date.id_for_label }}_popover">
                             <div class="input-group date form_datetime">
                                 {{ form.start_date }}
+                                {% if form.start_date.errors %}
+                                <span class="glyphicon glyphicon-remove form-control-feedback input-group-addon" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only input-group-addon">(error)</span>
+                                {% endif %}
                                 <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                             </div>
                         </div>
                     </div>
+                    {% if form.end_date.errors %}
+                    <div class="form-group has-error has-feedback">
+                    {% else %}
                     <div class="form-group">
+                    {% endif %}
                         <label for="{{ form.end_date.id_for_label }}" class="col-xs-12 col-sm-3 control-label">End Date</label>
-                        <div class="col-xs-12 col-sm-9">
+                        <div class="col-xs-12 col-sm-9" id="{{ form.end_date.id_for_label }}_popover">
                             <div class="input-group date form_datetime">
                                 {{ form.end_date }}
+                                {% if form.end_date.errors %}
+                                <span class="glyphicon glyphicon-remove form-control-feedback input-group-addon" aria-hidden="true"></span>
+                                <span id="inputError2Status" class="sr-only input-group-addon">(error)</span>
+                                {% endif %}
                                 <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                             </div>
                         </div>
@@ -40,7 +76,8 @@
 	        	</div>
         		<div class="modal-footer">
         		  	<a class="btn btn-default" href="javascript:void(0)" onclick="closeDialog();">Close</a>
-					<button type="submit" class="btn btn-primary">Save</button>
+					<!-- <button type="submit" class="btn btn-primary">Save</button> -->
+                    <a class="btn btn-primary" href="javascript:void(0);" onclick="saveIterationChanges();">{{ button_desc }}</a>
         		</div>
 	        </form>
 
@@ -48,21 +85,52 @@
     </div><!-- /.modal-dialog -->
 
     <script type="text/javascript">
+        {% for field in form %}
+        {% if field.errors %}
+        var {{ field.id_for_label}}_errors = '';
+        {% for error in field.errors %}
+        {{ field.id_for_label }}_errors += '{{ error|escape }}';
+        {% endfor %}
+        $("#{{ field.id_for_label }}_popover").popover({
+            animation: true,
+            html: true,
+            content: {{ field.id_for_label }}_errors,
+            placement: 'right',
+            trigger: 'hover'
+        });
+        {% endif %}
+        {% endfor %}
+
+
         // detect submit button event to use ajax method to post the form
         // and retrive the return data back if there is error object in form object.
-        $('#iterationForm').on('submit',function(e){
-            $(this).ajaxForm({
-                type : "POST",
-                cache : false,
-                url : $(this).attr('action'),
-                data : $(this).serialize(),
-                success : function(data) {
-                    $("#iterationModal").html(data);
+        function saveIterationChanges() {
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: $("#iterationForm").attr('action'),
+                data: $("#iterationForm").serialize(),
+                success: function(data) {
+                    $("#dialogModal").html(data);
                 },
-                async:false
-            }).submit();
-            e.stopPropagation();
-        });
+                async: false
+            });
+        }
+        // detect submit button event to use ajax method to post the form
+        // and retrive the return data back if there is error object in form object.
+        // $('#iterationForm').on('submit',function(e){
+        //     $(this).ajaxForm({
+        //         type : "POST",
+        //         cache : false,
+        //         url : $(this).attr('action'),
+        //         data : $(this).serialize(),
+        //         success : function(data) {
+        //             $("#dialogModal").html(data);
+        //         },
+        //         async:false
+        //     }).submit();
+        //     e.stopPropagation();
+        // });
 
         $(".form_datetime").datetimepicker({
             format: "mm/dd/yyyy",
