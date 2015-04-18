@@ -236,7 +236,11 @@
                 url: $("#storyForm").attr('action'),
                 data: $("#storyForm").serialize(),
                 success: function(data) {
-                    $("#dialogModal").html(data);
+                    if (data != "") {
+                        $("#dialogModal").html(data);    
+                    } else {
+                        location.reload(true);
+                    }
                 },
                 async: false
             });
@@ -259,37 +263,37 @@
         $(function() {
             $("#story_point").html(getStoryPointHtml({{ form.points.value }}));
         });
-       //  function change_state(){
-       //      var state = document.getElementById("{{ form.status.id_for_label }}");
-       //      if (state.selectedIndex<3){
-       //          document.getElementById("btn-state").disabled=false;
-       //          document.getElementById("btn-state").style.visibility="visible";
-       //         state.selectedIndex =state.selectedIndex+1;
-       //      }
-       //      else{
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden";
-       //      }
-       //  }
+        function change_state(){
+            var state = document.getElementById("{{ form.status.id_for_label }}");
+            if (state.selectedIndex<3){
+                document.getElementById("btn-state").disabled=false;
+                document.getElementById("btn-state").style.visibility="visible";
+               state.selectedIndex =state.selectedIndex+1;
+            }
+            else{
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden";
+            }
+        }
 
        // /*
        // When edit form is loaded, the following function checks the status of the story, if it is accepted, the 
        // next state button is disabled because there are no more states. After that, it checks the paused feature, if the checkbox is checked, you cannot go to the next state, so the next state button is disabled, if it is unchecked, the next state button is enabled. 
        // */
 
-       // $(document).ready(function() {
-       //      var state = document.getElementById("{{ form.status.id_for_label }}");
-       //      var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
+       $(document).ready(function() {
+            var state = document.getElementById("{{ form.status.id_for_label }}");
+            var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
         
-       //      if (state.selectedIndex>2){
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden";
-       //      }
+            if (state.selectedIndex>2){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden";
+            }
 
-       //      if (paused.checked==true){
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden"   
-       //      }
+            if (paused.checked==true){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden"   
+            }
             
             
        //      //hide the delete label & checkbox that the management_form uses
@@ -300,7 +304,7 @@
        //      $( "input[id*='DELETE']" ).each(function () {
        //          $(this).attr('style', 'display:none');
        //      });
-       //  });    
+        });    
         
        //  // Register the click event handlers
        //  $("#add").click(function () {

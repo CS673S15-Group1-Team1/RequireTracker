@@ -48,10 +48,6 @@
                         <div class="col-xs-12 col-sm-9" id="{{ form.start_date.id_for_label }}_popover">
                             <div class="input-group date form_datetime">
                                 {{ form.start_date }}
-                                {% if form.start_date.errors %}
-                                <span class="glyphicon glyphicon-remove form-control-feedback input-group-addon" aria-hidden="true"></span>
-                                <span id="inputError2Status" class="sr-only input-group-addon">(error)</span>
-                                {% endif %}
                                 <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                             </div>
                         </div>
@@ -65,10 +61,6 @@
                         <div class="col-xs-12 col-sm-9" id="{{ form.end_date.id_for_label }}_popover">
                             <div class="input-group date form_datetime">
                                 {{ form.end_date }}
-                                {% if form.end_date.errors %}
-                                <span class="glyphicon glyphicon-remove form-control-feedback input-group-addon" aria-hidden="true"></span>
-                                <span id="inputError2Status" class="sr-only input-group-addon">(error)</span>
-                                {% endif %}
                                 <span class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></span>
                             </div>
                         </div>
@@ -111,9 +103,13 @@
                 url: $("#iterationForm").attr('action'),
                 data: $("#iterationForm").serialize(),
                 success: function(data) {
-                    $("#dialogModal").html(data);
+                    if (data != "") {
+                        $("#dialogModal").html(data);
+                    } else {
+                        location.reload(true);
+                    }
                 },
-                async: false
+                async: true
             });
         }
         // detect submit button event to use ajax method to post the form

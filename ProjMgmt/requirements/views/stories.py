@@ -41,11 +41,14 @@ def new_story(request, projectID):
 # =======
             story = mdl_story.create_story(project, request.POST)
             story = form.save(commit=False)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
+
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(project=project)
@@ -69,7 +72,10 @@ def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     association = UserAssociation.objects.get(user=request.user, project=project)
     story = mdl_story.get_story(storyID)
-    if story == None: return redirect('/req/projectdetail/' + projectID)
+    if story == None:
+        # return redirect('/req/projectdetail/' + projectID)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
         form = StoryForm(request.POST, instance=story, project=project)
         if form.is_valid():
@@ -83,11 +89,14 @@ def edit_story(request, projectID, storyID):
             #     return redirect('/req/projects/' + projectID)
 # =======
             story = form.save(commit=True)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
+
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(instance=story, project=project)
@@ -116,14 +125,20 @@ def edit_story(request, projectID, storyID):
 def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
-    if story == None: return redirect('/req/projectdetail/' + projectID)
+    if story == None:
+        # return redirect('/req/projectdetail/' + projectID)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
         story.delete()
-        if not 'next' in request.POST:
-            return redirect('/req/projectdetail/' + projectID)
-        else:
-            next = request.POST['next']
-            return redirect(next)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
+
+        # if not 'next' in request.POST:
+        #     return redirect('/req/projectdetail/' + projectID)
+        # else:
+        #     next = request.POST['next']
+        #     return redirect(next)
     else:
         form = StoryForm(instance=story, project=project)
 

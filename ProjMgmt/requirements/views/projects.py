@@ -63,7 +63,9 @@ def new_project(request):
         if form.is_valid():
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
-            return redirect('/req/projects')
+            # return redirect('/req/projects')
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
     else:
         form = ProjectForm()
         
@@ -81,7 +83,9 @@ def edit_project(request, projectID):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             project = form.save(commit=True)
-            return redirect('/req/projects')
+            # return redirect('/req/projects')
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
     else:
         form = ProjectForm(instance=project)
         
@@ -95,10 +99,15 @@ def edit_project(request, projectID):
 @user_owns_project()
 def delete_project(request, projectID):
     project = project_api.get_project(projectID)
-    if project == None: return redirect('/req/projects')
+    if project == None:
+        # return redirect('/req/projects')
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
         project_api.delete_project(project)
-        return redirect('/req/projects')
+        # return redirect('/req/projects')
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     else:
         form = ProjectForm(instance=project)
         
