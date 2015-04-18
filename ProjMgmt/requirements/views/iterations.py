@@ -1,5 +1,6 @@
 from django import forms
 from requirements import models
+from requirements.views import projects
 from requirements.models import project_api
 from requirements.models import user_manager
 from requirements.models import story as mdl_story
@@ -8,6 +9,7 @@ from requirements.models.user_manager import user_owns_project
 from forms import IterationForm
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 import datetime
 
 
@@ -48,6 +50,7 @@ def new_iteration(request, projectID):
             mdl_iteration.create_iteration(project,request.POST)
             form.save(commit=False)
             return redirect('/req/projectdetail/' + projectID)
+            # return ''
     else:
         form = IterationForm()
     context = {
@@ -69,7 +72,7 @@ def edit_iteration(request,projectID,iterationID):
         form = IterationForm(request.POST, instance=iteration)
         if form.is_valid():
             form.save(commit=True)
-            return redirect('/req/projects/' + projectID)
+            return redirect('/req/projectdetail/' + projectID)
     else:
         form = IterationForm(instance=iteration)
     context = {

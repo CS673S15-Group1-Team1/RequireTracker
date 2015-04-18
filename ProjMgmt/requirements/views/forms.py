@@ -84,7 +84,7 @@ class StoryForm(forms.ModelForm):
 		self.project = kwargs.pop('project', None)	#retrive the parameter project, then call the superclass init
 		super(StoryForm, self).__init__(*args, **kwargs)
 		#change the origin field 'owner' to ChoiceField 
-		self.fields['owner'] = forms.ModelChoiceField(queryset=self.project.users.all(), empty_label='None')
+		self.fields['owner'] = forms.ModelChoiceField(queryset=self.project.users.all(), empty_label='None', required=False)
 		#add 'form-control' into all element's class attrtribute
 		for name, field in self.fields.items():
 			if field.widget.attrs.has_key('class'):

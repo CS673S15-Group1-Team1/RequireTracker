@@ -67,8 +67,8 @@ def remove_user_from_project(projectID, username):
     ua = UserAssociation.objects.get(project = proj, user=user)
     ua.delete()
 
-def delete_project(projectID):
-    project = Project.objects.filter(id=projectID)
+def delete_project(project):
+    if project == None: return None
     association = UserAssociation.objects.filter(project=project)
     association.delete()
     project.delete()    
