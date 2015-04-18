@@ -1,12 +1,14 @@
+
 function showDialog(actionUrl){
-    $.ajax({
+	$.ajax({
+		type: "GET",
         url: actionUrl,
         success: function(result) {
-            $("#dialogModal").html(result);
+        	$("#dialogModal").html(result);
             $("#dialogModal").modal({
                 backdrop: false,
                 show: true
-            })
+            });
         },
         async:false
     }); 
@@ -14,7 +16,7 @@ function showDialog(actionUrl){
 
 // close Story Dialog and erase the content
 function closeDialog(){
-    $("#dialogModal").modal('hide');
+	$("#dialogModal").modal('hide');
     $("#dialogModal").html('');
 }
 
@@ -24,15 +26,28 @@ function getStoryPointHtml(point) {
 		pointhtml = '<i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i><i class="fa fa-star-o fw"></i>';
 	} else {
 		for (var i = 0; i < point; i++) {
-			pointhtml += '<i class="fa fa-star fw"></i>'
+			pointhtml += '<i class="fa fa-star fw"></i>';
 		}
 		for (var i = 5; i > point; i--) {
-			pointhtml += '<i class="fa fa-star-o fw"></i>'
+			pointhtml += '<i class="fa fa-star-o fw"></i>';
 		}
 	}
 	return pointhtml;
 }
 
+function loadIterationList(projectID) {
+	var listUrl = "/req/iterations/" + projectID;
+	var listID = "#proj_" + projectID + "_iters";
+	$.ajax({
+		type: "GET",
+		cache: false,
+		url: listUrl,
+		success: function(result) {
+			$(listID).html(result);
+		},
+		async: true
+	});
+}
 
 function loadUsersInProject(projectID) {
 	var taskUrl = "/req/usersinproject/" + projectID;
