@@ -77,27 +77,92 @@
                         <div class="col-xs-12 col-sm-9">{{ form.test }}</div>
                     </div>
                         {% comment "No Use" %}
-                        <div id="tasks">
-                            <h4 style="font-weight:bold">Tasks:</h4>
-                            {{ formset.management_form }}
+                        <!--
+                            Tasks section - Django uses these 4 hidden inputs (before the loop) to
+                            decide how to process the forms.  Nothing needs to be done here, but
+                            note that when a user clicks "Add Task", the "addForm" js function below
+                            increments the value of the task-set-TOTAL_FORMS element by one.
+                        -->                 
+                        <div>
+                            <h4     style="font-weight:bold">Tasks:</h4>
+                            <input  id="id_task_set-TOTAL_FORMS" 
+                                    name="task_set-TOTAL_FORMS" 
+                                    type="hidden" value="{{ numTasks }}" />
+                            <input  id="id_task_set-INITIAL_FORMS" 
+                                    name="task_set-INITIAL_FORMS" 
+                                    type="hidden" value="{{ initTasks }}" />
+                            <input  id="id_task_set-MIN_NUM_FORMS" 
+                                    name="task_set-MIN_NUM_FORMS" 
+                                    type="hidden" value="0" />
+                            <input  id="id_task_set-MAX_NUM_FORMS" 
+                                    name="task_set-MAX_NUM_FORMS" 
+                                    type="hidden" value="1000" />
+                            
+                            <!--
+                                Here, each task's form is rendered in a loop. If a story doesn't have any 
+                                initial Tasks, one empty form is provided, so there's always at
+                                least one.  Note: this is also important for the addForm js function,
+                                because in order to create a new form dynamically, that function copies
+                                the first in this list -- so there has to be one to start! 
+                            -->
                             {% for form in formset.forms %}
-                                <div class="item">
-                                    {{ form.as_table }}
-                                    <a  class="delete" 
-                                        href="javascript:void(0);">
-                                        <i class="fa fa-trash-o fa-fw"></i>
-                                             Delete
-                                    </a>
-                                </div>
+                            <div class="item">
+                                <label  for="id_task_set-{{ forloop.counter0 }}-description">Description:</label>
+                                <input  id="id_task_set-{{ forloop.counter0 }}-description" 
+                                        maxlength="1024" 
+                                        name="task_set-{{ forloop.counter0 }}-description" 
+                                        type="text" 
+                                        value="{{ form.description.value }}" />
+                                <input  id="id_task_set-{{ forloop.counter0 }}-DELETE" 
+                                        name="task_set-{{ forloop.counter0 }}-DELETE" 
+                                        style="display:none"
+                                        type="checkbox" />
+                                        
+                                <!--
+                                    New tasks will not have a "value" attribute in the "input" 
+                                    element for task_id. That's how Django knows they're new, and it 
+                                    will create a new id once it's submitted.   
+                                -->
+                                {% if form.id.value == None %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-id"
+                                        name="task_set-{{ forloop.counter0 }}-id" 
+                                        type="hidden" />
+                                {% else %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-id" 
+                                        name="task_set-{{ forloop.counter0 }}-id" 
+                                        type="hidden" 
+                                        value="{{ form.id.value }}" />
+                                {% endif %}
+                                
+                                <!--
+                                    The same practice goes for stories.  If it's new, don't
+                                    include the "value" attribute on story_id.
+                                -->
+                                {% if form.story.id.value == '' %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-story" 
+                                        name="task_set-{{ forloop.counter0 }}-story" 
+                                        type="hidden" />
+                                {% else %}
+                                <input  id="id_task_set-{{ forloop.counter0 }}-story" 
+                                        name="task_set-{{ forloop.counter0 }}-story" 
+                                        type="hidden" 
+                                        value="{{ form.story.id }}" />
+                                {% endif %}
+                                        
+                                <a class="delete" href="javascript:void(0);">
+                                    <i class="fa fa-trash-o fa-fw"></i>
+                                     Delete
+                                </a>                                        
+                            </div>
                             {% endfor %}
-                            <p>
-                                <a  id="add" 
-                                    href="#">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                        New Task
-                                </a>
-                            </p>
+                            <a  id="add" href="#">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                New Task
+                            </a>
                         </div>
+                        <!--End tasks section-->
+
+                        
                         <hr>
                         {% endcomment %}
                     <div class="form-group">
@@ -212,103 +277,104 @@
         $(function() {
             $("#story_point").html(getStoryPointHtml({{ form.points.value }}));
         });
-       //  function change_state(){
-       //      var state = document.getElementById("{{ form.status.id_for_label }}");
-       //      if (state.selectedIndex<3){
-       //          document.getElementById("btn-state").disabled=false;
-       //          document.getElementById("btn-state").style.visibility="visible";
-       //         state.selectedIndex =state.selectedIndex+1;
-       //      }
-       //      else{
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden";
-       //      }
-       //  }
+
+        function change_state(){
+            var state = document.getElementById("{{ form.status.id_for_label }}");
+            if (state.selectedIndex<3){
+                document.getElementById("btn-state").disabled=false;
+                document.getElementById("btn-state").style.visibility="visible";
+               state.selectedIndex =state.selectedIndex+1;
+            }
+            else{
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden";
+            }
+        }
 
        // /*
        // When edit form is loaded, the following function checks the status of the story, if it is accepted, the 
        // next state button is disabled because there are no more states. After that, it checks the paused feature, if the checkbox is checked, you cannot go to the next state, so the next state button is disabled, if it is unchecked, the next state button is enabled. 
        // */
 
-       // $(document).ready(function() {
-       //      var state = document.getElementById("{{ form.status.id_for_label }}");
-       //      var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
+       $(document).ready(function() {
+            var state = document.getElementById("{{ form.status.id_for_label }}");
+            var paused =document.getElementById("{{ form.pause.id_for_label }}"); 
         
-       //      if (state.selectedIndex>2){
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden";
-       //      }
+            if (state.selectedIndex>2){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden";
+            }
 
-       //      if (paused.checked==true){
-       //          document.getElementById("btn-state").disabled=true;
-       //          document.getElementById("btn-state").style.visibility="hidden"   
-       //      }
+            if (paused.checked==true){
+                document.getElementById("btn-state").disabled=true;
+                document.getElementById("btn-state").style.visibility="hidden"   
+            }
             
             
-       //      //hide the delete label & checkbox that the management_form uses
-       //      $( "label[for*='DELETE']" ).each(function () {
-       //          $(this).attr('style', 'display:none');
-       //      });
+            //hide the delete label & checkbox that the management_form uses
+            $( "label[for*='DELETE']" ).each(function () {
+                $(this).attr('style', 'display:none');
+            });
             
-       //      $( "input[id*='DELETE']" ).each(function () {
-       //          $(this).attr('style', 'display:none');
-       //      });
-       //  });    
+            $( "input[id*='DELETE']" ).each(function () {
+                $(this).attr('style', 'display:none');
+            });
+        });    
         
-       //  // Register the click event handlers
-       //  $("#add").click(function () {
-       //      return addForm(this, "task_set");
-       //  });
+        // Register the click event handlers
+        $("#add").click(function () {
+            return addForm(this, "task_set");
+        });
     
-       //  $(".delete").click(function () {
-       //      return deleteForm(this, "task_set");
-       //  });
+        $(".delete").click(function () {
+            return deleteForm(this, "task_set");
+        });
   
-       //  //add a new task form to the formset
-       //  function addForm(btn, prefix) {
-       //      //get the mgmt section data
-       //      var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
+        //add a new task form to the formset
+        function addForm(btn, prefix) {
+            //get the mgmt section data
+            var formCount = parseInt($('#id_' + prefix + '-TOTAL_FORMS').val());
             
-       //      //copy the row & append it to the end
-       //      var row = $(".item:first").clone().get(0);
-       //      $(row).removeAttr('id').hide().insertAfter(".item:last").slideDown(300);
-       //      var newRef = prefix + "-" + formCount;
+            //copy the row & append it to the end
+            var row = $(".item:first").clone().get(0);
+            $(row).removeAttr('id').hide().insertAfter(".item:last").slideDown(300);
+            var newRef = prefix + "-" + formCount;
             
-       //      //remove errors from the new row, if any
-       //      $(".errorlist", row).remove();
-       //      $(row).children().removeClass("error");
+            //remove errors from the new row, if any
+            $(".errorlist", row).remove();
+            $(row).children().removeClass("error");
             
-       //      //update the names & reset the vals
-       //      var html = $(".item:last").html();
-       //      html = html.replace(/task_set-0/g, newRef);
-       //      $(".item:last").html(html);
-       //      $(".item:last").children( "input" ).each(function () {
-       //          if ($(this).attr('id').indexOf("-story") == -1) {
-       //              $(this).removeAttr("value");
-       //          }
-       //          if ($(this).attr('id').indexOf("-DELETE") > -1) {
-       //              $(this).removeAttr("checked");
-       //          }
-       //      });
+            //update the names & reset the vals
+            var html = $(".item:last").html();
+            html = html.replace(/task_set-0/g, newRef);
+            $(".item:last").html(html);
+            $(".item:last").children( "input" ).each(function () {
+                if ($(this).attr('id').indexOf("-story") == -1) {
+                    $(this).removeAttr("value");
+                }
+                if ($(this).attr('id').indexOf("-DELETE") > -1) {
+                    $(this).removeAttr("checked");
+                }
+            });
             
-       //      // Add an event handler for the delete item/form link 
-       //      $(row).find(".delete").click(function () {
-       //          return deleteForm(this, prefix);
-       //      });
+            // Add an event handler for the delete item/form link 
+            $(row).find(".delete").click(function () {
+                return deleteForm(this, prefix);
+            });
         
-       //      // Update the total form count
-       //      $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
-       //  }
+            // Update the total form count
+            $("#id_" + prefix + "-TOTAL_FORMS").val(formCount + 1);
+        }
 
-       //  function deleteForm(btn, prefix) {
-       //      var sibs = $(btn).siblings( "input" );
-       //      $(sibs).each(function () {
-       //          if ($(this).attr('id').indexOf("-DELETE") > 0) {
-       //              $(this).attr('checked', 'true');
-       //              $(btn).parents('.item').each(function () {
-       //                  $(this).attr('style', 'display:none');
-       //              });
-       //          }
-       //      });
-       //  }
+        function deleteForm(btn, prefix) {
+            var sibs = $(btn).siblings( "input" );
+            $(sibs).each(function () {
+                if ($(this).attr('id').indexOf("-DELETE") > 0) {
+                    $(this).attr('checked', 'true');
+                    $(btn).parents('.item').each(function () {
+                        $(this).attr('style', 'display:none');
+                    });
+                }
+            });
+        }
     </script>

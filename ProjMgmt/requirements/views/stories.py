@@ -30,39 +30,49 @@ def new_story(request, projectID):
         form = StoryForm(request.POST,project=project)
         if form.is_valid():
 # <<<<<<< HEAD
-            # formset = TaskFormSet(request.POST, instance=story)
-            # if formset.is_valid():
-            #     story = models.story.create_story(request.user, 
-            #                                       project_api.get_project(projectID), 
-            #                                       request.POST)
-            #     formset.instance=story
-            #     formset.save()
-            #     return redirect('/req/projects/' + projectID)
+            formset = TaskFormSet(request.POST, instance=story)
+            if formset.is_valid():
+                story = models.story.create_story(request.user, 
+                                                  project_api.get_project(projectID), 
+                                                  request.POST)
+                story = form.save(commit=False)
+                formset.instance=story
+                formset.save()
+                return redirect('/req/projects/' + projectID)
 # =======
-            story = mdl_story.create_story(project, request.POST)
-            story = form.save(commit=False)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # story = mdl_story.create_story(project, request.POST)
+            # story = form.save(commit=False)
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(project=project)
-        # formset = TaskFormSet(instance=story)
-        # formset.extra = 1
+        formset = TaskFormSet(instance=story)
+        formset.extra = 1
     project = project_api.get_project(projectID)
     association = UserAssociation.objects.get(user=request.user, project=project)    
     context = {'title' : 'New User Story',
                'form' : form,
-               # 'formset' : formset,
                'project': project,
                'association': association,
-               'action' : '/req/newstory/' + projectID , 
-               'button_desc' : 'Create User Story',
-                }
+# <<<<<<< HEAD
+#                # 'formset' : formset,
+#                'action' : '/req/newstory/' + projectID , 
+#                'button_desc' : 'Create User Story',
+#                 }
+#     return render(request, 'StorySummary.html', context )
+# =======
+               'formset' : formset,
+               'initTasks' : 0,
+               'numTasks' : 1,
+               'action' : '/newstory/' + projectID , 
+               'desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
+#TODAO we need some kind of permission here - aat
 @login_required(login_url='/signin')
 @user_has_role(user_association.PERM_EDIT_STORY)
 def edit_story(request, projectID, storyID):
@@ -74,23 +84,24 @@ def edit_story(request, projectID, storyID):
         form = StoryForm(request.POST, instance=story, project=project)
         if form.is_valid():
 # <<<<<<< HEAD
-            # story = form.save(commit=False)
-            # formset = TaskFormSet(request.POST, instance=story)
+            story = form.save(commit=False)
+            formset = TaskFormSet(request.POST, instance=story)
             
-            # if formset.is_valid():
-            #     story.save()
-            #     formset.save()
-            #     return redirect('/req/projects/' + projectID)
+            if formset.is_valid():
+                story.save()
+                formset.save()
+                return redirect('/req/projects/' + projectID)
 # =======
-            story = form.save(commit=True)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # story = form.save(commit=True)
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
-        form = StoryForm(instance=story, project=project)
+# <<<<<<< HEAD
+#         form = StoryForm(instance=story, project=project)
         # formset = TaskFormSet(instance=story)
         # if story.task_set.count() == 0: formset.extra = 1
 
@@ -99,15 +110,31 @@ def edit_story(request, projectID, storyID):
         # can_edit_hours = association.get_permission("EditHours") # should become unnecessary
         # str_edit_hours = str(can_edit_hours)
         # print "In association of user and project, permission EditHours is "+str_edit_hours
+# =======
+        form = StoryForm(instance=story)
+        formset = TaskFormSet(instance=story)
+        numTasks = initTasks = story.task_set.count()
+        if numTasks == 0: 
+            formset.extra = 1
+            numTasks = 1
+# >>>>>>> newfeature-TasksFormset
         
     context = {'title' : 'Edit User Story',
                'project' : project,
                'association' : association,
                'title' : 'Edit User Story',
                'form' : form, 
-               # 'formset' : formset,
-               'action' : '/req/editstory/' + projectID + '/' + storyID, 
+# <<<<<<< HEAD
+#                # 'formset' : formset,
+#                'action' : '/req/editstory/' + projectID + '/' + storyID, 
+#                'button_desc' : 'Save Changes'}
+# =======
+               'formset' : formset,
+               'initTasks' : initTasks,
+               'numTasks' : numTasks,
+               'action' : '/editstory/' + projectID + '/' + storyID, 
                'button_desc' : 'Save Changes'}
+# >>>>>>> newfeature-TasksFormset
     
     return render(request, 'StorySummary.html', context )
 
