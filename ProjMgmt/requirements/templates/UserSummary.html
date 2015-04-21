@@ -87,7 +87,8 @@
                 data : $("form").serialize(),
                 success : function(data) {
                     $("#dialogModal").html(data);
-                    loadUsersInProject({{ project.id }});
+                    // loadUsersInProject({{ project.id }});
+                    location.reload(true);
                 },
                 async:false
             });

@@ -17,6 +17,7 @@ from django.template import RequestContext
 from django.shortcuts import render, redirect
 from requirements.models.user_manager import user_has_role, user_owns_project
 from requirements.models import user_association
+import datetime
 
 PERMISSION_OWN_PROJECT = 'requirements.own_project'
     
@@ -41,11 +42,14 @@ def new_story(request, projectID):
 # =======
             story = mdl_story.create_story(project, request.POST)
             story = form.save(commit=False)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
+
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(project=project)
@@ -69,7 +73,10 @@ def edit_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     association = UserAssociation.objects.get(user=request.user, project=project)
     story = mdl_story.get_story(storyID)
-    if story == None: return redirect('/req/projectdetail/' + projectID)
+    if story == None:
+        # return redirect('/req/projectdetail/' + projectID)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
         form = StoryForm(request.POST, instance=story, project=project)
         if form.is_valid():
@@ -83,11 +90,14 @@ def edit_story(request, projectID, storyID):
             #     return redirect('/req/projects/' + projectID)
 # =======
             story = form.save(commit=True)
-            if not 'next' in request.POST:
-                return redirect('/req/projectdetail/' + projectID)
-            else:
-                next = request.POST['next']
-                return redirect(next)
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
+
+            # if not 'next' in request.POST:
+            #     return redirect('/req/projectdetail/' + projectID)
+            # else:
+            #     next = request.POST['next']
+            #     return redirect(next)
 # >>>>>>> newfeature-additerationdetail
     else:
         form = StoryForm(instance=story, project=project)
@@ -116,14 +126,20 @@ def edit_story(request, projectID, storyID):
 def delete_story(request, projectID, storyID):
     project = project_api.get_project(projectID)
     story = models.story.get_story(storyID)
-    if story == None: return redirect('/req/projectdetail/' + projectID)
+    if story == None:
+        # return redirect('/req/projectdetail/' + projectID)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
         story.delete()
-        if not 'next' in request.POST:
-            return redirect('/req/projectdetail/' + projectID)
-        else:
-            next = request.POST['next']
-            return redirect(next)
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
+
+        # if not 'next' in request.POST:
+        #     return redirect('/req/projectdetail/' + projectID)
+        # else:
+        #     next = request.POST['next']
+        #     return redirect(next)
     else:
         form = StoryForm(instance=story, project=project)
 
@@ -294,6 +310,8 @@ def add_comment_into_list(request, storyID):
         form = CommentForm(request.POST)
         if form.is_valid():
             mdl_comment.create_comment(story,request.POST)
+            story.last_updated=datetime.datetime.now()
+            story.save()
     else:
         form = CommentForm()
     comments = mdl_comment.get_comments_for_story(story)
@@ -331,6 +349,8 @@ def edit_comment_in_list(request, storyID, commentID):
         form = CommentForm(request.POST, instance=comment)
         if form.is_valid():
             comment = form.save(commit=True)
+            story.last_updated=datetime.datetime.now()
+            story.save()
     else:
         form = CommentForm(instance=comment)
     comments = mdl_comment.get_comments_for_story(story)
@@ -371,8 +391,11 @@ def remove_comment_from_list(request, storyID, commentID):
     comment = mdl_comment.get_comment(commentID)
     if request.method == 'POST':
         comment.delete()
+        story.last_updated=datetime.datetime.now()
+        story.save()
     comments = mdl_comment.get_comments_for_story(story)
     form = CommentForm()
+
 
     context = {
         'story': story,
