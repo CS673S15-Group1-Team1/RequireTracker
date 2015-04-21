@@ -61,7 +61,10 @@
 			{% else %}
 				<h4 class="list-group-item-heading">
 					{{ acomment.title }}
+					<h6> {{ acomment.last_updated }}<h6>
 				</h4>
+					
+				
 				<div class="list-group-item-text">
 					{{ acomment.comment|linebreaksbr }}
 					<a class="btn btn-link pull-right" href="javascript:void(0);" onclick="removeCommentFromList({{ story.id }},{{ acomment.id }});">

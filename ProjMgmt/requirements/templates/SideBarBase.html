@@ -1,8 +1,11 @@
 {% extends "TopBarBase.html" %}
-
 {% block content %}
+
+{% load staticfiles %}
+<link rel="stylesheet" href="{{ STATIC_URL }}sb-admin/css/sb-admin.css" />
+
 <div class="navbar-inverse">
-	<div class="navbar-collapse navbar-ex1-collapse collapse" aria-expanded="false" style="height: 1px;">
+	<div class="navbar-collapse collapse" aria-expanded="false" style="height: 1px;">
         <ul class="nav navbar-nav side-nav">
             {% if project %}
             <li>
@@ -47,14 +50,18 @@
                         {% else %}
                         <ul id="proj_{{ aproject.id }}_iters" class="collapse in" aria-expanded="true">
                         {% endif %}
-<!--                             <li><a href="#"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
+                            {% comment "No Use" %}
+                            <li><a href="/req/iterationdetail/{{ aproject.id }}/0"><i class="fa fa-fw fa-calendar"></i> Ice Box</a></li>
                             {% for aiteration in aproject.get_iterations %}
-                            <li><a href="#"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
+                            <li><a href="/req/iterationdetail/{{ aproject.id }}/{{ aiteration.id }}"><i class="fa fa-fw fa-calendar"></i> {{ aiteration.title }}</a></li>
                             {% endfor %}
-                            <li><a href="#"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li> -->
+                            {% if canOwnProject %}
+                            <li><a href="javascript:void(0);" onclick="showDialog('/req/newiteration/{{ aproject.id }}');"><i class="fa fa-fw fa-plus"></i> New Iteration</a></li>
+                            {% endif %}
+                            {% endcomment %}
                         </ul>
                     </li>
-                    <li><a href="javascript:void(0)" onclick="showDialog('/req/getattachments/{{ aproject.id }}');"><i class="fa fa-fw fa-folder-open-o"></i> Attachments</a></li>
+                    <li><a href="javascript:void(0);" onclick="showDialog('/req/getattachments/{{ aproject.id }}');"><i class="fa fa-fw fa-folder-open-o"></i> Attachments</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-comments-o"></i> Communication</a></li>
                     <li><a href="#"><i class="fa fa-fw fa-road"></i> Issue Tracker</a></li>
                 </ul>
@@ -66,8 +73,6 @@
 {% block content2 %}
 {% endblock content2 %}
 
-{% load staticfiles %}
-<link rel="stylesheet" href="{{ STATIC_URL }}sb-admin/css/sb-admin.css" />
 
 <style type="text/css">
     .navbar-inverse .navbar-nav > ul {
@@ -82,66 +87,21 @@
 <script type="text/javascript">
     // because the project model has not foreign relation with iteration model
     // we only can use ajax method to retrive each project's iterations into sidebar.
-    {% for aproject in projects %}
     $(function() {
-        $.ajax({
-            {% if aproject == project and iteration == None and isIceBox %}
-            url:'/req/iterationswithselection/{{ aproject.id }}/0',
-            {% elif aproject == project and iteration != None %}
-            url:'/req/iterationswithselection/{{ aproject.id }}/{{ iteration.id }}',
-            {% else %}
-            url:'/req/iterations/{{ aproject.id }}',
-            {% endif %}
-            success: function(result) {
-                $("#proj_{{ aproject.id }}_iters").html(result);
-            },
-            async:true
-        });
-    });
+    {% for aproject in projects %}
+        loadIterationList({{ aproject.id }});
+        // $.ajax({
+        //     type: "GET",
+        //     cache: false,
+        //     url:'/req/iterations/{{ aproject.id }}',
+        //     success: function(result) {
+        //         $("#proj_{{ aproject.id }}_iters").html(result);
+        //     },
+        //     async:false
+        // });
     {% endfor %}
+    });
 
-    // use ajax method to load Iteration Dialog
-    // iterUrl will be one of the following three:
-    // /newiteration/projID or /edititeration/iterID or /deleteiteration/iterID
-    // for now only provide new iteration function.
-    function showNewIterationDialog(iterUrl){
-        $.ajax({
-            url: iterUrl,
-            success: function(result) {
-                $("#iterationModal").html(result);
-                $("#iterationModal").modal({
-                    backdrop: false,
-                    show: true
-                })
-            },
-            async:false
-        }); 
-    }
-
-    // close Iteration Dialog and erase content.
-    function closeNewIterationDialog(){
-        $("#iterationModal").modal('hide');
-        $("#iterationModal").html('');
-    }
-    
-        function openAttachmentsModal(projectID){
-        $.ajax({
-            url: "/req/getattachments/"+projectID,
-            success: function(result) {
-                $("#projAttachModal").html(result);
-                $("#projAttachModal").modal({
-                    backdrop: false,
-                    show: true
-                })
-            },
-            async:false
-        }); 
-    }
-
-    function closeAttachmentsModal(){
-        $("#projAttachModal").modal('hide');
-        $("#projAttachModal").html('');
-    }
 </script>
 
 {% endblock content %}
