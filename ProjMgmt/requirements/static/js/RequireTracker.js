@@ -10,7 +10,7 @@ function showDialog(actionUrl){
                 show: true
             });
         },
-        async:false
+        async:true
     }); 
 }
 
@@ -85,7 +85,7 @@ function addTaskIntoList(storyID) {
         success : function(data) {
             $(listID).html(data);
         },
-        async:true
+        async: true
 	});
 }
 

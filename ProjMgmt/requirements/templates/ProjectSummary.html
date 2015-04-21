@@ -88,7 +88,12 @@
                 url: $("#projectForm").attr('action'),
                 data: $("#projectForm").serialize(),
                 success: function(data) {
-                    $("#dialogModal").html(data);
+                    if (data != "") {
+                        $("#dialogModal").html(data);    
+                    } else {
+                        location.reload(true);
+                    };
+                    
                 },
                 async: false
             });
