@@ -8,12 +8,10 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}css/RequireTracker.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}sb-admin/font-awesome/css/font-awesome.min.css" />
     <link rel="stylesheet" href="{{ STATIC_URL }}bs-datetimepicker/css/bootstrap-datetimepicker.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <!-- <script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script> -->
     <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}js/tooltip.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}js/popover.js" type="text/javascript"></script>
-    <script src="{{ STATIC_URL }}bs-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
-    <script src ="{{ STATIC_URL }}js/RequireTracker.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -76,10 +74,12 @@
     <span id="projAttachModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="projAttachModalLabel" aria-hidden="true" style="display: none;">
     </span> -->
     
-    <div id="dialogModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialogModalLabel" aria-hidden="true" style="display: none;">
+    <div id="dialogModal" class="modal" tabindex="-1" role="dialog" aria-labelledby="dialogModalLabel" aria-hidden="true" style="display: none;">
     </div>
 
-    <script type="text/javascript">
-    </script>
+    <script src="{{ STATIC_URL }}js/tooltip.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}js/popover.js" type="text/javascript"></script>
+    <script src="{{ STATIC_URL }}bs-datetimepicker/js/bootstrap-datetimepicker.min.js" type="text/javascript"></script>
+    <script src ="{{ STATIC_URL }}js/RequireTracker.js" type="text/javascript"></script>
 </body>
 </html>

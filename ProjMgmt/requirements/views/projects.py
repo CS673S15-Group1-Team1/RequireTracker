@@ -43,19 +43,15 @@ def project(request, projectID):
     project = project_api.get_project(projectID)
     if project == None: return redirect('/req/projects')
 
-    activeUsers = user_manager.getActiveUsers()
     iterations = mdl_iteration.get_iterations_for_project(project)
     association = UserAssociation.objects.get(user=request.user, project=project)
 
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'project' : project,
                'stories' : mdl_story.get_stories_for_project(project),
-               'users' : project.users.all,
                'iterations' : iterations,
-               'activeUsers' : activeUsers,
                'association' : association,
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
-               # 'can_edit_project' : can_edit,
                }
     return render(request, 'ProjectDetail.html', context)
 
@@ -67,14 +63,16 @@ def new_project(request):
         if form.is_valid():
             project_api.create_project(request.user, request.POST)
             project = form.save(commit=False)
-            return redirect('/req/projects')
+            # return redirect('/req/projects')
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
     else:
         form = ProjectForm()
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'New Project',
-               'form' : form, 'action' : '/req/newproject' , 'desc' : 'Create Project' }
+               'form' : form, 'action' : '/req/newproject' , 'button_desc' : 'Create Project' }
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
@@ -85,26 +83,31 @@ def edit_project(request, projectID):
         form = ProjectForm(request.POST, instance=project)
         if form.is_valid():
             project = form.save(commit=True)
-            return redirect('/req/projects')
+            # return redirect('/req/projects')
+            # return empty string and do the redirect stuff in front-end
+            return HttpResponse('')
     else:
         form = ProjectForm(instance=project)
         
     context = {'projects' : project_api.get_projects_for_user(request.user.id),
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Edit Project',
-               'form' : form, 'action' : '/req/editproject/' + projectID, 'desc' : 'Save Changes'}
+               'form' : form, 'action' : '/req/editproject/' + projectID, 'button_desc' : 'Save Changes'}
     return render(request, 'ProjectSummary.html', context )
 
 @login_required(login_url='/signin')
 @user_owns_project()
 def delete_project(request, projectID):
     project = project_api.get_project(projectID)
+    if project == None:
+        # return redirect('/req/projects')
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     if request.method == 'POST':
-        # form = NewProjectForm(request.POST, instance=project)
-        # if form.is_valid():
-        #     project = form.save(commit=False)
-        models.project_api.delete_project(project.id)
-        return redirect('/projects')
+        project_api.delete_project(project)
+        # return redirect('/req/projects')
+        # return empty string and do the redirect stuff in front-end
+        return HttpResponse('')
     else:
         form = ProjectForm(instance=project)
         
@@ -112,7 +115,7 @@ def delete_project(request, projectID):
                'canOwnProject' : request.user.has_perm(PERMISSION_OWN_PROJECT),
                'title' : 'Delete Project',
                'confirm_message' : 'This is an unrevert procedure ! You will lose all information about this project !',
-               'form' : form, 'action' : '/req/deleteproject/' + projectID , 'desc' : 'Delete Project' }
+               'form' : form, 'action' : '/req/deleteproject/' + projectID , 'button_desc' : 'Delete Project' }
     return render(request, 'ProjectSummary.html', context )
 
 #===============================================================================
