@@ -8,7 +8,7 @@ from requirements.models import iteration as mdl_iteration
 from requirements.models import story as mdl_story
 from requirements.models import task as mdl_task
 from requirements.models import story_comment as mdl_comment
-from forms import StoryForm
+from forms import StoryForm, TaskFormSet
 from forms import TaskForm, CommentForm
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required, permission_required
@@ -23,7 +23,7 @@ PERMISSION_OWN_PROJECT = 'requirements.own_project'
 @login_required(login_url='/signin')
 @user_has_role(user_association.PERM_CREATE_STORY)
 def new_story(request, projectID):
-    # story = Story()
+    story = Story()
     project = project_api.get_project(projectID)
     association = UserAssociation.objects.get(user=request.user, project=project)
     if request.method == 'POST':
@@ -69,7 +69,7 @@ def new_story(request, projectID):
                'initTasks' : 0,
                'numTasks' : 1,
                'action' : '/newstory/' + projectID , 
-               'desc' : 'Create User Story' }
+               'button_desc' : 'Create User Story' }
     return render(request, 'StorySummary.html', context )
 
 #TODAO we need some kind of permission here - aat
@@ -111,12 +111,15 @@ def edit_story(request, projectID, storyID):
         # str_edit_hours = str(can_edit_hours)
         # print "In association of user and project, permission EditHours is "+str_edit_hours
 # =======
-        form = StoryForm(instance=story)
+        form = StoryForm(instance=story, project=project)
         formset = TaskFormSet(instance=story)
-        numTasks = initTasks = story.task_set.count()
+        numTasks = initTasks = mdl_task.get_tasks_for_story(story).count() #story.task_set.count()
         if numTasks == 0: 
-            formset.extra = 1
             numTasks = 1
+        else:
+            numTasks = numTasks + 1
+        formset.extra = 1
+            
 # >>>>>>> newfeature-TasksFormset
         
     context = {'title' : 'Edit User Story',
@@ -132,7 +135,7 @@ def edit_story(request, projectID, storyID):
                'formset' : formset,
                'initTasks' : initTasks,
                'numTasks' : numTasks,
-               'action' : '/editstory/' + projectID + '/' + storyID, 
+               'action' : '/req/editstory/' + projectID + '/' + storyID, 
                'button_desc' : 'Save Changes'}
 # >>>>>>> newfeature-TasksFormset
     
