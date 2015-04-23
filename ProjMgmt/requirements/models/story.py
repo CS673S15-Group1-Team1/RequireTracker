@@ -37,11 +37,11 @@ class Story(ProjMgmtBase):
     iteration = models.ForeignKey(Iteration,blank=True,null=True)
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
-    hours = models.IntegerField(default=0, blank=True, null=True)
+    hours = models.IntegerField(default=0)
     owner = models.ForeignKey(User,blank=True,null=True,default=None)
-    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED, blank=True, null=True)
-    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE, blank=True, null=True)
-    pause = models.BooleanField(default=False, blank=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED)
+    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE)
+    pause = models.BooleanField(default=False)
     
     def __str__(self):
         return self.title

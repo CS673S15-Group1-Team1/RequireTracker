@@ -118,11 +118,9 @@
                         -->                 
                         <!-- <div> -->
                     {% check_permission association project "EditTasks" as can_edit_tasks %}
-
+                    {% if can_edit_tasks %}
                     <div class="form-group">
-                        {% if can_edit_tasks %}
                         <h5     style="font-weight:bold" class="col-xs-12 col-sm-3 control-label">Tasks:</h5>
-                        {% endif %}
                         <input  id="id_task_set-TOTAL_FORMS" 
                                 name="task_set-TOTAL_FORMS" 
                                 type="hidden" value="{{ numTasks }}" />
@@ -143,16 +141,16 @@
                             because in order to create a new form dynamically, that function copies
                             the first in this list -- so there has to be one to start! 
                         -->
-                    {% if can_edit_tasks %}
                     {% for tform in formset.forms %}
                     <div class="form-group item">
                         <label  for="id_task_set-{{ forloop.counter0 }}-description" class="col-xs-12 col-sm-3 control-label">Description</label>
                         <div class="col-xs-12 col-sm-9">
-                            <input  id="id_task_set-{{ forloop.counter0 }}-description" 
+                            {{ tform.description }}
+<!--                             <input  id="id_task_set-{{ forloop.counter0 }}-description" 
                                     maxlength="1024" 
                                     name="task_set-{{ forloop.counter0 }}-description" 
                                     type="text" 
-                                    value="{{ tform.description.value }}" class="form-control" />
+                                    value="{{ tform.description.value }}" class="form-control" /> -->
 <!--                             <input  id="id_task_set-{{ forloop.counter0 }}-description" 
                                     maxlength="1024" 
                                     name="task_set-{{ forloop.counter0 }}-description" 
@@ -206,6 +204,8 @@
                         <!-- </div> -->
                     </div>
                     {% endfor %}
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ formset }}</div>
                     {% endif %}
                         <!-- </div> -->
                         <!--End tasks section-->
@@ -227,6 +227,8 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ form.owner }}</div>
                     {% endif %}
                     
                     {% check_permission association project "EditHours" as can_edit_hours %}
@@ -248,6 +250,8 @@
                             </div>
                         </div>
                     </div>
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ form.hours }}</div>
                     {% endif %}
                     
                     {% check_permission association project "SelectStoryStatus" as can_select_status %}
@@ -266,6 +270,8 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ form.status }}</div>
                     {% endif %}
                     
                     {% check_permission association project "EditPoints" as can_edit_points %}
@@ -284,6 +290,8 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ form.points }}</div>
                     {% endif %}
 
                     {% check_permission association project "PauseStory" as can_pause %}
@@ -302,6 +310,8 @@
                             {% endif %}
                         </div>
                     </div>
+                    {% else %}
+                    <div style="visibility: hidden; height: 0px;">{{ form.pause }}</div>
                     {% endif %}
                     {% endif %}
                 </div>
