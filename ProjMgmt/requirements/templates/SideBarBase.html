@@ -89,16 +89,19 @@
     // we only can use ajax method to retrive each project's iterations into sidebar.
     $(function() {
     {% for aproject in projects %}
-        loadIterationList({{ aproject.id }});
-        // $.ajax({
-        //     type: "GET",
-        //     cache: false,
-        //     url:'/req/iterations/{{ aproject.id }}',
-        //     success: function(result) {
-        //         $("#proj_{{ aproject.id }}_iters").html(result);
-        //     },
-        //     async:false
-        // });
+    {% if aproject == project %}
+        {% if iteration == None %}
+        {% if isIceBox %}
+        loadIterationList({{ aproject.id }},"0");
+        {% else %}
+        loadIterationList({{ aproject.id }}, null);
+        {% endif %}
+        {% else %}
+        loadIterationList({{ aproject.id }}, {{ iteration.id }});
+        {% endif %}
+    {% else %}
+        loadIterationList({{ aproject.id }}, null);
+    {% endif %}
     {% endfor %}
     });
 
