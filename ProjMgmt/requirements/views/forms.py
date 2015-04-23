@@ -91,6 +91,12 @@ class StoryForm(forms.ModelForm):
 				field.widget.attrs['class'] += ' form-control'
 			else:
 				field.widget.attrs.update({'class':'form-control'})
+	
+	def clean_owner(self):
+		data = self.cleaned_data['owner']
+		if data == '':
+			data = None
+		return data
 
 	class Meta:
 		model = Story

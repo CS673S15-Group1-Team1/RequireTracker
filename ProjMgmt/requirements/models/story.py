@@ -37,10 +37,10 @@ class Story(ProjMgmtBase):
     iteration = models.ForeignKey(Iteration,blank=True,null=True)
     reason = models.CharField(default='', max_length=1024,blank=True)
     test= models.CharField(default='', max_length=1024, blank=True)
-    hours = models.IntegerField(default=0,blank=True)
+    hours = models.IntegerField(default=0, blank=True, null=True)
     owner = models.ForeignKey(User,blank=True,null=True,default=None)
-    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED, blank=True)
-    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE, blank=True)
+    status = models.IntegerField(choices=STATUS_CHOICES, max_length=1, default=STATUS_UNSTARTED, blank=True, null=True)
+    points = models.IntegerField(choices=POINTS_CHOICES, max_length=1, default=POINTS_NONE, blank=True, null=True)
     pause = models.BooleanField(default=False, blank=True)
     
     def __str__(self):
@@ -78,15 +78,18 @@ def create_story(project, fields):
     reason = fields.get('reason', '')
     test = fields.get('test', '')
     hours = fields.get('hours',0)
-    owner = fields.get('owner', '')
+    owner = fields.get('owner', None)
     status = fields.get('status', Story.STATUS_UNSTARTED)
     points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
     
-    if owner != '':
-        owner = User.objects.get(id=owner)
-    else:
+    if owner == None or owner == '':
         owner = None
+    else:
+        try:
+            owner = User.objects.get(id=owner)
+        except Exception, e:
+            owner = None       
 
     story = Story(project=project,
                   title=title, 

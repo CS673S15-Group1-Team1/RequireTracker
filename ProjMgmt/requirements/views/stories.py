@@ -219,6 +219,8 @@ def list_tasks(request, storyID):
 @login_required(login_url='/signin')
 def add_task_into_list(request, storyID):
     story = mdl_story.get_story(storyID)
+    project = story.project
+    association = UserAssociation.objects.get(user=request.user,project=project)
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
@@ -229,7 +231,9 @@ def add_task_into_list(request, storyID):
     context = {
         'story': story,
         'tasks': tasks,
-        'newform': form
+        'newform': form,
+        'project': project,
+        'association': association
     }
     return render(request, 'TaskList.html', context)
 
@@ -256,6 +260,8 @@ def add_task_into_list(request, storyID):
 def edit_task_in_list(request, storyID, taskID):
     story = mdl_story.get_story(storyID)
     task = mdl_task.get_task(taskID)
+    project = story.project
+    association = UserAssociation.objects.get(user=request.user,project=project)
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
@@ -269,6 +275,8 @@ def edit_task_in_list(request, storyID, taskID):
         'tasks': tasks,
         'task': task,
         'editform': form,
+        'project': project,
+        'association': association
     }
 
     return render(request, 'TaskList.html', context)
@@ -298,6 +306,8 @@ def edit_task_in_list(request, storyID, taskID):
 def remove_task_from_list(request, storyID, taskID):
     story = mdl_story.get_story(storyID)
     task = mdl_task.get_task(taskID)
+    project = story.project
+    association = UserAssociation.objects.get(user=request.user,project=project)
     if request.method == 'POST':
         task.delete()
     tasks = mdl_task.get_tasks_for_story(story)
@@ -306,7 +316,9 @@ def remove_task_from_list(request, storyID, taskID):
     context = {
         'story': story,
         'tasks': tasks,
-        'newform': form
+        'newform': form,
+        'project': project,
+        'association': association
     }
 
     return render(request, 'TaskList.html', context)
