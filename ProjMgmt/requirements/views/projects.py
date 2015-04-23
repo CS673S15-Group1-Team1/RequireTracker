@@ -129,6 +129,9 @@ def delete_project(request, projectID):
 @login_required(login_url='/signin')
 def list_users_in_project(request, projectID):
     project = project_api.get_project(projectID)
+    if project == None:
+        return redirect('/req/projects')
+    association = UserAssociation.objects.get(user=request.user,project=project)
     users = project.users.all()
     pmusers = User.objects.filter(project__id=project.id,userassociation__role=user_association.ROLE_OWNER)
     devusers = User.objects.filter(project__id=project.id,userassociation__role=user_association.ROLE_DEVELOPER)
@@ -136,6 +139,7 @@ def list_users_in_project(request, projectID):
     
     context = {
         'project': project,
+        'association': association,
         'users': users,
         'pmusers': pmusers,
         'devusers': devusers,
