@@ -25,7 +25,7 @@ class Story(ProjMgmtBase):
     POINTS_FIVE = 5
 
     POINTS_CHOICES = (
-        (POINTS_NONE,"Not Scaled"),
+        (POINTS_NONE,"0 Not Scaled"),
         (POINTS_ONE, "1 Point"),
         (POINTS_TWO, "2 Points"),
         (POINTS_THREE, "3 Points"),
@@ -83,10 +83,13 @@ def create_story(project, fields):
     points = fields.get('points',Story.POINTS_NONE)
     pause = fields.get('pause',False)
     
-    if owner != '':
-        owner = User.objects.get(id=owner)
-    else:
+    if owner == None or owner == '':
         owner = None
+    else:
+        try:
+            owner = User.objects.get(id=owner)
+        except Exception, e:
+            owner = None       
 
     story = Story(project=project,
                   title=title, 
